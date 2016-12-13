@@ -1,0 +1,9 @@
+{
+  "authors": [
+    "Mike Pagel <mike@mpagel.de>"
+  ],
+  "dependencies": {
+    "eonasdan-bootstrap-datetimepicker": "^4.17.43",
+    "bootstrap": "^3.3.7"
+  }
+}
