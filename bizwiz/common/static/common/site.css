@@ -1,0 +1,17 @@
+body {
+    padding-top: 70px;
+    padding-bottom: 30px;
+}
+
+.asteriskField {
+    display: none;
+}
+
+.navbar-login {
+    width: 305px;
+    padding: 10px 10px 0px 10px;
+}
+
+.icon-big {
+    font-size: 87px;
+}

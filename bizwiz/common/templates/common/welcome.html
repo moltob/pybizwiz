@@ -1,0 +1,21 @@
+{% extends "common/base.html" %}
+
+{%  load i18n %}
+
+{% block content %}
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+    <div class="jumbotron">
+        <h1>{% trans 'Weclome to POC' %}</h1>
+        <p>
+            {% trans 'This test application tries to realize a very simple invoice management system with classis Django means.' %}
+        </p>
+        <ul>
+            <li>{% trans 'No Javascript based templating.' %}
+            </li>
+            <li>SQL Datenbank wird verwendet. Ob später mondodb zum Einsatz kommt, wird sich dann
+                zeigen.
+            </li>
+        </ul>
+    </div>
+
+{% endblock content %}
