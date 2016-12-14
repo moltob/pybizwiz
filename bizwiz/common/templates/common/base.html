@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bizwiz 4</title>
     <link rel="stylesheet"
-          href="{% static 'bower_components/bootstrap/dist/css/bootstrap.min.css' %}"/>
+          href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'common/site.css' %}"/>
     {% block head-content %}
     {% endblock %}
@@ -18,8 +18,8 @@
 
 {% include 'common/navigation.html' %}
 
-<script src="{% static 'bower_components/jquery/dist/jquery.js' %}"></script>
-<script src="{% static 'bower_components/bootstrap/dist/js/bootstrap.js' %}"></script>
+<script src="{% static 'jquery/dist/jquery.js' %}"></script>
+<script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
 
 <div class="container">
     {% for message in messages %}
