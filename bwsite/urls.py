@@ -17,7 +17,8 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^accounts/', include('bizwiz.accounts.urls', namespace='accounts')),
     url(r'^', include('bizwiz.common.urls', namespace='common')),
+    url(r'^accounts/', include('bizwiz.accounts.urls', namespace='accounts')),
+    url(r'^articles/', include('bizwiz.articles.urls', namespace='articles')),
     url(r'^admin/', admin.site.urls),
 ]
