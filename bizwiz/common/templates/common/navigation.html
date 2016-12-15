@@ -54,7 +54,7 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <p>
-                                                <a href="{% comment %}{% url 'accounts:logout' %}{% endcomment %}#"
+                                                <a href="{% url 'accounts:logout' %}#"
                                                    class="btn btn-primary btn-block">{% trans 'Logout' %}</a>
                                             </p>
                                         </div>
@@ -65,7 +65,7 @@
                     </li>
                 {% else %}
                     <li class="{% if 'login' in request.path %}active{% endif %}">
-                        <a href="{% comment %}{% url 'accounts:login' %}{% endcomment %}#">
+                        <a href="{% url 'accounts:login' %}">
                             <span class="glyphicon glyphicon-user"></span> 
                             <strong>{% trans 'Login' %}</strong>
                         </a>
