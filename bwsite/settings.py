@@ -32,7 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'bizwiz.account',
+    'bizwiz.accounts',
     'bizwiz.common',
     'crispy_forms',
     'django.contrib.admin',

@@ -1,7 +1,7 @@
 from django.conf.urls import url, include
 from django.contrib.auth import views as auth_views
 
-from bizwiz.account.forms import login_helper
+from bizwiz.accounts.forms import login_helper
 
 urlpatterns = [
     url(r'^login/$', auth_views.login, {
