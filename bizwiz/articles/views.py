@@ -7,3 +7,4 @@ from bizwiz.common.views import PaginatedOrderedListView
 
 class List(LoginRequiredMixin, PaginatedOrderedListView):
     model = Article
+    ordering = 'name'

@@ -1,6 +1,7 @@
 from django.views.generic import ListView
 from django.views.generic import TemplateView
 
+from bizwiz.exceptions import IncorrectViewConfigurationError
 from bizwiz.version import BIZWIZ_VERSION
 
 
@@ -16,7 +17,9 @@ class PaginatedOrderedListView(ListView):
 
     @property
     def order_by(self):
-        return self.request.GET.get('order_by', 'name')
+        if not self.ordering:
+            raise IncorrectViewConfigurationError('Default ordering not set.')
+        return self.request.GET.get('order_by', self.ordering)
 
     @property
     def order_dir(self):
