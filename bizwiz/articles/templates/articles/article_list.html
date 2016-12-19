@@ -16,11 +16,25 @@
                 <a href="?order_by=name{% if order_by == 'name' and order_dir == 'asc' %}&order_dir=desc{% endif %}">
                     {% trans 'Invoice Text' %}
                 </a>
+                {% if order_by == 'name' %}
+                    {% if order_dir == 'asc' %}
+                        <span class="glyphicon glyphicon-triangle-top icon-small"></span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-triangle-bottom icon-small"></span>
+                    {% endif %}
+                {% endif %}
             </th>
             <th class="text-right">
                 <a href="?order_by=price{% if order_by == 'price' and order_dir == 'asc' %}&order_dir=desc{% endif %}">
                     {% trans 'Unit Price' %}
                 </a>
+                {% if order_by == 'price' %}
+                    {% if order_dir == 'asc' %}
+                        <span class="glyphicon glyphicon-triangle-top icon-small"></span>
+                    {% else %}
+                        <span class="glyphicon glyphicon-triangle-bottom icon-small"></span>
+                    {% endif %}
+                {% endif %}
             </th>
         </tr>
         </thead>
