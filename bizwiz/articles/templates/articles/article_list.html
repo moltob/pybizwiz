@@ -7,42 +7,45 @@
 
     <table class="table table-striped">
         <colgroup>
-            <col style="width:5%">
-            <col style="width:50%">
-            <col style="width:25%">
-            <col style="width:10%">
-            <col style="width:5%">
+            <col style="width:75%">
+            <col style="width:20%">
             <col style="width:5%">
         </colgroup>
         <thead>
         <tr>
-            <th>{% trans 'ID' %}</th>
             <th>{% trans 'Invoice Text' %}</th>
-            <th>{% trans 'Unit Price' %}</th>
+            <th class="text-right">{% trans 'Unit Price' %}</th>
             <th>{% trans 'Inactive' %}</th>
-            <th></th>
         </tr>
         </thead>
         <tbody>
         {% for article in article_list %}
             <tr>
-                <td>
-                    <a href="{% comment %}{% url 'invoice:detail' invoice.pk %}{% endcomment %}#">{{ article.pk }}</a>
-                </td>
-                <td>{{ article.name }}</td>
+                <td><a href="{% comment %}{% url 'invoice:update' invoice.pk %}{% endcomment %}#">
+                    {{ article.name }}
+                </a></td>
                 <td class="text-right">{{ article.price }} &euro;</td>
                 <td>{{ article.inactive }}</td>
-                <td class="text-center">
-                    <a role="button"
-                       class="btn btn-default btn-xs"
-                       href="{% url 'invoice:update' invoice.pk %}">
-                        <span class="glyphicon glyphicon-edit"></span>
-                    </a>
-                </td>
             </tr>
         {% endfor %}
         </tbody>
 
     </table>
+
+    <nav class="text-right">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li><a href="?page={{ page_obj.previous_page_number }}">«</a></li>
+            {% endif %}
+            {% for  page_num in paginator.page_range %}
+                <li {% if page_num == page_obj.number %}class="active"{% endif %}>
+                    <a href="?page={{ page_num }}">{{ page_num }}</a>
+                </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li><a href="?page={{ page_obj.next_page_number }}">»</a></li>
+            {% endif %}
+        </ul>
+    </nav>
 
 {% endblock content %}

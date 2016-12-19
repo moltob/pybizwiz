@@ -6,3 +6,4 @@ from bizwiz.articles.models import Article
 
 class List(LoginRequiredMixin, ListView):
     model = Article
+    paginate_by = 15
