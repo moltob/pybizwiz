@@ -24,15 +24,14 @@
         </tr>
         </thead>
         <tbody>
-        {% comment %}
-        {% for invoice in invoice_list %}
+        {% for article in article_list %}
             <tr>
                 <td>
-                    <a href="{% url 'invoice:detail' invoice.pk %}">R{{ invoice.pk|stringformat:'05d' }}</a>
+                    <a href="{% comment %}{% url 'invoice:detail' invoice.pk %}{% endcomment %}#">{{ article.pk }}</a>
                 </td>
-                <td>{{ invoice.customer_name }}</td>
-                <td>{{ invoice.date | date }}</td>
-                <td class="text-right">{{ invoice.total }} &euro;</td>
+                <td>{{ article.name }}</td>
+                <td class="text-right">{{ article.price }} &euro;</td>
+                <td>{{ article.inactive }}</td>
                 <td class="text-center">
                     <a role="button"
                        class="btn btn-default btn-xs"
@@ -40,16 +39,8 @@
                         <span class="glyphicon glyphicon-edit"></span>
                     </a>
                 </td>
-                <td class="text-center">
-                    <a role="button"
-                       class="btn btn-default btn-xs"
-                       href="{% url 'invoice:delete' invoice.pk %}">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </td>
             </tr>
         {% endfor %}
-        {% endcomment %}
         </tbody>
 
     </table>
