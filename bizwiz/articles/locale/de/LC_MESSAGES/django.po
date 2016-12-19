@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-19 21:14+0100\n"
+"POT-Creation-Date: 2016-12-19 21:32+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -54,6 +54,7 @@ msgstr "Inaktive ausblenden"
 msgid "Show inactive"
 msgstr "Inaktive anzeigen"
 
-#: .\bizwiz\articles\views.py:33
-msgid "Article %(name) has been updated."
-msgstr "Artikel %(name) wurde gespeichert."
+#: .\bizwiz\articles\views.py:38
+#, python-format
+msgid "Updated: %(name)s"
+msgstr "Gespeichert: %(name)s"

@@ -30,6 +30,12 @@ class List(LoginRequiredMixin, OrderedListViewMixin, ListView):
 
 class Update(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Article
-    success_message = _("Article %(name) has been updated.")
     success_url = reverse_lazy('articles:list')
     form_class = UpdateForm
+
+    def form_valid(self, form):
+        if form.has_changed():
+            self.success_message = _("Updated: %(name)s")
+        else:
+            self.success_message = ""
+        return super().form_valid(form)
