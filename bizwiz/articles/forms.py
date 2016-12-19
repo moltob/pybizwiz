@@ -1,13 +1,22 @@
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout, Field
+from crispy_forms.layout import Submit, Layout
+from django.forms import modelform_factory
+from django.utils.translation import ugettext as _
 
-update_helper = FormHelper()
-update_helper.form_class = 'form-horizontal'
-update_helper.label_class = 'col-lg-2'
-update_helper.field_class = 'col-lg-8'
-update_helper.layout = Layout(
-    'name',
-    'price',
-    'inactive',
+from bizwiz.articles.models import Article
+
+UpdateForm = modelform_factory(
+    Article,
+    fields='__all__',
+    labels={
+        'name': _("Invoice text"),
+        'price': _("Unit price"),
+        'inactive': _("Inactive, no longer in use"),
+    },
 )
-update_helper.add_input(Submit('submit', 'Submit'))
+
+UpdateForm.helper = FormHelper()
+UpdateForm.helper.form_class = 'form-horizontal'
+UpdateForm.helper.label_class = 'col-lg-2'
+UpdateForm.helper.field_class = 'col-lg-8'
+UpdateForm.helper.add_input(Submit('submit', _("Submit")))

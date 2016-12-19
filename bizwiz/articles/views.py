@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import ugettext as _
 from django.views.generic import ListView, UpdateView
 
-from bizwiz.articles.forms import update_helper
+from bizwiz.articles.forms import UpdateForm
 from bizwiz.articles.models import Article
 from bizwiz.common.views import OrderedListViewMixin
 
@@ -32,7 +32,4 @@ class Update(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Article
     success_message = _("Article %(name) has been updated.")
     success_url = reverse_lazy('articles:list')
-    fields = '__all__'
-
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(helper=update_helper, **kwargs)
+    form_class = UpdateForm
