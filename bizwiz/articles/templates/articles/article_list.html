@@ -1,6 +1,7 @@
 {% extends "common/base.html" %}
 
 {% load i18n %}
+{% load common.navigation %}
 
 {% block content %}
     <div class="page-header"><h1>{% trans 'Articles' %}</h1></div>
@@ -13,28 +14,10 @@
         <thead>
         <tr>
             <th>
-                <a href="?order_by=name{% if order_by == 'name' and order_dir == 'asc' %}&order_dir=desc{% endif %}">
-                    {% trans 'Invoice Text' %}
-                </a>
-                {% if order_by == 'name' %}
-                    {% if order_dir == 'asc' %}
-                        <span class="glyphicon glyphicon-triangle-top icon-small"></span>
-                    {% else %}
-                        <span class="glyphicon glyphicon-triangle-bottom icon-small"></span>
-                    {% endif %}
-                {% endif %}
+                {% ordering_link 'Invoice Text' 'name' order_by order_dir %}
             </th>
             <th class="text-right">
-                <a href="?order_by=price{% if order_by == 'price' and order_dir == 'asc' %}&order_dir=desc{% endif %}">
-                    {% trans 'Unit Price' %}
-                </a>
-                {% if order_by == 'price' %}
-                    {% if order_dir == 'asc' %}
-                        <span class="glyphicon glyphicon-triangle-top icon-small"></span>
-                    {% else %}
-                        <span class="glyphicon glyphicon-triangle-bottom icon-small"></span>
-                    {% endif %}
-                {% endif %}
+                {% ordering_link 'Unit Price' 'price' order_by order_dir %}
             </th>
         </tr>
         </thead>
