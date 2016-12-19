@@ -8,28 +8,26 @@
     <table class="table table-striped">
         <colgroup>
             <col style="width:75%">
-            <col style="width:20%">
-            <col style="width:5%">
+            <col style="width:25%">
         </colgroup>
         <thead>
         <tr>
             <th>{% trans 'Invoice Text' %}</th>
             <th class="text-right">{% trans 'Unit Price' %}</th>
-            <th>{% trans 'Inactive' %}</th>
         </tr>
         </thead>
         <tbody>
         {% for article in article_list %}
             <tr>
                 <td><a href="{% comment %}{% url 'invoice:update' invoice.pk %}{% endcomment %}#">
+                    {% if article.inactive %}<s>{% endif %}
                     {{ article.name }}
+                    {% if article.inactive %}</s>{% endif %}
                 </a></td>
                 <td class="text-right">{{ article.price }} &euro;</td>
-                <td>{{ article.inactive }}</td>
             </tr>
         {% endfor %}
         </tbody>
-
     </table>
 
     <nav class="text-right">
