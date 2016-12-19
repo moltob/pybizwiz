@@ -29,4 +29,4 @@ class PaginatedOrderedListView(ListView):
             return '-{}'.format(self.order_by)
 
     def get_context_data(self, **kwargs):
-        return super().get_context_data(order_by=self.order_by, order_dir=self.order_dir)
+        return super().get_context_data(order_by=self.order_by, order_dir=self.order_dir, **kwargs)
