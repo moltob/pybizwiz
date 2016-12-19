@@ -52,24 +52,5 @@
         </tbody>
     </table>
 
-    <nav class="text-right">
-        <ul class="pagination">
-            {% if page_obj.has_previous %}
-                <li>
-                    <a href="?page={{ page_obj.previous_page_number }}&order_by={{ order_by }}&order_dir={{ order_dir }}">«</a>
-                </li>
-            {% endif %}
-            {% for  page_num in paginator.page_range %}
-                <li {% if page_num == page_obj.number %}class="active"{% endif %}>
-                    <a href="?page={{ page_num }}&order_by={{ order_by }}&order_dir={{ order_dir }}">{{ page_num }}</a>
-                </li>
-            {% endfor %}
-            {% if page_obj.has_next %}
-                <li>
-                    <a href="?page={{ page_obj.next_page_number }}&order_by={{ order_by }}&order_dir={{ order_dir }}">»</a>
-                </li>
-            {% endif %}
-        </ul>
-    </nav>
-
+    {% include 'common/pagination.html' %}
 {% endblock content %}
