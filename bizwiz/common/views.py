@@ -1,4 +1,3 @@
-from django.views.generic import ListView
 from django.views.generic import TemplateView
 
 from bizwiz.exceptions import IncorrectViewConfigurationError
@@ -12,9 +11,7 @@ class Welcome(TemplateView):
         return super().get_context_data(version=BIZWIZ_VERSION, **kwargs)
 
 
-class PaginatedOrderedListView(ListView):
-    paginate_by = 15
-
+class OrderedListViewMixin:
     @property
     def order_by(self):
         if not self.ordering:
