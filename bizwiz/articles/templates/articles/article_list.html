@@ -14,17 +14,17 @@
         <thead>
         <tr>
             <th>
-                {% ordering_link _("Invoice Text") 'name' order_by order_dir %}
+                {% ordering_link _("Invoice text") 'name' order_by order_dir %}
             </th>
             <th class="text-right">
-                {% ordering_link _("Unit Price") 'price' order_by order_dir %}
+                {% ordering_link _("Unit price") 'price' order_by order_dir %}
             </th>
         </tr>
         </thead>
         <tbody>
         {% for article in article_list %}
             <tr>
-                <td><a href="{% comment %}{% url 'invoice:update' invoice.pk %}{% endcomment %}#">
+                <td><a href="{% url 'articles:update' article.pk %}">
                     {% if article.inactive %}<s>{% endif %}
                     {{ article.name }}
                     {% if article.inactive %}</s>{% endif %}
