@@ -35,5 +35,18 @@
         </tbody>
     </table>
 
-    {% include 'common/pagination-bar.html' %}
+    <div class="text-right">
+        {% if show_inactive %}
+            <a class="btn btn-default" href="{% url 'articles:list' %}" role="button">
+                {% trans 'Hide inactive' %}
+            </a>
+        {% else %}
+            <a class="btn btn-default" href="{% url 'articles:list_with_inactive' %}"
+               role="button">
+                {% trans 'Show inactive' %}
+            </a>
+        {% endif %}
+        {% include 'common/pagination-bar.html' %}
+    </div>
+
 {% endblock content %}
