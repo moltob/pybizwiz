@@ -37,19 +37,23 @@ class Bw2Importer:
             if deleted:
                 _logger.info('Deleted {} preexisting {} objects.'.format(deleted, modelname))
 
-            count = 0
             with open(self.exported_filepath(modelname), encoding='utf-8') as file:
                 for row in csv.reader(file):
                     yield row
-                    count += 1
-
-            _logger.info('Imported {} {} objects.'.format(count, modelname))
 
     def import_articles(self):
         from bizwiz.articles.models import Article
+
+        count = 0
         for bw2_id, invoice_text, last_price, outdated in self.imported_objects('Article', Article):
-            article = Article(name=invoice_text, price=last_price, inactive=outdated)
-            article.save()
+            if "rabatt" in invoice_text.lower():
+                _logger.info('Skipping import of rebate article: {}.'.format(invoice_text))
+            else:
+                article = Article(name=invoice_text, price=last_price, inactive=outdated)
+                article.save()
+                count += 1
+
+        _logger.info('Imported {} articles.'.format(count))
 
 
 def main():
