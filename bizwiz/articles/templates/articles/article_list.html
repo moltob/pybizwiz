@@ -1,7 +1,7 @@
 {% extends "common/base.html" %}
 
 {% load i18n %}
-{% load common.navigation %}
+{% load common.pagination %}
 
 {% block content %}
     <div class="page-header"><h1>{% trans 'Articles' %}</h1></div>
@@ -35,5 +35,5 @@
         </tbody>
     </table>
 
-    {% include 'common/pagination.html' %}
+    {% include 'common/pagination-bar.html' %}
 {% endblock content %}
