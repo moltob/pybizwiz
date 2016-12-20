@@ -37,11 +37,11 @@
 
     <div class="text-right">
         {% if show_inactive %}
-            <a class="btn btn-default" href="{% url 'articles:list' %}" role="button">
+            <a class="btn btn-default" href="{% url 'articles:list_active' %}" role="button">
                 {% trans 'Hide inactive' %}
             </a>
         {% else %}
-            <a class="btn btn-default" href="{% url 'articles:list_with_inactive' %}"
+            <a class="btn btn-default" href="{% url 'articles:list' %}"
                role="button">
                 {% trans 'Show inactive' %}
             </a>

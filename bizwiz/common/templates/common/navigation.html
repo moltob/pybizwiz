@@ -21,7 +21,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="#">{% trans 'New' %}</a></li>
-                        <li><a href="{% url 'articles:list' %}">{% trans 'Browse' %}</a></li>
+                        <li><a href="{% url 'articles:list_active' %}">{% trans 'Browse' %}</a></li>
                     </ul>
                 </li>
                 <li class="{% if 'overview' in request.path %}active{% endif %}">

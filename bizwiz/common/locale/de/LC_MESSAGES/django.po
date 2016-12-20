@@ -24,11 +24,11 @@ msgstr "Artikel"
 
 #: .\bizwiz\common\templates\common\navigation.html:23
 msgid "New"
-msgstr "Anlegen"
+msgstr "Neu"
 
 #: .\bizwiz\common\templates\common\navigation.html:24
 msgid "Browse"
-msgstr "Ansehen"
+msgstr "Übersicht"
 
 #: .\bizwiz\common\templates\common\navigation.html:29
 msgid "Invoices"
