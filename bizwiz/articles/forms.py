@@ -1,3 +1,4 @@
+from crispy_forms import bootstrap
 from crispy_forms import helper, layout
 from django import forms
 from django.utils.translation import ugettext as _
@@ -34,8 +35,22 @@ class BaseArticleFormset(forms.BaseModelFormSet):
     helper = helper.FormHelper()
     helper.form_tag = False
     helper.disable_csrf = True
+    helper.form_show_labels = False
+    helper.layout = layout.Layout(
+        layout.Row(
+            layout.Div('name', css_class='col-lg-9'),
+            layout.Div('price', css_class='col-lg-2'),
+            layout.Div(
+                bootstrap.StrictButton(
+                    '<span class="glyphicon glyphicon-minus"></span>',
+                    css_class='btn-default',
+                    data_formset_delete_button=''),
+                css_class='col-lg-1 text-center'),
+            layout.Field('DELETE', style='display:none;'),
+            data_formset_form='',
+        )
+    )
 
 
-ArticleFormset = forms.modelformset_factory(Article,
-                                            formset=BaseArticleFormset,
+ArticleFormset = forms.modelformset_factory(Article, formset=BaseArticleFormset, can_delete=True,
                                             **FORM_FACTORY_OPTIONS)

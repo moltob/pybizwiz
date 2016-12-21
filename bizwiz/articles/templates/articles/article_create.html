@@ -1,14 +1,56 @@
 {% extends "common/base.html" %}
 
 {% load i18n %}
+{% load static %}
 {% load crispy_forms_tags %}
+{% load formset_tags %}
+
 
 {% block content %}
     <div class="page-header"><h1>{% trans 'Create articles' %}</h1></div>
 
     <form method="post">
-        {% crispy formset %}
+        <div id="formset" data-formset-prefix="{{ formset.prefix }}">
+            {{ formset.management_form|crispy }}
+
+            <script type="form-template" data-formset-empty-form>
+                {% escapescript %}
+                    {% crispy formset.empty_form formset.helper%}
+                {% endescapescript %}
+            </script>
+
+
+            {# Headers for crispy forms rendered fields. #}
+            <div class="row">
+                <label class="col-lg-9 control-label requiredField">
+                    {{ formset.empty_form.name.label }}
+                </label>
+                <label class="col-lg-2 control-label requiredField">
+                    {{ formset.empty_form.price.label }}
+                </label>
+            </div>
+
+            <div data-formset-body>
+                {% crispy formset %}
+            </div>
+
+            <div class="row form-group">
+                <div class="col-lg-offset-11 col-lg-1 text-center">
+                    <button type="button" class="btn btn-default" data-formset-add>
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </button>
+                </div>
+            </div>
+
+        </div>
         {% crispy form %}
     </form>
+
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script>
+        $("#formset").formset({
+            animateForms: true
+        });
+    </script>
 
 {% endblock content %}
