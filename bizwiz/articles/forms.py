@@ -4,6 +4,7 @@ from django import forms
 from django.utils.translation import ugettext as _
 
 from bizwiz.articles.models import Article
+from bizwiz.common.dynamic_formset import remove_form_button_factory
 
 FORM_FACTORY_OPTIONS = dict(
     fields='__all__',
@@ -39,12 +40,7 @@ class BaseArticleFormset(forms.BaseModelFormSet):
         layout.Row(
             layout.Div('name', css_class='col-lg-9'),
             layout.Div('price', css_class='col-lg-2'),
-            layout.Div(
-                bootstrap.StrictButton(
-                    '<span class="glyphicon glyphicon-minus"></span>',
-                    css_class='btn-default',
-                    data_formset_delete_button=''),
-                css_class='col-lg-1 text-right'),
+            layout.Div(remove_form_button_factory(), css_class='col-lg-1 text-right'),
             layout.Field('DELETE', style='display:none;'),
             data_formset_form='',
         )
