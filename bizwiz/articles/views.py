@@ -1,16 +1,15 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.messages.views import SuccessMessageMixin
-from django.urls import reverse_lazy
+from django import urls
+from django.contrib.auth import mixins
+from django.contrib.messages import views
 from django.utils.translation import ugettext as _
-from django.views.generic import FormView
-from django.views.generic import ListView, UpdateView
+from django.views import generic
 
 from bizwiz.articles.forms import UpdateForm, CreateForm, ArticleFormset
 from bizwiz.articles.models import Article
 from bizwiz.common.views import OrderedListViewMixin
 
 
-class List(LoginRequiredMixin, OrderedListViewMixin, ListView):
+class List(mixins.LoginRequiredMixin, OrderedListViewMixin, generic.ListView):
     model = Article
     ordering = 'name'
     paginate_by = 15
@@ -29,9 +28,9 @@ class List(LoginRequiredMixin, OrderedListViewMixin, ListView):
         return super().get_queryset()
 
 
-class Update(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
+class Update(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.UpdateView):
     model = Article
-    success_url = reverse_lazy('articles:list_active')
+    success_url = urls.reverse_lazy('articles:list_active')
     form_class = UpdateForm
 
     def form_valid(self, form):
@@ -42,8 +41,8 @@ class Update(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         return super().form_valid(form)
 
 
-class Create(LoginRequiredMixin, SuccessMessageMixin, FormView):
-    success_url = reverse_lazy('articles:list_active')
+class Create(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.FormView):
+    success_url = urls.reverse_lazy('articles:list_active')
     form_class = CreateForm
     template_name = 'articles/article_create.html'
 
