@@ -61,4 +61,11 @@ class Create(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.FormV
 
     def forms_valid(self, form, article_formset):
         article_formset.save()
+
+        if article_formset.new_objects:
+            names = (str(a) for a in article_formset.new_objects)
+            self.success_message = _("Added: {}.").format(", ".join(names))
+        else:
+            self.success_message = ""
+
         return self.form_valid(form)
