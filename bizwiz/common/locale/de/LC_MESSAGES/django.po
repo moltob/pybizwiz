@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-19 21:32+0100\n"
+"POT-Creation-Date: 2016-12-21 19:27+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -41,6 +41,10 @@ msgstr "Ausloggen"
 #: .\bizwiz\common\templates\common\navigation.html:80
 msgid "Login"
 msgstr "Einloggen"
+
+#: .\bizwiz\common\templates\common\submit-button.html:5
+msgid "Submit"
+msgstr "Abschicken"
 
 #: .\bizwiz\common\templates\common\welcome.html:8
 msgid "Welcome to Bizwiz 4"
