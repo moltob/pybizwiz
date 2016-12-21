@@ -44,7 +44,7 @@ class BaseArticleFormset(forms.BaseModelFormSet):
                     '<span class="glyphicon glyphicon-minus"></span>',
                     css_class='btn-default',
                     data_formset_delete_button=''),
-                css_class='col-lg-1 text-center'),
+                css_class='col-lg-1 text-right'),
             layout.Field('DELETE', style='display:none;'),
             data_formset_form='',
         )
