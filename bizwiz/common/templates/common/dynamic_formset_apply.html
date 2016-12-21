@@ -1,0 +1,8 @@
+{% load static %}
+
+<script src="{% static 'js/jquery.formset.js' %}"></script>
+<script>
+    $("{{ selector }}").formset({
+        animateForms: true
+    });
+</script>

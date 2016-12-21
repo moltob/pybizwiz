@@ -1,0 +1,11 @@
+{% load crispy_forms_tags %}
+{% load formset_tags %}
+
+ <div id="{{ css_id }}" data-formset-prefix="{{ formset.prefix }}">
+            {{ formset.management_form|crispy }}
+
+            <script type="form-template" data-formset-empty-form>
+                {% escapescript %}
+                    {% crispy formset.empty_form formset.helper%}
+                {% endescapescript %}
+            </script>
