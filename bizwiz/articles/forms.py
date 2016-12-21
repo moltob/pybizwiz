@@ -28,7 +28,6 @@ class UpdateForm(ArticleForm):
 class CreateForm(forms.Form):
     helper = helper.FormHelper()
     helper.form_tag = False
-    helper.add_input(layout.Submit('submit', _("Submit")))
 
 
 class BaseArticleFormset(forms.BaseModelFormSet):
@@ -52,5 +51,9 @@ class BaseArticleFormset(forms.BaseModelFormSet):
     )
 
 
-ArticleFormset = forms.modelformset_factory(Article, formset=BaseArticleFormset, can_delete=True,
-                                            **FORM_FACTORY_OPTIONS)
+ArticleFormset = forms.modelformset_factory(
+    Article,
+    formset=BaseArticleFormset,
+    can_delete=True,
+    **FORM_FACTORY_OPTIONS
+)
