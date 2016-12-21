@@ -1,12 +1,10 @@
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit, Layout
-from django.forms import modelform_factory, Form
+from crispy_forms import helper, layout
+from django import forms
 from django.utils.translation import ugettext as _
 
 from bizwiz.articles.models import Article
 
-UpdateForm = modelform_factory(
-    Article,
+FORM_FACTORY_OPTIONS = dict(
     fields='__all__',
     labels={
         'name': _("Invoice text"),
@@ -15,13 +13,29 @@ UpdateForm = modelform_factory(
     },
 )
 
-UpdateForm.helper = FormHelper()
-UpdateForm.helper.form_class = 'form-horizontal'
-UpdateForm.helper.label_class = 'col-lg-2'
-UpdateForm.helper.field_class = 'col-lg-8'
-UpdateForm.helper.add_input(Submit('submit', _("Submit")))
+ArticleForm = forms.modelform_factory(Article, **FORM_FACTORY_OPTIONS)
 
 
-class CreateForm(Form):
-    helper = FormHelper()
-    helper.add_input(Submit('submit', _("Submit")))
+class UpdateForm(ArticleForm):
+    helper = helper.FormHelper()
+    helper.form_class = 'form-horizontal'
+    helper.label_class = 'col-lg-2'
+    helper.field_class = 'col-lg-8'
+    helper.add_input(layout.Submit('submit', _("Submit")))
+
+
+class CreateForm(forms.Form):
+    helper = helper.FormHelper()
+    helper.form_tag = False
+    helper.add_input(layout.Submit('submit', _("Submit")))
+
+
+class BaseArticleFormset(forms.BaseModelFormSet):
+    helper = helper.FormHelper()
+    helper.form_tag = False
+    helper.disable_csrf = True
+
+
+ArticleFormset = forms.modelformset_factory(Article,
+                                            formset=BaseArticleFormset,
+                                            **FORM_FACTORY_OPTIONS)

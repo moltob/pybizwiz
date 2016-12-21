@@ -6,6 +6,9 @@
 {% block content %}
     <div class="page-header"><h1>{% trans 'Create articles' %}</h1></div>
 
-    {% crispy form %}
+    <form method="post">
+        {% crispy formset %}
+        {% crispy form %}
+    </form>
 
 {% endblock content %}
