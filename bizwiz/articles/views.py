@@ -2,9 +2,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.urls import reverse_lazy
 from django.utils.translation import ugettext as _
+from django.views.generic import FormView
 from django.views.generic import ListView, UpdateView
 
-from bizwiz.articles.forms import UpdateForm
+from bizwiz.articles.forms import UpdateForm, CreateForm
 from bizwiz.articles.models import Article
 from bizwiz.common.views import OrderedListViewMixin
 
@@ -39,3 +40,9 @@ class Update(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
         else:
             self.success_message = ""
         return super().form_valid(form)
+
+
+class Create(LoginRequiredMixin, SuccessMessageMixin, FormView):
+    success_url = reverse_lazy('articles:list')
+    form_class = CreateForm
+    template_name = 'articles/article_create.html'
