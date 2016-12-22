@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-22 10:52+0100\n"
+"POT-Creation-Date: 2016-12-22 11:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,35 +18,38 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\bizwiz\articles\forms.py:12
+#: .\bizwiz\articles\forms.py:21
+msgid "Submit"
+msgstr "Abschicken"
+
+#: .\bizwiz\articles\models.py:8
 #: .\bizwiz\articles\templates\articles\article_list.html:17
 msgid "Invoice text"
 msgstr "Rechnungstext"
 
-#: .\bizwiz\articles\forms.py:13
+#: .\bizwiz\articles\models.py:13
 #: .\bizwiz\articles\templates\articles\article_list.html:20
 msgid "Unit price"
 msgstr "Stückpreis"
 
-#: .\bizwiz\articles\forms.py:14
-msgid "Inactive, no longer in use"
-msgstr "Inaktiv, nicht mehr in Verwendung"
+#: .\bizwiz\articles\models.py:18
+msgid "No longer used."
+msgstr "Nicht mehr in Verwendung."
 
-#: .\bizwiz\articles\forms.py:17
+#: .\bizwiz\articles\models.py:20
 msgid "Inactive articles can no longer be used in projects and invoices."
 msgstr ""
 "Inaktive Artikel können nicht mehr in Projekten und Rechnungen verwendet "
 "werden."
 
-#: .\bizwiz\articles\forms.py:21
-msgid "An other article already has this name, please choose a different one."
-msgstr ""
-"Ein anderer Artikel mit diesem Namen existiert bereits, bitte wählen Sie "
-"einen anderen."
+#: .\bizwiz\articles\models.py:27
+msgid "Article"
+msgstr "Artikel"
 
-#: .\bizwiz\articles\forms.py:34
-msgid "Submit"
-msgstr "Abschicken"
+#: .\bizwiz\articles\models.py:28
+#: .\bizwiz\articles\templates\articles\article_list.html:7
+msgid "Articles"
+msgstr "Artikel"
 
 #: .\bizwiz\articles\templates\articles\article_create.html:8
 msgid "Create articles"
@@ -55,10 +58,6 @@ msgstr "Artikel hinzufügen"
 #: .\bizwiz\articles\templates\articles\article_form.html:7
 msgid "Edit article"
 msgstr "Artikel bearbeiten"
-
-#: .\bizwiz\articles\templates\articles\article_list.html:7
-msgid "Articles"
-msgstr "Artikel"
 
 #: .\bizwiz\articles\templates\articles\article_list.html:41
 msgid "Hide inactive"

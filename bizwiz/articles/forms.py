@@ -6,24 +6,7 @@ from django.utils.translation import ugettext as _
 from bizwiz.articles.models import Article
 from bizwiz.common.dynamic_formset import remove_form_button_factory
 
-FORM_FACTORY_OPTIONS = dict(
-    fields='__all__',
-    labels={
-        'name': _("Invoice text"),
-        'price': _("Unit price"),
-        'inactive': _("Inactive, no longer in use"),
-    },
-    help_texts={
-        'inactive': _("Inactive articles can no longer be used in projects and invoices.")
-    },
-    error_messages={
-        'name': {
-            'unique': _("An other article already has this name, please choose a different one."),
-        }
-    }
-)
-
-ArticleForm = forms.modelform_factory(Article, **FORM_FACTORY_OPTIONS)
+ArticleForm = forms.modelform_factory(Article, fields='__all__')
 
 
 class UpdateForm(ArticleForm):
@@ -61,5 +44,5 @@ ArticleFormset = forms.modelformset_factory(
     Article,
     formset=BaseArticleFormset,
     can_delete=True,
-    **FORM_FACTORY_OPTIONS
+    fields='__all__'
 )

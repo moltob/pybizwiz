@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-22 10:52+0100\n"
+"POT-Creation-Date: 2016-12-22 11:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,26 +19,32 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: .\bizwiz\common\templates\common\navigation.html:20
-msgid "Articles"
-msgstr "Artikel"
-
-#: .\bizwiz\common\templates\common\navigation.html:23
-msgid "New"
-msgstr "Neu"
-
-#: .\bizwiz\common\templates\common\navigation.html:24
-msgid "Browse"
-msgstr "Übersicht"
-
-#: .\bizwiz\common\templates\common\navigation.html:29
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#: .\bizwiz\common\templates\common\navigation.html:68
+#: .\bizwiz\common\templates\common\navigation.html:24
+msgid "Articles"
+msgstr "Artikel"
+
+#: .\bizwiz\common\templates\common\navigation.html:27
+#: .\bizwiz\common\templates\common\navigation.html:37
+msgid "New"
+msgstr "Neu"
+
+#: .\bizwiz\common\templates\common\navigation.html:28
+#: .\bizwiz\common\templates\common\navigation.html:39
+msgid "Browse"
+msgstr "Übersicht"
+
+#: .\bizwiz\common\templates\common\navigation.html:33
+msgid "Customers"
+msgstr "Kunden"
+
+#: .\bizwiz\common\templates\common\navigation.html:79
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: .\bizwiz\common\templates\common\navigation.html:80
+#: .\bizwiz\common\templates\common\navigation.html:91
 msgid "Login"
 msgstr "Einloggen"
 
