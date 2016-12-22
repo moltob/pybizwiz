@@ -47,7 +47,10 @@ class Create(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.FormV
     template_name = 'articles/article_create.html'
 
     def get_context_data(self, **kwargs):
-        article_formset = ArticleFormset(queryset=Article.objects.none())
+        if self.request.method in ('POST', 'PUT'):
+            article_formset = ArticleFormset(self.request.POST)
+        else:
+            article_formset = ArticleFormset(queryset=Article.objects.none())
         return super().get_context_data(formset=article_formset, **kwargs)
 
     def post(self, request, *args, **kwargs):
