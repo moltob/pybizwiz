@@ -59,3 +59,14 @@ class Customer(models.Model):
     class Meta:
         verbose_name = _("Customer")
         verbose_name_plural = _("Customers")
+
+    def full_name(self):
+        return '{}, {}'.format(self.last_name, self.first_name)
+
+    def __str__(self):
+        data = [self.full_name()]
+        if self.company_name:
+            data.append('({})'.format(self.company_name))
+        if self.street_address or self.city:
+            data.append('@ {}, {} {}'.format(self.street_address, self.zip_code, self.city))
+        return ' '.join(data)

@@ -12,9 +12,16 @@ import csv
 import logging
 import os
 
+import collections
 import django.db.transaction
 
 _logger = logging.getLogger('import-bw2')
+
+Bw2Article = collections.namedtuple('Bw2Article', 'id invoice_text last_price outdated')
+Bw2Customer = collections.namedtuple('Bw2Customer', 'id last_name first_name title company_name '
+                                                    'street_address zip_code city salutation '
+                                                    'phone_number mobile_number email shoot_1_date '
+                                                    'shoot_2_date shoot_3_date shoot_4_date notes')
 
 
 class Bw2Importer:
@@ -25,7 +32,8 @@ class Bw2Importer:
     def run(self):
         _logger.info('Importing Bizwiz 2 data from {}.'.format(self.folderpath))
         django.setup()
-        self.import_articles()
+        articles = self.import_articles()
+        customers = self.import_customers()
 
     def exported_filepath(self, modelname):
         filename = '{}{}.csv'.format(self.prefix, modelname)
@@ -44,16 +52,68 @@ class Bw2Importer:
     def import_articles(self):
         from bizwiz.articles.models import Article
 
-        count = 0
-        for bw2_id, invoice_text, last_price, outdated in self.imported_objects('Article', Article):
-            if "rabatt" in invoice_text.lower():
-                _logger.info('Skipping import of rebate article: {}.'.format(invoice_text))
+        articles = {}
+        unique_article_names = set()
+        bw2_articles = (Bw2Article(*fields) for fields in self.imported_objects('Article', Article))
+        for bw2_article in bw2_articles:
+            if "rabatt" in bw2_article.invoice_text.lower():
+                _logger.info('Skipping import of rebate: {}.'.format(bw2_article.invoice_text))
             else:
-                article = Article(name=invoice_text, price=last_price, inactive=outdated)
-                article.save()
-                count += 1
+                article = Article(name=bw2_article.invoice_text.strip(),
+                                  price=bw2_article.last_price.strip(),
+                                  inactive=bw2_article.outdated.strip())
 
-        _logger.info('Imported {} articles.'.format(count))
+                if article.name in unique_article_names:
+                    _logger.warning('Article {} {} violates unique naming condition and'
+                                    ' must be deduplicated.'.
+                                    format(bw2_article.id, bw2_article.invoice_text))
+                else:
+                    unique_article_names.add(article.name)
+                    article.save()
+                    articles[int(bw2_article.id)] = article
+
+        _logger.info('Imported {} articles.'.format(len(articles)))
+        self.delete_duplicates('Kontaktabzug behalten', articles, 115, (118,))
+        return articles
+
+    def import_customers(self):
+        from bizwiz.customers.models import Customer
+
+        customers = {}
+        bw2_customers = (Bw2Customer(*fields) for fields in
+                         self.imported_objects('Customer', Customer))
+
+        for bw2_customer in bw2_customers:
+            customer = Customer(last_name=bw2_customer.last_name.strip(),
+                                first_name=bw2_customer.first_name.strip(),
+                                title=bw2_customer.title.strip(),
+                                company_name=bw2_customer.company_name.strip(),
+                                street_address=bw2_customer.street_address.strip(),
+                                zip_code=bw2_customer.zip_code.strip(),
+                                city=bw2_customer.city.strip(),
+                                phone_number=bw2_customer.phone_number.strip(),
+                                mobile_number=bw2_customer.mobile_number.strip(),
+                                email=bw2_customer.email.strip(),
+                                notes=bw2_customer.notes.strip())
+            customer.save()
+            customers[int(bw2_customer.id)] = customer
+
+        _logger.info('Imported {} customers.'.format(len(customers)))
+        self.delete_duplicates('Frank Hemmer, M-Wert', customers, 1224, (1222, 1223, 1225))
+        self.delete_duplicates('Konstantin Körner', customers, 1105, (1116, 1117))
+        return customers
+
+    @staticmethod
+    def delete_duplicates(description, objects, keep_id, duplicate_ids):
+        keep_object = objects[keep_id]
+        for duplicate in duplicate_ids:
+            duplicate_object = objects.get(duplicate)
+            objects[duplicate] = keep_object
+            _logger.info('Deduplication "{}":\n  From: {}\n  To:   {}'.format(description,
+                                                                              duplicate_object,
+                                                                              keep_object))
+            if duplicate_object:
+                duplicate_object.delete()
 
 
 def main():
