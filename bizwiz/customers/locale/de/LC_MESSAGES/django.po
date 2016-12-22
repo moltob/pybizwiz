@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-22 12:01+0100\n"
+"POT-Creation-Date: 2016-12-22 17:14+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,54 +17,71 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: .\bizwiz\customers\models.py:7
+
+#: .\bizwiz\customers\models.py:13
 msgid "Last name"
 msgstr "Nachname"
 
-#: .\bizwiz\customers\models.py:11
+#: .\bizwiz\customers\models.py:17
 msgid "First name"
 msgstr "Vorname"
 
-#: .\bizwiz\customers\models.py:15
+#: .\bizwiz\customers\models.py:21
+msgid "Salutation"
+msgstr "Anrede"
+
+#: .\bizwiz\customers\models.py:24
+msgid "Mr."
+msgstr "Herr"
+
+#: .\bizwiz\customers\models.py:25
+msgid "Mrs."
+msgstr "Frau"
+
+#: .\bizwiz\customers\models.py:26
+msgid "Family"
+msgstr "Familie"
+
+#: .\bizwiz\customers\models.py:30
 msgid "Title"
 msgstr "Titel"
 
-#: .\bizwiz\customers\models.py:20
+#: .\bizwiz\customers\models.py:35
 msgid "Company name"
 msgstr "Firma"
 
-#: .\bizwiz\customers\models.py:25
+#: .\bizwiz\customers\models.py:40
 msgid "Street address"
 msgstr "Straße"
 
-#: .\bizwiz\customers\models.py:30
+#: .\bizwiz\customers\models.py:45
 msgid "Zip code"
 msgstr "Postleitzahl"
 
-#: .\bizwiz\customers\models.py:35
+#: .\bizwiz\customers\models.py:50
 msgid "City"
 msgstr "Stadt"
 
-#: .\bizwiz\customers\models.py:40
+#: .\bizwiz\customers\models.py:55
 msgid "Phone number"
 msgstr "Telefon"
 
-#: .\bizwiz\customers\models.py:45
+#: .\bizwiz\customers\models.py:60
 msgid "Mobile number"
 msgstr "Mobiltelefon"
 
-#: .\bizwiz\customers\models.py:50
+#: .\bizwiz\customers\models.py:65
 msgid "Email address"
 msgstr "Email Adresse"
 
-#: .\bizwiz\customers\models.py:55
+#: .\bizwiz\customers\models.py:70
 msgid "Notes"
 msgstr "Notizen"
 
-#: .\bizwiz\customers\models.py:60
+#: .\bizwiz\customers\models.py:75
 msgid "Customer"
 msgstr "Kunde"
 
-#: .\bizwiz\customers\models.py:61
+#: .\bizwiz\customers\models.py:76
 msgid "Customers"
 msgstr "Kunden"
