@@ -77,7 +77,9 @@ class Bw2Importer:
         return articles
 
     def import_customers(self):
-        from bizwiz.customers.models import Customer
+        from bizwiz.customers.models import Customer, Salutation
+
+        salutation = [Salutation.MR, Salutation.MRS, Salutation.FAMILY]
 
         customers = {}
         bw2_customers = (Bw2Customer(*fields) for fields in
@@ -86,6 +88,7 @@ class Bw2Importer:
         for bw2_customer in bw2_customers:
             customer = Customer(last_name=bw2_customer.last_name.strip(),
                                 first_name=bw2_customer.first_name.strip(),
+                                salutation=salutation[int(bw2_customer.salutation) - 1],
                                 title=bw2_customer.title.strip(),
                                 company_name=bw2_customer.company_name.strip(),
                                 street_address=bw2_customer.street_address.strip(),
@@ -97,7 +100,10 @@ class Bw2Importer:
                                 notes=bw2_customer.notes.strip())
 
             if customer.last_name.startswith('-'):
-                customer.last_name = customer.last_name[1:]
+                old = customer.last_name
+                new = old[1:]
+                _logger.info('Clean up: "{}" --> "{}"'.format(old, new))
+                customer.last_name = new
 
             customer.save()
             customers[int(bw2_customer.id)] = customer

@@ -2,6 +2,12 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 
+class Salutation:
+    MR = 'MR'
+    MRS = 'MRS'
+    FAMILY = 'FAMILY'
+
+
 class Customer(models.Model):
     last_name = models.CharField(
         _("Last name"),
@@ -10,6 +16,15 @@ class Customer(models.Model):
     first_name = models.CharField(
         _("First name"),
         max_length=50
+    )
+    salutation = models.CharField(
+        _("Salutation"),
+        max_length=20,
+        choices=(
+            (Salutation.MR, _("Mr.")),
+            (Salutation.MRS, _("Mrs.")),
+            (Salutation.FAMILY, _("Family")),
+        )
     )
     title = models.CharField(
         _("Title"),
