@@ -13,6 +13,14 @@ FORM_FACTORY_OPTIONS = dict(
         'price': _("Unit price"),
         'inactive': _("Inactive, no longer in use"),
     },
+    help_texts={
+        'inactive': _("Inactive articles can no longer be used in projects and invoices.")
+    },
+    error_messages={
+        'name': {
+            'unique': _("An other article already has this name, please choose a different one."),
+        }
+    }
 )
 
 ArticleForm = forms.modelform_factory(Article, **FORM_FACTORY_OPTIONS)
