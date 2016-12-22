@@ -15,6 +15,9 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+                <li class="{% if 'overview' in request.path %}active{% endif %}">
+                    <a href="{% comment %}{% url 'invoice:overview' %}{% endcomment %}#">{% trans 'Invoices' %}</a>
+                </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
                         {% trans 'Articles' %} <span class="caret"></span>
@@ -24,8 +27,14 @@
                         <li><a href="{% url 'articles:list_active' %}">{% trans 'Browse' %}</a></li>
                     </ul>
                 </li>
-                <li class="{% if 'overview' in request.path %}active{% endif %}">
-                    <a href="{% comment %}{% url 'invoice:overview' %}{% endcomment %}#">{% trans 'Invoices' %}</a>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                        {% trans 'Customers' %} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% comment %}{% url 'customers:create' %}{% endcomment %}#">{% trans 'New' %}</a></li>
+                        <li><a href="{% comment %}{% url 'customers:list_active' %}{% endcomment %}#">{% trans 'Browse' %}</a></li>
+                    </ul>
                 </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">

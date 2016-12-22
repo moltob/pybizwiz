@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'bizwiz.accounts',
     'bizwiz.articles',
     'bizwiz.common',
+    'bizwiz.customers',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
