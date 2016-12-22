@@ -38,8 +38,10 @@ class BaseArticleFormset(forms.BaseModelFormSet):
     helper.form_show_labels = False
     helper.layout = layout.Layout(
         layout.Row(
-            layout.Div('name', css_class='col-lg-9'),
-            layout.Div('price', css_class='col-lg-2'),
+            # since a dynamic formset is used, there is no need to allow posting empty fields for
+            # unused extra forms, so all fields can be explicitly required:
+            layout.Div(layout.Field('name', required=''), css_class='col-lg-9'),
+            layout.Div(layout.Field('price', required=''), css_class='col-lg-2', required=''),
             layout.Div(remove_form_button_factory(), css_class='col-lg-1 text-right'),
             layout.Field('DELETE', style='display:none;'),
             data_formset_form='',
