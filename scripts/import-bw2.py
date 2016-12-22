@@ -95,6 +95,10 @@ class Bw2Importer:
                                 mobile_number=bw2_customer.mobile_number.strip(),
                                 email=bw2_customer.email.strip(),
                                 notes=bw2_customer.notes.strip())
+
+            if customer.last_name.startswith('-'):
+                customer.last_name = customer.last_name[1:]
+
             customer.save()
             customers[int(bw2_customer.id)] = customer
 

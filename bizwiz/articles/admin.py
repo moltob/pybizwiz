@@ -4,7 +4,8 @@ from bizwiz.articles.models import Article
 
 
 class ArticleAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'price', 'inactive')
+    search_fields = ('name',)
 
 
 admin.site.register(Article, ArticleAdmin)
