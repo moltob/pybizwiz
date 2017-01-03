@@ -1,8 +1,13 @@
 import django_tables2 as tables
+from django import urls
 from django.contrib.auth import mixins
+from django.contrib.messages import views
 from django.db import models
+from django.utils.translation import ugettext as _
+from django.views import generic
 
 from bizwiz.common.views import SizedColumnsMixin
+from bizwiz.customers.forms import UpdateForm
 from bizwiz.customers.models import Customer
 
 
@@ -37,3 +42,16 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView)
                                                  models.Q(city__icontains=strfilter))
 
         return super().get_queryset()
+
+
+class Update(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.UpdateView):
+    model = Customer
+    success_url = urls.reverse_lazy('customers:list')
+    form_class = UpdateForm
+
+    def form_valid(self, form):
+        if form.has_changed():
+            self.success_message = _("Updated: %(last_name)s, %(first_name)s")
+        else:
+            self.success_message = ""
+        return super().form_valid(form)
