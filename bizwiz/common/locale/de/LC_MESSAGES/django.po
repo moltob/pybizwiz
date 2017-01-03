@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-22 17:14+0100\n"
+"POT-Creation-Date: 2017-01-03 13:43+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,7 +32,7 @@ msgid "New"
 msgstr "Neu"
 
 #: .\bizwiz\common\templates\common\navigation.html:28
-#: .\bizwiz\common\templates\common\navigation.html:39
+#: .\bizwiz\common\templates\common\navigation.html:38
 msgid "Browse"
 msgstr "Übersicht"
 
@@ -40,11 +40,11 @@ msgstr "Übersicht"
 msgid "Customers"
 msgstr "Kunden"
 
-#: .\bizwiz\common\templates\common\navigation.html:79
+#: .\bizwiz\common\templates\common\navigation.html:78
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: .\bizwiz\common\templates\common\navigation.html:91
+#: .\bizwiz\common\templates\common\navigation.html:90
 msgid "Login"
 msgstr "Einloggen"
 

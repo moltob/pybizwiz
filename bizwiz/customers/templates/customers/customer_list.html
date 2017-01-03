@@ -2,59 +2,11 @@
 
 {% load i18n %}
 {% load common.pagination %}
+{% load django_tables2 %}
 
 {% block content %}
     <div class="page-header"><h1>{% trans 'Customers' %}</h1></div>
 
-    <table class="table table-striped">
-        {% comment %}
-        <colgroup>
-            <col style="width:75%">
-            <col style="width:25%">
-        </colgroup>
-        {% endcomment %}
-        <thead>
-        <tr>
-            <th>
-                {% ordering_link _("Last name") 'last_name' order_by order_dir %}
-            </th>
-            <th>
-                {% ordering_link _("First name") 'first_name' order_by order_dir %}
-            </th>
-            <th>
-                {% ordering_link _("Company name") 'company_name' order_by order_dir %}
-            </th>
-            <th>
-                {% ordering_link _("Email address") 'email' order_by order_dir %}
-            </th>
-            <th>
-                {% ordering_link _("City") 'city' order_by order_dir %}
-            </th>
-            <th>
-                {% ordering_link _("Street address") 'street_address' order_by order_dir %}
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for customer in customer_list %}
-            <tr>
-                <td>
-                    <a href="{% comment %}{% url 'customers:update' customer.pk %}{% endcomment %}#">
-                        {{ customer.last_name }}
-                    </a>
-                </td>
-                <td>{{ customer.first_name }}</td>
-                <td>{{ customer.company_name }}</td>
-                <td>{{ customer.email}}</td>
-                <td>{{ customer.city}}</td>
-                <td>{{ customer.street_address}}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="text-right">
-        {% include 'common/pagination-bar.html' %}
-    </div>
+    {% render_table table %}
 
 {% endblock content %}

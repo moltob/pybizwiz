@@ -1,0 +1,25 @@
+{% extends "django_tables2/bootstrap.html" %}
+{% load django_tables2 %}
+{% load i18n %}
+
+{% block table.thead %}
+    {% if widths %}
+        <colgroup>
+            {% for width in widths %}
+                <col style="width:{{ width }}">
+            {% endfor %}
+        </colgroup>
+    {% endif %}
+    {{ block.super }}
+{% endblock table.thead %}
+
+{% block pagination.previous %}
+    <a href="{% querystring table.prefixed_page_field=table.page.previous_page_number %}"
+       class="btn btn-default">«</a>
+{% endblock pagination.previous %}
+
+{% block pagination.next %}
+    <a href="{% querystring table.prefixed_page_field=table.page.next_page_number %}"
+       class="btn btn-default">»</a>
+{% endblock pagination.next %}
+
