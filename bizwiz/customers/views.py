@@ -48,18 +48,19 @@ class EditMixin(views.SuccessMessageMixin):
     model = Customer
     success_url = urls.reverse_lazy('customers:list')
     form_class = UpdateForm
+    specific_success_message = None
 
     def form_valid(self, form):
         if form.has_changed():
-            self.success_message = _("Updated: %(last_name)s, %(first_name)s")
+            self.success_message = self.specific_success_message
         else:
             self.success_message = ""
         return super().form_valid(form)
 
 
 class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
-    pass
+    specific_success_message = _("Updated: %(last_name)s, %(first_name)s")
 
 
 class Create(mixins.LoginRequiredMixin, EditMixin, generic.CreateView):
-    pass
+    specific_success_message = _("Created: %(last_name)s, %(first_name)s")
