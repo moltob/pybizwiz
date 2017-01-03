@@ -44,7 +44,7 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView)
         return super().get_queryset()
 
 
-class Update(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.UpdateView):
+class EditMixin(views.SuccessMessageMixin):
     model = Customer
     success_url = urls.reverse_lazy('customers:list')
     form_class = UpdateForm
@@ -55,3 +55,11 @@ class Update(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.Updat
         else:
             self.success_message = ""
         return super().form_valid(form)
+
+
+class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
+    pass
+
+
+class Create(mixins.LoginRequiredMixin, EditMixin, generic.CreateView):
+    pass
