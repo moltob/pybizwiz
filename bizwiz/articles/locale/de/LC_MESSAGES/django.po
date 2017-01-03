@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-03 16:26+0100\n"
+"POT-Creation-Date: 2017-01-03 20:00+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -45,7 +45,7 @@ msgid "Article"
 msgstr "Artikel"
 
 #: .\bizwiz\articles\models.py:28
-#: .\bizwiz\articles\templates\articles\article_list.html:8
+#: .\bizwiz\articles\templates\articles\article_list.html:9
 msgid "Articles"
 msgstr "Artikel"
 
@@ -57,19 +57,19 @@ msgstr "Artikel hinzufügen"
 msgid "Edit article"
 msgstr "Artikel bearbeiten"
 
-#: .\bizwiz\articles\templates\articles\article_list.html:12
+#: .\bizwiz\articles\templates\articles\article_list.html:13
 msgid "Hide inactive"
 msgstr "Inaktive ausblenden"
 
-#: .\bizwiz\articles\templates\articles\article_list.html:17
+#: .\bizwiz\articles\templates\articles\article_list.html:18
 msgid "Show inactive"
 msgstr "Inaktive anzeigen"
 
-#: .\bizwiz\articles\views.py:70
+#: .\bizwiz\articles\views.py:77
 #, python-format
 msgid "Updated: %(name)s"
 msgstr "Gespeichert: %(name)s"
 
-#: .\bizwiz\articles\views.py:102
+#: .\bizwiz\articles\views.py:109
 msgid "Added: {}."
 msgstr "Hinzugefügt: {}"
