@@ -11,6 +11,14 @@ class Welcome(TemplateView):
         return super().get_context_data(version=BIZWIZ_VERSION, **kwargs)
 
 
+class SizedColumnsMixin:
+    """Provides column sizes for table to HTML template."""
+    column_widths = None
+
+    def get_context_data(self, **kwargs):
+        return super().get_context_data(column_widths=self.column_widths)
+
+
 class OrderedListViewMixin:
     @property
     def order_by(self):

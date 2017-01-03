@@ -1,9 +1,7 @@
 import django_tables2 as tables
 from django.contrib.auth import mixins
-from django.core import paginator
-from django.views import generic
 
-from bizwiz.common.views import OrderedListViewMixin
+from bizwiz.common.views import SizedColumnsMixin
 from bizwiz.customers.models import Customer
 
 
@@ -20,10 +18,7 @@ class CustomerTable(tables.Table):
         order_by = ('last_name', 'first_name')
 
 
-class List(mixins.LoginRequiredMixin, tables.SingleTableMixin, generic.ListView):
+class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
     model = Customer
     table_class = CustomerTable
-    widths = ('20%', '15%', '20%', '20%', '10%', '15%',)
-
-    def get_context_data(self, **kwargs):
-        return super().get_context_data(widths=self.widths)
+    column_widths = ('20%', '15%', '20%', '20%', '10%', '15%',)

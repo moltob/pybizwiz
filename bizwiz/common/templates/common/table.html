@@ -3,9 +3,9 @@
 {% load i18n %}
 
 {% block table.thead %}
-    {% if widths %}
+    {% if column_widths %}
         <colgroup>
-            {% for width in widths %}
+            {% for width in column_widths %}
                 <col style="width:{{ width }}">
             {% endfor %}
         </colgroup>
