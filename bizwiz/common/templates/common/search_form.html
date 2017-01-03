@@ -1,0 +1,13 @@
+{% load i18n %}
+
+<form method="get">
+    <div class="input-group">
+        <input type="text" name="{{ query_field_name }}" class="form-control"
+               placeholder="{% trans 'Search...' %}" value="{{ query_field_value }}">
+        <span class="input-group-btn">
+            <button class="btn btn-default" type="submit">
+                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+            </button>
+        </span>
+    </div>
+</form>

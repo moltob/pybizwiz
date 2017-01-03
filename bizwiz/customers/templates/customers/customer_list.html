@@ -1,6 +1,7 @@
 {% extends "common/base.html" %}
 
 {% load i18n %}
+{% load common.search %}
 {% load django_tables2 %}
 
 {% block content %}
@@ -8,22 +9,11 @@
 
     <div class="row">
         <div class="col-lg-4">
-            <form method="get">
-                <div class="input-group">
-                    <input type="text" name="q" class="form-control"
-                           placeholder="{% trans 'Search for...' %}" value="{{ request.GET.q }}">
-                    <span class="input-group-btn">
-                    <button class="btn btn-default" type="submit">
-                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                    </button>
-                </span>
-                </div>
-            </form>
+            {% search_form %}
         </div>
     </div>
 
     <div class="voffset3">
         {% render_table table %}
     </div>
-
 {% endblock content %}
