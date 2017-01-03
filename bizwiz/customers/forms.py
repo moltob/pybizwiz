@@ -12,4 +12,27 @@ class UpdateForm(CostumerForm):
     helper.form_class = 'form-horizontal'
     helper.label_class = 'col-lg-2'
     helper.field_class = 'col-lg-8'
+    helper.layout = layout.Layout(
+        'last_name',
+        'first_name',
+        'salutation',
+        'title',
+        'company_name',
+        layout.Fieldset(
+            _("Address"),
+            'street_address',
+            'zip_code',
+            'city',
+        ),
+        layout.Fieldset(
+            _("Contact data"),
+            'phone_number',
+            'mobile_number',
+            'email',
+        ),
+        layout.Fieldset(
+            _("Additional"),
+            'notes',
+        ),
+    )
     helper.add_input(layout.Submit('submit', _("Submit")))
