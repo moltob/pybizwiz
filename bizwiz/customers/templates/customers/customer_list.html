@@ -6,6 +6,24 @@
 {% block content %}
     <div class="page-header"><h1>{% trans 'Customers' %}</h1></div>
 
-    {% render_table table %}
+    <div class="row">
+        <div class="col-lg-4">
+            <form method="get">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control"
+                           placeholder="{% trans 'Search for...' %}" value="{{ request.GET.q }}">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                </span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="voffset3">
+        {% render_table table %}
+    </div>
 
 {% endblock content %}
