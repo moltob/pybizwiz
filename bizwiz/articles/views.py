@@ -2,6 +2,7 @@ import django_tables2 as tables
 from django import urls
 from django.contrib.auth import mixins
 from django.contrib.messages import views
+from django.db import models
 from django.utils.translation import ugettext as _
 from django.views import generic
 
@@ -49,6 +50,11 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView)
         if not self.kwargs['show_inactive']:
             self.count_inactive = self.queryset.filter(inactive=True).count()
             self.queryset = self.queryset.filter(inactive=False)
+
+        strfilter = self.request.GET.get('q')
+        if strfilter:
+            self.queryset = self.queryset.filter(models.Q(name__icontains=strfilter) |
+                                                 models.Q(price__icontains=strfilter))
 
         return super().get_queryset()
 

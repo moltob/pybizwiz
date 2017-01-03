@@ -1,6 +1,7 @@
 {% extends "common/base.html" %}
 
 {% load i18n %}
+{% load common.search %}
 {% load django_tables2 %}
 
 {% block content %}
@@ -20,6 +21,14 @@
         </h1>
     </div>
 
-    {% render_table table %}
+    <div class="row">
+        <div class="col-lg-4">
+            {% search_form %}
+        </div>
+    </div>
+
+    <div class="voffset3">
+        {% render_table table %}
+    </div>
 
 {% endblock content %}
