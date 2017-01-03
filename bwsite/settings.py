@@ -26,7 +26,7 @@ SECRET_KEY = '&dw26r488i80f#3g7ncj^x#+zvl(wv0=mh*%dkyd9qx4j56rc0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['pybizwiz-moltob.c9users.io']
+ALLOWED_HOSTS = ['pybizwiz-moltob.c9users.io', '127.0.0.1']
 
 # Application definition
 
