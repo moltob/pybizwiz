@@ -17,6 +17,7 @@ class CustomerTable(tables.Table):
         per_page = 15
         model = Customer
         fields = ('last_name', 'first_name', 'company_name', 'street_address', 'zip_code', 'city',)
+        order_by = ('last_name', 'first_name')
 
 
 class List(mixins.LoginRequiredMixin, tables.SingleTableMixin, generic.ListView):
