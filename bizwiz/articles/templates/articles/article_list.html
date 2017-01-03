@@ -1,52 +1,25 @@
 {% extends "common/base.html" %}
 
 {% load i18n %}
-{% load common.pagination %}
+{% load django_tables2 %}
 
 {% block content %}
-    <div class="page-header"><h1>{% trans 'Articles' %}</h1></div>
-
-    <table class="table table-striped">
-        <colgroup>
-            <col style="width:75%">
-            <col style="width:25%">
-        </colgroup>
-        <thead>
-        <tr>
-            <th>
-                {% ordering_link _("Invoice text") 'name' order_by order_dir %}
-            </th>
-            <th class="text-right">
-                {% ordering_link _("Unit price") 'price' order_by order_dir %}
-            </th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for article in article_list %}
-            <tr>
-                <td><a href="{% url 'articles:update' article.pk %}">
-                    {% if article.inactive %}<s>{% endif %}
-                    {{ article.name }}
-                    {% if article.inactive %}</s>{% endif %}
-                </a></td>
-                <td class="text-right">{{ article.price }} &euro;</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <div class="text-right">
-        {% if show_inactive %}
-            <a class="btn btn-default" href="{% url 'articles:list_active' %}" role="button">
-                {% trans 'Hide inactive' %}
-            </a>
-        {% else %}
-            <a class="btn btn-default" href="{% url 'articles:list' %}"
-               role="button">
-                {% trans 'Show inactive' %}
-            </a>
-        {% endif %}
-        {% include 'common/pagination-bar.html' %}
+    <div class="page-header">
+        <h1>{% trans 'Articles' %}
+            {% if show_inactive %}
+                <a class="btn btn-default pull-right" href="{% url 'articles:list_active' %}"
+                   role="button">
+                    {% trans 'Hide inactive' %}
+                </a>
+            {% else %}
+                <a class="btn btn-default pull-right" href="{% url 'articles:list' %}"
+                   role="button">
+                    {% trans 'Show inactive' %} <span class="badge">{{ count_inactive }}</span>
+                </a>
+            {% endif %}
+        </h1>
     </div>
+
+    {% render_table table %}
 
 {% endblock content %}

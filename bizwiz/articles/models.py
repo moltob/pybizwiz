@@ -15,7 +15,7 @@ class Article(models.Model):
         decimal_places=2
     )
     inactive = models.BooleanField(
-        _("No longer used."),
+        _("Inactive"),
         default=False,
         help_text=_("Inactive articles can no longer be used in projects and invoices.")
     )

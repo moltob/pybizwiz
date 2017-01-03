@@ -1,3 +1,4 @@
+import django_tables2 as tables
 from django import urls
 from django.contrib.auth import mixins
 from django.contrib.messages import views
@@ -6,26 +7,58 @@ from django.views import generic
 
 from bizwiz.articles.forms import UpdateForm, CreateForm, ArticleFormset
 from bizwiz.articles.models import Article
-from bizwiz.common.views import OrderedListViewMixin
+from bizwiz.common.views import SizedColumnsMixin
 
 
-class List(mixins.LoginRequiredMixin, OrderedListViewMixin, generic.ListView):
+class ArticleTable(tables.Table):
+    name = tables.LinkColumn('articles:update', args=[tables.utils.A('pk')])
+    price = tables.Column(attrs={
+        'th': {'class': 'text-right'},
+        'td': {'class': 'text-right'}
+    })
+    inactive = tables.BooleanColumn(yesno='✔,', attrs={
+        'th': {'class': 'text-center'},
+        'td': {'class': 'text-center'},
+    })
+
+    class Meta:
+        template = 'common/table.html'
+        attrs = {'class': 'table table-striped'}
+        per_page = 15
+        model = Article
+        fields = ('name', 'price', 'inactive')
+        order_by = ('name',)
+
+
+class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
     model = Article
-    ordering = 'name'
-    paginate_by = 15
+    table_class = ArticleTable
+    column_widths = ('73%', '20%', '7%',)
+    count_inactive = None
 
     def get_context_data(self, **kwargs):
         # pass view argument (from URL) to context:
-        return super().get_context_data(show_inactive=self.kwargs['show_inactive'], **kwargs)
+        return super().get_context_data(show_inactive=self.kwargs['show_inactive'],
+                                        count_inactive=self.count_inactive,
+                                        **kwargs)
 
     def get_queryset(self):
         self.queryset = Article.objects.all()
 
         # only show inactive elements if requested:
         if not self.kwargs['show_inactive']:
+            self.count_inactive = self.queryset.filter(inactive=True).count()
             self.queryset = self.queryset.filter(inactive=False)
 
         return super().get_queryset()
+
+    def get_table(self, **kwargs):
+        table = super().get_table(**kwargs)
+        if self.kwargs['show_inactive']:
+            table.exclude = ()
+        else:
+            table.exclude = ('inactive',)
+        return table
 
 
 class Update(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.UpdateView):
