@@ -23,7 +23,7 @@ class CustomerTable(tables.Table):
 class List(mixins.LoginRequiredMixin, tables.SingleTableMixin, generic.ListView):
     model = Customer
     table_class = CustomerTable
-    widths = ('20%', '15%', '20%', '20%', '5%', '20%',)
+    widths = ('20%', '15%', '20%', '20%', '10%', '15%',)
 
     def get_context_data(self, **kwargs):
         return super().get_context_data(widths=self.widths)
