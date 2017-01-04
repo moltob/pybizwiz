@@ -13,10 +13,10 @@ class UpdateForm(CostumerForm):
     helper.label_class = 'col-lg-2'
     helper.field_class = 'col-lg-8'
     helper.layout = layout.Layout(
-        'last_name',
-        'first_name',
         'salutation',
         'title',
+        'first_name',
+        'last_name',
         'company_name',
         layout.Fieldset(
             _("Address"),
