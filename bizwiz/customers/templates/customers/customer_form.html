@@ -6,6 +6,33 @@
 {% block content %}
     <div class="page-header"><h1>{% trans 'Edit customer' %}</h1></div>
 
+    {% if form.duplicates %}
+        <div class="panel panel-danger">
+            <div class="panel-heading">
+                <strong>
+                    {% blocktrans %}
+                        The name you entered is the same for the customers listed below.
+                    {% endblocktrans %}
+                </strong>
+            </div>
+            <div class="panel-body">
+                <p>
+                    {% blocktrans %}
+                        Please change last name or first name or check the box below to confirm the
+                        currently chosen name.
+                    {% endblocktrans %}
+
+                </p>
+                <ul>
+                    {% for duplicate in form.duplicates %}
+                        <li><a href="{% url 'customers:update' duplicate.pk %}">{{ duplicate }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+
     {% crispy form %}
 
 {% endblock content %}

@@ -6,10 +6,12 @@ from django.utils.translation import ugettext as _
 from bizwiz.articles.models import Article
 from bizwiz.common.dynamic_formset import remove_form_button_factory
 
-ArticleForm = forms.modelform_factory(Article, fields='__all__')
 
+class UpdateForm(forms.ModelForm):
+    class Meta:
+        model = Article
+        fields = '__all__'
 
-class UpdateForm(ArticleForm):
     helper = helper.FormHelper()
     helper.form_class = 'form-horizontal'
     helper.label_class = 'col-lg-2'
