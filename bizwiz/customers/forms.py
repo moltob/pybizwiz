@@ -9,9 +9,6 @@ CostumerForm = forms.modelform_factory(Customer, fields='__all__')
 
 class UpdateForm(CostumerForm):
     helper = helper.FormHelper()
-    #helper.form_class = 'form-horizontal'
-    #helper.label_class = 'col-lg-2'
-    #helper.field_class = 'col-lg-8'
     helper.layout = layout.Layout(
         layout.Row(
             layout.Div('salutation', css_class='col-lg-3'),
@@ -48,5 +45,7 @@ class UpdateForm(CostumerForm):
                 layout.Div('notes', css_class='col-lg-12'),
             ),
         ),
+        layout.Row(
+            layout.Div(layout.Submit('submit', _("Submit")), css_class='col-lg-1')
+        ),
     )
-    helper.add_input(layout.Submit('submit', _("Submit")))
