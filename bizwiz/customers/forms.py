@@ -1,4 +1,4 @@
-from crispy_forms import helper, layout
+from crispy_forms import helper, layout, bootstrap
 from django import forms
 from django.utils.translation import ugettext as _
 
@@ -21,31 +21,29 @@ class UpdateForm(CostumerForm):
         layout.Row(
             layout.Div('company_name', css_class='col-lg-6'),
         ),
-        layout.Fieldset(
-            _("Address"),
-            layout.Row(
-                layout.Div('street_address', css_class='col-lg-6'),
-            ),
-            layout.Row(
-                layout.Div('zip_code', css_class='col-lg-2'),
-                layout.Div('city', css_class='col-lg-4'),
-            ),
+        layout.Row(
+            layout.Div('street_address', css_class='col-lg-6'),
         ),
-        layout.Fieldset(
-            _("Contact data"),
-            layout.Row(
-                layout.Div('phone_number', css_class='col-lg-4'),
-                layout.Div('mobile_number', css_class='col-lg-4'),
-                layout.Div('email', css_class='col-lg-4'),
-            ),
+        layout.Row(
+            layout.Div('zip_code', css_class='col-lg-2'),
+            layout.Div('city', css_class='col-lg-4'),
         ),
-        layout.Fieldset(
-            _("Additional"),
-            layout.Row(
-                layout.Div('notes', css_class='col-lg-12'),
+        bootstrap.Accordion(
+            bootstrap.AccordionGroup(
+                _("Additional"),
+                layout.Row(
+                    layout.Div('phone_number', css_class='col-lg-4'),
+                    layout.Div('mobile_number', css_class='col-lg-4'),
+                    layout.Div('email', css_class='col-lg-4'),
+                ),
+                layout.Row(
+                    layout.Div('notes', css_class='col-lg-12'),
+                ),
+                active=False
             ),
         ),
         layout.Row(
             layout.Div(layout.Submit('submit', _("Submit")), css_class='col-lg-1')
         ),
+
     )
