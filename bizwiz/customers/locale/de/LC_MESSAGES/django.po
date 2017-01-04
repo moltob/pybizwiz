@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-03 21:25+0100\n"
+"POT-Creation-Date: 2017-01-04 19:16+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,19 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\bizwiz\customers\forms.py:22
-msgid "Address"
-msgstr "Adresse"
+#: .\bizwiz\customers\forms.py:17
+msgid "Name is correct"
+msgstr "Name ist korrekt"
 
-#: .\bizwiz\customers\forms.py:28
-msgid "Contact data"
-msgstr "Kontaktdaten"
-
-#: .\bizwiz\customers\forms.py:34
+#: .\bizwiz\customers\forms.py:53
 msgid "Additional"
 msgstr "Zusätzliches"
 
-#: .\bizwiz\customers\forms.py:38
+#: .\bizwiz\customers\forms.py:66
 msgid "Submit"
 msgstr "Abschicken"
 
@@ -107,11 +103,45 @@ msgstr "Kunden"
 msgid "Edit customer"
 msgstr "Kunde bearbeiten"
 
+#: .\bizwiz\customers\templates\customers\customer_form.html:13
+msgid ""
+"\n"
+"                        The entered name already exists.\n"
+"                    "
+msgstr ""
+"\n"
+"                        Der eingegebene Name existiert bereits.\n"
+"                    "
+
+#: .\bizwiz\customers\templates\customers\customer_form.html:20
+msgid ""
+"\n"
+"                        The following customers have the same name:\n"
+"                    "
+msgstr ""
+"\n"
+"                        Die folgenden Kunden haben den gleichen Namen:\n"
+"                    "
+
+#: .\bizwiz\customers\templates\customers\customer_form.html:32
+msgid ""
+"\n"
+"                        Please change last name or first name or check the "
+"box to confirm the\n"
+"                        currently chosen name.\n"
+"                    "
+msgstr ""
+"\n"
+"                        Bitte ändern Sie Nach- oder Vornamen oder bestätigen "
+"Sie den aktuellen Namen mithilfe der angezeigten Checkbox.\n"
+"                    "
+
 #: .\bizwiz\customers\views.py:62
 #, python-format
 msgid "Updated: %(last_name)s, %(first_name)s"
 msgstr "Bearbeitet: %(last_name)s, %(first_name)s"
 
 #: .\bizwiz\customers\views.py:66
+#, python-format
 msgid "Created: %(last_name)s, %(first_name)s"
 msgstr "Erstellt: %(last_name)s, %(first_name)s"

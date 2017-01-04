@@ -11,15 +11,14 @@
             <div class="panel-heading">
                 <strong>
                     {% blocktrans %}
-                        The name you entered is the same for the customers listed below.
+                        The entered name already exists.
                     {% endblocktrans %}
                 </strong>
             </div>
             <div class="panel-body">
                 <p>
                     {% blocktrans %}
-                        Please change last name or first name or check the box below to confirm the
-                        currently chosen name.
+                        The following customers have the same name:
                     {% endblocktrans %}
 
                 </p>
@@ -29,6 +28,13 @@
                         </li>
                     {% endfor %}
                 </ul>
+                <p>
+                    {% blocktrans %}
+                        Please change last name or first name or check the box to confirm the
+                        currently chosen name.
+                    {% endblocktrans %}
+
+                </p>
             </div>
         </div>
     {% endif %}
