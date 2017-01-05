@@ -36,6 +36,15 @@
                         <li><a href="{% url 'customers:list' %}">{% trans 'Browse' %}</a></li>
                     </ul>
                 </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                        {% trans 'Projects' %} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% comment %} {% url 'projects:create' %}{% endcomment %}">{% trans 'New' %}</a></li>
+                        <li><a href="{% url 'projects:list' %}">{% trans 'Browse' %}</a></li>
+                    </ul>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
                 {% if user.is_authenticated %}
