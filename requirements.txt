@@ -2,3 +2,5 @@ Django
 django-crispy-forms  # HTML rendering and layout of forms and formsets
 django-formset-js    # Client-side adding and deleting of formset rows
 django-tables2       # HTML rendering and layout of table views, sortable, pagination
+pytest
+pytest-django
