@@ -21,6 +21,13 @@ class Project(models.Model):
         blank=True
     )
 
+    class Meta:
+        verbose_name = _("Project")
+        verbose_name_plural = _("Projects")
+
+    def __str__(self):
+        return self.name
+
 
 class CustomerGroup(models.Model):
     """Groups of customers within a project."""
@@ -30,3 +37,11 @@ class CustomerGroup(models.Model):
     )
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     customers = models.ManyToManyField(Customer)
+
+    class Meta:
+        verbose_name = _("Customer group")
+        verbose_name_plural = _("Customer groups")
+
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.project.name)
+
