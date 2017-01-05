@@ -1,3 +1,4 @@
+import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -13,7 +14,7 @@ class Project(models.Model):
     )
     start_date = models.DateField(
         _("Start date"),
-        auto_now=True,
+        default=datetime.date.today,
     )
     notes = models.TextField(
         _("Notes"),

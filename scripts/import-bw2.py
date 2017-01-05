@@ -13,6 +13,8 @@ import logging
 import os
 
 import collections
+
+import datetime
 import django.db.transaction
 
 _logger = logging.getLogger('import-bw2')
@@ -22,6 +24,7 @@ Bw2Customer = collections.namedtuple('Bw2Customer', 'id last_name first_name tit
                                                     'street_address zip_code city salutation '
                                                     'phone_number mobile_number email shoot_1_date '
                                                     'shoot_2_date shoot_3_date shoot_4_date notes')
+Bw2Project = collections.namedtuple('Bw2Project', 'id name notes start_date')
 
 
 class Bw2Importer:
@@ -34,6 +37,7 @@ class Bw2Importer:
         django.setup()
         articles = self.import_articles()
         customers = self.import_customers()
+        projects = self.import_projects()
 
     def exported_filepath(self, modelname):
         filename = '{}{}.csv'.format(self.prefix, modelname)
@@ -112,6 +116,23 @@ class Bw2Importer:
         self.delete_duplicates('Frank Hemmer, M-Wert', customers, 1224, (1222, 1223, 1225))
         self.delete_duplicates('Konstantin Körner', customers, 1105, (1116, 1117))
         return customers
+
+    def import_projects(self):
+        from bizwiz.projects.models import Project
+
+        projects = {}
+        bw2_projects = (Bw2Project(*fields) for fields in self.imported_objects('Project', Project))
+
+        for bw2_project in bw2_projects:
+            project = Project(name=bw2_project.name,
+                              start_date=datetime.datetime.strptime(bw2_project.start_date,
+                                                                    '%Y-%m-%d %H:%M:%S'),
+                              notes=bw2_project.notes)
+            project.save()
+            projects[int(bw2_project.id)] = project
+
+        _logger.info('Imported {} projects.'.format(len(projects)))
+        return projects
 
     @staticmethod
     def delete_duplicates(description, objects, keep_id, duplicate_ids):
