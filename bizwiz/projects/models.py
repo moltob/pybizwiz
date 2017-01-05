@@ -27,7 +27,6 @@ class CustomerGroup(models.Model):
     name = models.CharField(
         _("Name"),
         max_length=50,
-        unique=True,
     )
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     customers = models.ManyToManyField(Customer)

@@ -25,6 +25,9 @@ Bw2Customer = collections.namedtuple('Bw2Customer', 'id last_name first_name tit
                                                     'phone_number mobile_number email shoot_1_date '
                                                     'shoot_2_date shoot_3_date shoot_4_date notes')
 Bw2Project = collections.namedtuple('Bw2Project', 'id name notes start_date')
+Bw2CustomerGroup = collections.namedtuple('Bw2CustomerGroup', 'id name project_id')
+Bw2CustomerInGroupAssoc = collections.namedtuple('Bw2CustomerInGroupAssoc', 'id customer_group_id '
+                                                                            'customer_id')
 
 
 class Bw2Importer:
@@ -38,6 +41,7 @@ class Bw2Importer:
         articles = self.import_articles()
         customers = self.import_customers()
         projects = self.import_projects()
+        customer_groups = self.import_customer_groups(projects, customers)
 
     def exported_filepath(self, modelname):
         filename = '{}{}.csv'.format(self.prefix, modelname)
@@ -45,9 +49,10 @@ class Bw2Importer:
 
     def imported_objects(self, modelname, modelclass):
         with django.db.transaction.atomic():
-            deleted, _ = modelclass.objects.all().delete()
-            if deleted:
-                _logger.info('Deleted {} preexisting {} objects.'.format(deleted, modelname))
+            if modelclass:
+                deleted, _ = modelclass.objects.all().delete()
+                if deleted:
+                    _logger.info('Deleted {} preexisting {} objects.'.format(deleted, modelname))
 
             with open(self.exported_filepath(modelname), encoding='utf-8') as file:
                 for row in csv.reader(file):
@@ -133,6 +138,38 @@ class Bw2Importer:
 
         _logger.info('Imported {} projects.'.format(len(projects)))
         return projects
+
+    def import_customer_groups(self, projects, customers):
+        from bizwiz.projects.models import CustomerGroup
+
+        customer_groups = {}
+        bw2_groups = (Bw2CustomerGroup(*fields) for fields in
+                      self.imported_objects('CustomerGroup', CustomerGroup))
+
+        for bw2_group in bw2_groups:
+            bw2_project_id = int(bw2_group.project_id)
+            group = CustomerGroup(name=bw2_group.name, project=projects[bw2_project_id])
+            group.save()
+            customer_groups[int(bw2_group.id)] = group
+
+        _logger.info('Imported {} customer groups.'.format(len(customer_groups)))
+
+        bw2_assocs = (Bw2CustomerInGroupAssoc(*fields) for fields in
+                                        self.imported_objects('CustomerInGroupAssoc', None))
+
+        count = 0
+        for bw2_assoc in bw2_assocs:
+            group_id = int(bw2_assoc.customer_group_id)
+            customer_id = int(bw2_assoc.customer_id)
+
+            group = customer_groups[group_id]
+            customer = customers[customer_id]
+            group.customers.add(customer)
+            group.save()
+            count += 1
+
+        _logger.info('Added {} customers to groups.'.format(count))
+        return customer_groups
 
     @staticmethod
     def delete_duplicates(description, objects, keep_id, duplicate_ids):
