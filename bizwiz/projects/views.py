@@ -2,12 +2,13 @@ import django_tables2 as tables
 from django import urls
 from django.contrib.auth import mixins
 from django.contrib.messages import views
+from django.db import transaction
 from django.utils.translation import ugettext as _
 from django.views import generic
 
 from bizwiz.common.views import SizedColumnsMixin
 from bizwiz.projects.forms import UpdateForm, CustomerGroupFormset
-from bizwiz.projects.models import Project, CustomerGroup
+from bizwiz.projects.models import Project
 
 
 class ProjectTable(tables.Table):
@@ -64,8 +65,9 @@ class EditMixin(views.SuccessMessageMixin):
         return super().get_context_data(formset=customer_group_formset, **kwargs)
 
     def forms_valid(self, form, customer_group_formset):
-        customer_group_formset.instance = form.save()
-        customer_group_formset.save()
+        with transaction.atomic():
+            customer_group_formset.instance = form.save()
+            customer_group_formset.save()
         if form.has_changed() or customer_group_formset.has_changed():
             self.success_message = self.specific_success_message
         else:
