@@ -6,6 +6,11 @@
 {% load common.crispy_forms %}
 {% load common.dynamic_formset %}
 
+{% block head-content %}
+    <link rel="stylesheet" href="{% static 'chosen/chosen.css' %}"/>
+    <link rel="stylesheet" href="{% static 'common/chosen-bootstrap.css' %}"/>
+{% endblock head-content %}
+
 {% block content %}
     <div class="page-header"><h1>{% trans 'Edit project' %}</h1></div>
 
@@ -14,21 +19,34 @@
         {% dynformset 'formset' formset %}
             {# Headers for crispy forms rendered fields. #}
             <div class="row voffset3">
-                <label class="col-lg-8 control-label requiredField">
+                <label class="col-lg-4 control-label requiredField">
                     {% trans 'Customer Groups' %}
+                </label>
+                <label class="col-lg-7 control-label requiredField">
+                    {{ formset.empty_form.customers.label }}
                 </label>
             </div>
             {% dynformset_body formset %}
-            {% dynformset_add_button 8 %}
-            <div class="row form-group">
-                <div class="col-lg-offset-7 col-lg-2 text-right">
-                    <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
-                </div>
-            </div>
+            {% dynformset_add_button %}
+            {% include 'common/submit-button.html' %}
         {% enddynformset %}
     </form>
 
     {% dynformset_apply '#formset' %}
     {% datetime_picker form.start_date %}
+
+    <script src="{% static 'chosen/chosen.jquery.js' %}"></script>
+    <script>
+        var chosenOptions = {
+            no_results_text: "{% trans 'No results matching' %}",
+            placeholder_text_single: "{% trans 'Start typing...' %}",
+            placeholder_text_multiple: "{% trans 'Start typing...' %}"
+        };
+        $(".chosen").chosen({no_result_text: "{% trans 'Keine Ergebnisse für' %}"});
+        $('#formset').on('formAdded', function (event) {
+            var newForm = event.target;
+            $(newForm).find(".chosen").chosen(chosenOptions);
+        });
+    </script>
 
 {% endblock content %}

@@ -58,12 +58,13 @@ class EditMixin(views.SuccessMessageMixin):
 
     def get_context_data(self, **kwargs):
         if self.request.method in ('POST', 'PUT'):
-            customer_group_formset = CustomerGroupFormset(self.request.POST)
+            customer_group_formset = CustomerGroupFormset(self.request.POST, instance=self.object)
         else:
             customer_group_formset = CustomerGroupFormset(instance=self.object)
         return super().get_context_data(formset=customer_group_formset, **kwargs)
 
     def forms_valid(self, form, customer_group_formset):
+        customer_group_formset.instance = form.save()
         customer_group_formset.save()
         if form.has_changed() or customer_group_formset.has_changed():
             self.success_message = self.specific_success_message
