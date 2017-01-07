@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 15:11+0100\n"
+"POT-Creation-Date: 2017-01-07 18:59+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -47,25 +47,21 @@ msgstr "Kundengruppe"
 msgid "Customer groups"
 msgstr "Kundengruppen"
 
-#: .\bizwiz\projects\templates\projects\project_form.html:10
+#: .\bizwiz\projects\templates\projects\project_form.html:11
 msgid "Edit project"
 msgstr "Projekt bearbeiten"
 
-#: .\bizwiz\projects\templates\projects\project_form.html:18
-#: .\bizwiz\projects\views.py:15
+#: .\bizwiz\projects\templates\projects\project_form.html:19
+#: .\bizwiz\projects\views.py:16
 msgid "Customer Groups"
 msgstr "Kundengruppen"
 
-#: .\bizwiz\projects\templates\projects\project_form.html:25
-msgid "Submit"
-msgstr "Abschicken"
-
-#: .\bizwiz\projects\views.py:76
+#: .\bizwiz\projects\views.py:79
 #, python-format
 msgid "Updated: %(name)s"
 msgstr "Bearbeitet: %(name)s"
 
-#: .\bizwiz\projects\views.py:85
+#: .\bizwiz\projects\views.py:88
 #, python-format
 msgid "Created: %(name)s"
 msgstr "Erstellt: %(name)s"

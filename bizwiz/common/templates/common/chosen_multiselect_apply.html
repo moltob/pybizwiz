@@ -6,7 +6,7 @@
         placeholder_text_single: "{% trans 'Start typing...' %}",
         placeholder_text_multiple: "{% trans 'Start typing...' %}"
     };
-    $(".chosen").chosen({no_result_text: "{% trans 'Keine Ergebnisse für' %}"});
+    $(".chosen").chosen(chosenOptions);
 
     {% for selector in selectors %}
         $('{{ selector }}').on('formAdded', function (event) {
