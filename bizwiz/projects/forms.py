@@ -11,6 +11,9 @@ class UpdateForm(forms.ModelForm):
         model = Project
         fields = '__all__'
 
+    # form requires assets from custom date picker field:
+    Media = PickableDateField.Media
+
     helper = helper.FormHelper()
     helper.layout = layout.Layout(
         layout.Row(

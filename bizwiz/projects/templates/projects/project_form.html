@@ -5,17 +5,10 @@
 {% load common.crispy_forms %}
 {% load static %}
 
-{% block head-content %}
-    <link rel="stylesheet"
-          href="{% static 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css' %}"/>
-{% endblock head-content %}
-
 {% block content %}
     <div class="page-header"><h1>{% trans 'Edit project' %}</h1></div>
 
     {% crispy form %}
-
-    {% include 'common/datetime_picker_media.html' %}
     {% datetime_picker form.start_date %}
 
 {% endblock content %}
