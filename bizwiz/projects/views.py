@@ -48,7 +48,6 @@ class EditMixin(views.SuccessMessageMixin):
     specific_success_message = None
 
     def post(self, request, *args, **kwargs):
-        self.object = self.get_object()
         customer_group_formset = CustomerGroupFormset(request.POST, instance=self.object)
         form = self.get_form()
 
@@ -66,7 +65,7 @@ class EditMixin(views.SuccessMessageMixin):
 
     def forms_valid(self, form, customer_group_formset):
         customer_group_formset.save()
-        if form.has_changed() or customer_group_formset.new_objects:
+        if form.has_changed() or customer_group_formset.has_changed():
             self.success_message = self.specific_success_message
         else:
             self.success_message = ""
@@ -76,6 +75,16 @@ class EditMixin(views.SuccessMessageMixin):
 class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
     specific_success_message = _("Updated: %(name)s")
 
+    def post(self, request, *args, **kwargs):
+        # extract object being edited in form:
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)
 
-class Create(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
-    specific_success_message = _("Updated: %(name)s")
+
+class Create(mixins.LoginRequiredMixin, EditMixin, generic.CreateView):
+    specific_success_message = _("Created: %(name)s")
+
+    def post(self, request, *args, **kwargs):
+        # no current object when creating a new one:
+        self.object = None
+        return super().post(request, *args, **kwargs)
