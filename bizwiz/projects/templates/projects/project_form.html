@@ -1,14 +1,32 @@
 {% extends "common/base.html" %}
 
 {% load i18n %}
+{% load static %}
 {% load crispy_forms_tags %}
 {% load common.crispy_forms %}
-{% load static %}
+{% load common.dynamic_formset %}
 
 {% block content %}
     <div class="page-header"><h1>{% trans 'Edit project' %}</h1></div>
 
-    {% crispy form %}
+    <form method="post">
+        {% crispy form %}
+        {% dynformset 'formset' formset %}
+            {# Headers for crispy forms rendered fields. #}
+            <div class="row">
+                <label class="col-lg-8 control-label requiredField">
+                    {% trans 'Customer Groups' %}
+                </label>
+            </div>
+            {% dynformset_body formset %}
+            {% dynformset_add_button %}
+            {% include 'common/submit-button.html' %}
+        {% enddynformset %}
+    </form>
+
+    {% dynformset_apply '#formset' %}
+
+
     {% datetime_picker form.start_date %}
 
 {% endblock content %}

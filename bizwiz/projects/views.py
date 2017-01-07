@@ -6,8 +6,8 @@ from django.utils.translation import ugettext as _
 from django.views import generic
 
 from bizwiz.common.views import SizedColumnsMixin
-from bizwiz.projects.forms import UpdateForm
-from bizwiz.projects.models import Project
+from bizwiz.projects.forms import UpdateForm, CustomerGroupFormset
+from bizwiz.projects.models import Project, CustomerGroup
 
 
 class ProjectTable(tables.Table):
@@ -47,12 +47,30 @@ class EditMixin(views.SuccessMessageMixin):
     form_class = UpdateForm
     specific_success_message = None
 
-    def form_valid(self, form):
-        if form.has_changed():
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        customer_group_formset = CustomerGroupFormset(request.POST, instance=self.object)
+        form = self.get_form()
+
+        if form.is_valid() and customer_group_formset.is_valid():
+            return self.forms_valid(form, customer_group_formset)
+        else:
+            return self.form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        if self.request.method in ('POST', 'PUT'):
+            customer_group_formset = CustomerGroupFormset(self.request.POST)
+        else:
+            customer_group_formset = CustomerGroupFormset(instance=self.object)
+        return super().get_context_data(formset=customer_group_formset, **kwargs)
+
+    def forms_valid(self, form, customer_group_formset):
+        customer_group_formset.save()
+        if form.has_changed() or customer_group_formset.new_objects:
             self.success_message = self.specific_success_message
         else:
             self.success_message = ""
-        return super().form_valid(form)
+        return self.form_valid(form)
 
 
 class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
