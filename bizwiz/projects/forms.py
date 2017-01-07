@@ -27,7 +27,7 @@ class UpdateForm(forms.ModelForm):
     )
 
 
-class CustomerForm(forms.ModelForm):
+class CustomerGroupForm(forms.ModelForm):
     customers = forms.ModelMultipleChoiceField(queryset=Customer.objects.all()
                                                .order_by('last_name', 'first_name', 'company_name'))
 
@@ -55,7 +55,7 @@ class BaseCustomerGroupFormset(forms.BaseInlineFormSet):
 CustomerGroupFormset = forms.inlineformset_factory(
     Project,
     CustomerGroup,
-    form=CustomerForm,
+    form=CustomerGroupForm,
     formset=BaseCustomerGroupFormset,
     can_delete=True,
     extra=0,
