@@ -5,11 +5,7 @@
 {% load crispy_forms_tags %}
 {% load common.crispy_forms %}
 {% load common.dynamic_formset %}
-
-{% block head-content %}
-    <link rel="stylesheet" href="{% static 'chosen/chosen.css' %}"/>
-    <link rel="stylesheet" href="{% static 'common/chosen-bootstrap.css' %}"/>
-{% endblock head-content %}
+{% load common.chosen %}
 
 {% block content %}
     <div class="page-header"><h1>{% trans 'Edit project' %}</h1></div>
@@ -32,21 +28,8 @@
         {% enddynformset %}
     </form>
 
-    {% dynformset_apply '#formset' %}
     {% datetime_picker form.start_date %}
-
-    <script src="{% static 'chosen/chosen.jquery.js' %}"></script>
-    <script>
-        var chosenOptions = {
-            no_results_text: "{% trans 'No results matching' %}",
-            placeholder_text_single: "{% trans 'Start typing...' %}",
-            placeholder_text_multiple: "{% trans 'Start typing...' %}"
-        };
-        $(".chosen").chosen({no_result_text: "{% trans 'Keine Ergebnisse für' %}"});
-        $('#formset').on('formAdded', function (event) {
-            var newForm = event.target;
-            $(newForm).find(".chosen").chosen(chosenOptions);
-        });
-    </script>
+    {% dynformset_apply '#formset' %}
+    {% chosen_multiselect_apply '#formset' %}
 
 {% endblock content %}

@@ -1,0 +1,17 @@
+{% load i18n %}
+
+<script>
+    var chosenOptions = {
+        no_results_text: "{% trans 'No results matching' %}",
+        placeholder_text_single: "{% trans 'Start typing...' %}",
+        placeholder_text_multiple: "{% trans 'Start typing...' %}"
+    };
+    $(".chosen").chosen({no_result_text: "{% trans 'Keine Ergebnisse für' %}"});
+
+    {% for selector in selectors %}
+        $('{{ selector }}').on('formAdded', function (event) {
+            var newForm = event.target;
+            $(newForm).find(".chosen").chosen(chosenOptions);
+        });
+    {% endfor %}
+</script>

@@ -2,7 +2,7 @@ from crispy_forms import layout, helper
 from django import forms
 from django.utils.translation import ugettext as _
 
-from bizwiz.common.crispy_forms import PickableDateField
+from bizwiz.common.crispy_forms import PickableDateField, ChosenMultiSelectField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
 from bizwiz.customers.models import Customer
 from bizwiz.projects.models import Project, CustomerGroup
@@ -31,6 +31,8 @@ class CustomerForm(forms.ModelForm):
     customers = forms.ModelMultipleChoiceField(queryset=Customer.objects.all()
                                                .order_by('last_name', 'first_name', 'company_name'))
 
+    Media = ChosenMultiSelectField.Media
+
 
 class BaseCustomerGroupFormset(forms.BaseInlineFormSet):
     helper = helper.FormHelper()
@@ -42,7 +44,7 @@ class BaseCustomerGroupFormset(forms.BaseInlineFormSet):
             # since a dynamic formset is used, there is no need to allow posting empty fields for
             # unused extra forms, so all fields can be explicitly required:
             layout.Div(layout.Field('name', required=''), css_class='col-lg-4'),
-            layout.Div(layout.Field('customers', css_class='chosen'), css_class='col-lg-7'),
+            layout.Div(ChosenMultiSelectField('customers'), css_class='col-lg-7'),
             layout.Div(remove_form_button_factory(), css_class='col-lg-1 text-right'),
             layout.Field('DELETE', style='display:none;'),
             data_formset_form='',
