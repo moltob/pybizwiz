@@ -19,7 +19,7 @@ class UpdateForm(forms.ModelForm):
     helper.form_tag = False
     helper.layout = layout.Layout(
         layout.Row(
-            layout.Div('name', css_class='col-lg-6'),
+            layout.Div('name', css_class='col-lg-7'),
             layout.Div(PickableDateField('start_date'), css_class='col-lg-2'),
         ),
     )

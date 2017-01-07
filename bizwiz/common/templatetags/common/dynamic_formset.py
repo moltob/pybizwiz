@@ -14,8 +14,8 @@ def dynformset_body(formset):
 
 
 @register.inclusion_tag('common/dynamic_formset_add_button.html')
-def dynformset_add_button():
-    return {}
+def dynformset_add_button(col_offset=11):
+    return dict(col_offset=col_offset)
 
 
 @register.inclusion_tag('common/dynamic_formset_end.html')
