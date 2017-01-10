@@ -2,6 +2,7 @@ import datetime
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
+from bizwiz.articles.models import Article
 from bizwiz.customers.models import Customer
 
 
@@ -20,6 +21,7 @@ class Project(models.Model):
         _("Notes"),
         blank=True
     )
+    articles = models.ManyToManyField(Article)
 
     class Meta:
         verbose_name = _("Project")

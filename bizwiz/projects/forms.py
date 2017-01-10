@@ -61,3 +61,11 @@ CustomerGroupFormset = forms.inlineformset_factory(
     extra=0,
     fields='__all__'
 )
+
+
+# TODO: add validation to check customer group names within project and at least one customer group
+# TODO: exists
+
+# TODO: single customer list possible in HTML?
+
+# TODO: project specific article selection

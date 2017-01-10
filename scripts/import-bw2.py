@@ -28,6 +28,8 @@ Bw2Project = collections.namedtuple('Bw2Project', 'id name notes start_date')
 Bw2CustomerGroup = collections.namedtuple('Bw2CustomerGroup', 'id name project_id')
 Bw2CustomerInGroupAssoc = collections.namedtuple('Bw2CustomerInGroupAssoc', 'id customer_group_id '
                                                                             'customer_id')
+Bw2ArticleInProjectAssoc = collections.namedtuple('Bw2ArticleInProjectAssoc', 'id article_id '
+                                                                              'project_id')
 
 
 class Bw2Importer:
@@ -38,9 +40,9 @@ class Bw2Importer:
     def run(self):
         _logger.info('Importing Bizwiz 2 data from {}.'.format(self.folderpath))
         django.setup()
-        articles = self.import_articles()
+        articles, rebate_ids = self.import_articles()
         customers = self.import_customers()
-        projects = self.import_projects()
+        projects = self.import_projects(articles, rebate_ids)
         customer_groups = self.import_customer_groups(projects, customers)
 
     def exported_filepath(self, modelname):
@@ -62,11 +64,13 @@ class Bw2Importer:
         from bizwiz.articles.models import Article
 
         articles = {}
+        rebate_ids = set()
         unique_article_names = set()
         bw2_articles = (Bw2Article(*fields) for fields in self.imported_objects('Article', Article))
         for bw2_article in bw2_articles:
             if "rabatt" in bw2_article.invoice_text.lower():
                 _logger.info('Skipping import of rebate: {}.'.format(bw2_article.invoice_text))
+                rebate_ids.add(int(bw2_article.id))
             else:
                 article = Article(name=bw2_article.invoice_text.strip(),
                                   price=bw2_article.last_price.strip(),
@@ -83,7 +87,7 @@ class Bw2Importer:
 
         _logger.info('Imported {} articles.'.format(len(articles)))
         self.delete_duplicates('Kontaktabzug behalten', articles, 115, (118,))
-        return articles
+        return articles, rebate_ids
 
     def import_customers(self):
         from bizwiz.customers.models import Customer, Salutation
@@ -122,7 +126,7 @@ class Bw2Importer:
         self.delete_duplicates('Konstantin Körner', customers, 1105, (1116, 1117))
         return customers
 
-    def import_projects(self):
+    def import_projects(self, articles, rebate_ids):
         from bizwiz.projects.models import Project
 
         projects = {}
@@ -137,6 +141,25 @@ class Bw2Importer:
             projects[int(bw2_project.id)] = project
 
         _logger.info('Imported {} projects.'.format(len(projects)))
+
+        bw2_assocs = (Bw2ArticleInProjectAssoc(*fields) for fields in
+                      self.imported_objects('ArticleInProjectAssoc', None))
+
+        count = 0
+        for bw2_assoc in bw2_assocs:
+            article_id = int(bw2_assoc.article_id)
+            project_id = int(bw2_assoc.project_id)
+
+            project = projects[project_id]
+            if article_id in rebate_ids:
+                _logger.debug('Skipping rebate association with {}.'.format(project.name))
+            else:
+                article = articles[article_id]
+                project.articles.add(article)
+                project.save()
+                count += 1
+
+        _logger.info('Added {} articles to projects.'.format(count))
         return projects
 
     def import_customer_groups(self, projects, customers):
@@ -155,7 +178,7 @@ class Bw2Importer:
         _logger.info('Imported {} customer groups.'.format(len(customer_groups)))
 
         bw2_assocs = (Bw2CustomerInGroupAssoc(*fields) for fields in
-                                        self.imported_objects('CustomerInGroupAssoc', None))
+                      self.imported_objects('CustomerInGroupAssoc', None))
 
         count = 0
         for bw2_assoc in bw2_assocs:
