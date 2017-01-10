@@ -2,6 +2,7 @@ from crispy_forms import layout, helper
 from django import forms
 from django.utils.translation import ugettext as _
 
+from bizwiz.articles.models import Article
 from bizwiz.common.crispy_forms import PickableDateField, ChosenMultiSelectField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
 from bizwiz.customers.models import Customer
@@ -13,6 +14,8 @@ class UpdateForm(forms.ModelForm):
         model = Project
         fields = '__all__'
 
+    articles = forms.ModelMultipleChoiceField(queryset=Article.objects.all().order_by('name'))
+
     # form requires assets from custom date picker field:
     Media = PickableDateField.Media
 
@@ -23,6 +26,9 @@ class UpdateForm(forms.ModelForm):
             layout.Div('name', css_class='col-lg-4'),
             layout.Div(PickableDateField('start_date'), css_class='col-lg-2'),
             layout.Div('notes', css_class='col-lg-5'),
+        ),
+        layout.Row(
+            layout.Div(ChosenMultiSelectField('articles'), css_class='col-lg-11'),
         ),
     )
 
@@ -67,5 +73,3 @@ CustomerGroupFormset = forms.inlineformset_factory(
 # TODO: exists
 
 # TODO: single customer list possible in HTML?
-
-# TODO: project specific article selection

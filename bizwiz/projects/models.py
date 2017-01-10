@@ -21,7 +21,7 @@ class Project(models.Model):
         _("Notes"),
         blank=True
     )
-    articles = models.ManyToManyField(Article)
+    articles = models.ManyToManyField(Article, verbose_name=_("Articles in project"))
 
     class Meta:
         verbose_name = _("Project")
@@ -38,7 +38,7 @@ class CustomerGroup(models.Model):
         max_length=50,
     )
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    customers = models.ManyToManyField(Customer)
+    customers = models.ManyToManyField(Customer, verbose_name=_("Customers in group"))
 
     class Meta:
         verbose_name = _("Customer group")
