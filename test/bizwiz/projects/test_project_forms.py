@@ -29,12 +29,16 @@ def management_form_data(*, min_num=1, max_num=1000, initial=0, total=1):
     }
 
 
-def customer_group_data(pos, name, project_, customer):
-    return {
+def customer_group_data(pos, name, project_, customer, deleted=False):
+    data = {
         'customergroup_set-%d-name' % pos: name,
         'customergroup_set-%d-project' % pos: str(project_.pk),
         'customergroup_set-%d-customers' % pos: [str(customer.pk)],
     }
+    if deleted:
+        data['customergroup_set-%d-DELETE' % pos] = 'on'
+
+    return data
 
 
 @pytest.mark.django_db
@@ -65,3 +69,11 @@ def test_customer_group_formset_name_duplicate(project, customer1):
     assert fs.non_form_errors()
 
 
+@pytest.mark.django_db
+def test_customer_group_formset_duplicate_deleted(project, customer1):
+    data = management_form_data(total=3)
+    data.update(customer_group_data(0, 'Blaue Gruppe', project, customer1))
+    data.update(customer_group_data(1, 'Rote Gruppe', project, customer1, deleted=True))
+    data.update(customer_group_data(2, 'Rote Gruppe', project, customer1))
+    fs = CustomerGroupFormset(data, instance=project)
+    assert fs.is_valid(), fs.non_form_errors()
