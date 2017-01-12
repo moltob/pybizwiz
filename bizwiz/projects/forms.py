@@ -57,6 +57,17 @@ class BaseCustomerGroupFormset(forms.BaseInlineFormSet):
         )
     )
 
+    def clean(self):
+        super().clean()
+        names = set()
+        for form in self.forms:
+            name = form.cleaned_data['name']
+            if name in names:
+                raise forms.ValidationError(_("Only one customer group may be called %(name)s."),
+                                            code='duplicate_group_name',
+                                            params={'name': name})
+            names.add(name)
+
 
 CustomerGroupFormset = forms.inlineformset_factory(
     Project,
@@ -64,6 +75,8 @@ CustomerGroupFormset = forms.inlineformset_factory(
     form=CustomerGroupForm,
     formset=BaseCustomerGroupFormset,
     can_delete=True,
+    min_num=1,
+    validate_min=True,
     extra=0,
     fields='__all__'
 )
