@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-14 13:38+0100\n"
+"POT-Creation-Date: 2017-01-14 13:50+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,11 +18,19 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\bizwiz\projects\forms.py:40
+#: .\bizwiz\projects\forms.py:18
+msgid "Article set"
+msgstr "Artikelauswahl"
+
+#: .\bizwiz\projects\forms.py:41
 msgid "At least one article must be selected."
 msgstr "Mindestens ein Artikel muss ausgewählt werden."
 
-#: .\bizwiz\projects\forms.py:78
+#: .\bizwiz\projects\forms.py:50
+msgid "Customers"
+msgstr "Kunden"
+
+#: .\bizwiz\projects\forms.py:80
 #, python-format
 msgid "Only one customer group may be called %(name)s."
 msgstr "Nur ein Kunde mit Namen %(name)s darf existieren."

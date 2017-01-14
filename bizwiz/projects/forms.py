@@ -15,6 +15,7 @@ class UpdateForm(forms.ModelForm):
         fields = '__all__'
 
     articles = forms.ModelMultipleChoiceField(queryset=Article.objects.all().order_by('name'),
+                                              label=_("Article set"),
                                               required=False)
 
     # form requires assets from custom date picker field:
@@ -45,7 +46,8 @@ class UpdateForm(forms.ModelForm):
 
 class CustomerGroupForm(forms.ModelForm):
     customers = forms.ModelMultipleChoiceField(queryset=Customer.objects.all()
-                                               .order_by('last_name', 'first_name', 'company_name'))
+                                               .order_by('last_name', 'first_name', 'company_name'),
+                                               label=_("Customers"))
 
     Media = ChosenMultiSelectField.Media
 
