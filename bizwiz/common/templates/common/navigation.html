@@ -45,7 +45,7 @@
                         <li><a href="{% url 'projects:list' %}">{% trans 'Browse' %}</a></li>
                         <li class="divider"></li>
                         <li class="{{ user.is_authenticated|yesno:',disabled' }}">
-                            <a href="#">{% trans 'Activate' %} <span class="caret"></span></a>
+                            <a href="#">{% trans 'Activate filter' %} <span class="caret"></span></a>
                             {% if user.is_authenticated and projects %}
                                 <ul class="dropdown-menu">
                                     {% for project in projects %}
