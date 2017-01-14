@@ -192,6 +192,30 @@ class Bw2Importer:
             count += 1
 
         _logger.info('Added {} customers to groups.'.format(count))
+
+        # remove the "Alle" customer groups:
+        customer_groups_copy = customer_groups.copy()
+        for customer_group_id, group in customer_groups_copy.items():
+            remove = False
+            if group.name == 'Alle':
+                _logger.info('Removing customer group "Alle" from project {}.'
+                             .format(group.project.name))
+                remove = True
+            if group.customers.count() == 0:
+                _logger.info('Removing empty customer group {}.'.format(group.name))
+                remove = True
+            if remove:
+                group.delete()
+                del customer_groups[customer_group_id]
+
+        # remove projects without customer groups:
+        projects_copy = projects.copy()
+        for project_id, project in projects_copy.items():
+            if project.customergroup_set.count() == 0:
+                _logger.info('Deleting project without customer groups: {}'.format(project.name))
+                project.delete()
+                del projects[project_id]
+
         return customer_groups
 
     @staticmethod
