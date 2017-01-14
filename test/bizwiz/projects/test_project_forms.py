@@ -1,8 +1,9 @@
+import datetime
 import pytest
 
 from bizwiz.articles.models import Article
 from bizwiz.customers.models import Customer
-from bizwiz.projects.forms import CustomerGroupFormset
+from bizwiz.projects.forms import CustomerGroupFormset, UpdateForm
 from bizwiz.projects.models import Project
 
 
@@ -11,6 +12,14 @@ def project():
     p = Project(name='MyProject')
     p.save()
     return p
+
+@pytest.fixture
+def articles():
+    article1 = Article(name='Article', price=10.5)
+    article2 = Article(name='Article 2', price=9.75)
+    article1.save()
+    article2.save()
+    return [article1, article2]
 
 
 @pytest.fixture
@@ -77,3 +86,24 @@ def test_customer_group_formset_duplicate_deleted(project, customer1):
     data.update(customer_group_data(2, 'Rote Gruppe', project, customer1))
     fs = CustomerGroupFormset(data, instance=project)
     assert fs.is_valid(), fs.non_form_errors()
+
+
+@pytest.mark.django_db
+def test_project_form_articles_valid(project, articles):
+    data = {
+        'name': 'Project',
+        'articles': [articles[0].pk, articles[1].pk],
+        'start_date': datetime.date(2000, 1, 1),
+    }
+    f = UpdateForm(data)
+    assert f.is_valid(), f.errors
+
+@pytest.mark.django_db
+def test_project_form_articles_empty(project, articles):
+    data = {
+        'name': 'Project',
+        'articles': [],
+        'start_date': datetime.date(2000, 1, 1),
+    }
+    f = UpdateForm(data)
+    assert not f.is_valid()

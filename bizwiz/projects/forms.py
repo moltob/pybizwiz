@@ -14,7 +14,8 @@ class UpdateForm(forms.ModelForm):
         model = Project
         fields = '__all__'
 
-    articles = forms.ModelMultipleChoiceField(queryset=Article.objects.all().order_by('name'))
+    articles = forms.ModelMultipleChoiceField(queryset=Article.objects.all().order_by('name'),
+                                              required=False)
 
     # form requires assets from custom date picker field:
     Media = PickableDateField.Media
@@ -31,6 +32,15 @@ class UpdateForm(forms.ModelForm):
             layout.Div(ChosenMultiSelectField('articles'), css_class='col-lg-11'),
         ),
     )
+
+    def clean_articles(self):
+        articles = self.cleaned_data['articles']
+        if not articles:
+            raise forms.ValidationError(
+                _("At least one article must be selected."),
+                code='required'
+            )
+        return articles
 
 
 class CustomerGroupForm(forms.ModelForm):
@@ -83,9 +93,3 @@ CustomerGroupFormset = forms.inlineformset_factory(
     extra=0,
     fields='__all__'
 )
-
-
-# TODO: add validation to check customer group names within project and at least one customer group
-# TODO: exists
-
-# TODO: single customer list possible in HTML?
