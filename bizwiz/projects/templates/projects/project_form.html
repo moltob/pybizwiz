@@ -12,20 +12,23 @@
 
     <form method="post">
         {% crispy form %}
-        {% dynformset 'formset' formset %}
-            {# Headers for crispy forms rendered fields. #}
-            <div class="row voffset3">
-                <label class="col-lg-4 control-label requiredField">
-                    {% trans 'Customer Groups' %}
-                </label>
-                <label class="col-lg-7 control-label requiredField">
-                    {{ formset.empty_form.customers.label }}
-                </label>
-            </div>
-            {% dynformset_body formset %}
-            {% dynformset_add_button %}
-            {% include 'common/submit-button.html' %}
-        {% enddynformset %}
+        <fieldset>
+            <legend>{% trans 'Customer Groups' %}</legend>
+            {% dynformset 'formset' formset %}
+                {# Headers for crispy forms rendered fields. #}
+                <div class="row voffset3">
+                    <label class="col-lg-4 control-label requiredField">
+                        {{ formset.empty_form.name.label }}
+                    </label>
+                    <label class="col-lg-7 control-label requiredField">
+                        {{ formset.empty_form.customers.label }}
+                    </label>
+                </div>
+                {% dynformset_body formset %}
+                {% dynformset_add_button %}
+                {% include 'common/submit-button.html' %}
+            {% enddynformset %}
+        </fieldset>
     </form>
 
     {% datetime_picker form.start_date %}

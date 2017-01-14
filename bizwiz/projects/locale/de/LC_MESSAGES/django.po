@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-07 18:59+0100\n"
+"POT-Creation-Date: 2017-01-14 13:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,32 +18,49 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\bizwiz\projects\models.py:11 .\bizwiz\projects\models.py:35
+#: .\bizwiz\projects\forms.py:40
+msgid "At least one article must be selected."
+msgstr "Mindestens ein Artikel muss ausgewählt werden."
+
+#: .\bizwiz\projects\forms.py:78
+#, python-format
+msgid "Only one customer group may be called %(name)s."
+msgstr "Nur ein Kunde mit Namen %(name)s darf existieren."
+
+#: .\bizwiz\projects\models.py:12 .\bizwiz\projects\models.py:37
 msgid "Name"
 msgstr "Name"
 
-#: .\bizwiz\projects\models.py:16
+#: .\bizwiz\projects\models.py:17
 msgid "Start date"
 msgstr "Startdatum"
 
-#: .\bizwiz\projects\models.py:20
+#: .\bizwiz\projects\models.py:21
 msgid "Notes"
 msgstr "Notizen"
 
-#: .\bizwiz\projects\models.py:25
+#: .\bizwiz\projects\models.py:24
+msgid "Articles in project"
+msgstr "Artikel im Projekt"
+
+#: .\bizwiz\projects\models.py:27
 msgid "Project"
 msgstr "Projekt"
 
-#: .\bizwiz\projects\models.py:26
+#: .\bizwiz\projects\models.py:28
 #: .\bizwiz\projects\templates\projects\project_list.html:8
 msgid "Projects"
 msgstr "Projekte"
 
-#: .\bizwiz\projects\models.py:42
+#: .\bizwiz\projects\models.py:41
+msgid "Customers in group"
+msgstr "Kunden in Gruppe"
+
+#: .\bizwiz\projects\models.py:44
 msgid "Customer group"
 msgstr "Kundengruppe"
 
-#: .\bizwiz\projects\models.py:43
+#: .\bizwiz\projects\models.py:45
 msgid "Customer groups"
 msgstr "Kundengruppen"
 
@@ -51,7 +68,7 @@ msgstr "Kundengruppen"
 msgid "Edit project"
 msgstr "Projekt bearbeiten"
 
-#: .\bizwiz\projects\templates\projects\project_form.html:19
+#: .\bizwiz\projects\templates\projects\project_form.html:16
 #: .\bizwiz\projects\views.py:16
 msgid "Customer Groups"
 msgstr "Kundengruppen"
