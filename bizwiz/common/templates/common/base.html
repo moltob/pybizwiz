@@ -11,6 +11,8 @@
     <link rel="stylesheet"
           href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"/>
     <link rel="stylesheet" href="{% static 'common/site.css' %}"/>
+    <link rel="stylesheet"
+          href="{% static 'smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css' %}"/>
     {% block head-content %}
     {% endblock %}
 </head>
@@ -18,8 +20,10 @@
 
 {% include 'common/navigation.html' %}
 
-<script src="{% static 'jquery/dist/jquery.js' %}"></script>
-<script src="{% static 'bootstrap/dist/js/bootstrap.js' %}"></script>
+<script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
+<script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'smartmenus/dist/jquery.smartmenus.min.js' %}"></script>
+<script src="{% static 'smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.min.js' %}"></script>
 
 <div class="container">
     {% for message in messages %}

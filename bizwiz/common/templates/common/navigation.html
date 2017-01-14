@@ -14,7 +14,7 @@
             <a class="navbar-brand" href="{% url 'common:index' %}">Bizwiz</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav" data-sm-options="{showOnClick:true}">
                 <li class="{% if 'overview' in request.path %}active{% endif %}">
                     <a href="{% comment %}{% url 'invoice:overview' %}{% endcomment %}#">{% trans 'Invoices' %}</a>
                 </li>
@@ -43,19 +43,43 @@
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'projects:create' %}">{% trans 'New' %}</a></li>
                         <li><a href="{% url 'projects:list' %}">{% trans 'Browse' %}</a></li>
+                        <li class="divider"></li>
+                        <li class="{{ user.is_authenticated|yesno:',disabled' }}">
+                            <a href="#">{% trans 'Activate' %} <span class="caret"></span></a>
+                            {% if user.is_authenticated and projects %}
+                                <ul class="dropdown-menu">
+                                    {% for project in projects %}
+                                        <li>
+                                            <a href="#">{{ project.name }} <span
+                                                    class="caret"></span></a>
+                                            <ul class="dropdown-menu">
+                                                {% for group in project.customergroup_set.all|dictsort:'name' %}
+                                                    <li>
+                                                        <a href="#">{{ group.name }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% endfor %}
+                                    <li>
+                                        <a href="#">Project 2 <span class="caret"></span></a>
+                                        <ul class="dropdown-menu">
+                                            <li>
+                                                <a href="#">Customergroup B1</a>
+                                            </li>
+                                            <li>
+                                                <a href="#">Customergroup B2</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            {% endif %}
+                        </li>
                     </ul>
                 </li>
             </ul>
 
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <p class="navbar-text">
-                    <span class="badge">Kims Kindertanz München, Rote Gruppe
-                        <a href="#" class="navbar-link"><span
-                                class="glyphicon glyphicon-remove"></span></a>
-                    </span>
-                    </p>
-                </li>
+            <ul class="nav navbar-nav navbar-right" data-sm-options="{showOnClick:true}">
                 {% if user.is_authenticated %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -86,14 +110,12 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <div class="navbar-login">
-                                    <div class="row">
-                                        <div class="col-lg-12">
-                                            <p>
-                                                <a href="{% url 'accounts:logout' %}#"
-                                                   class="btn btn-primary btn-block">{% trans 'Logout' %}</a>
-                                            </p>
-                                        </div>
+                                <div class="row">
+                                    <div class="col-lg-offset-1 col-lg-10">
+                                        <p>
+                                            <a href="{% url 'accounts:logout' %}#"
+                                               class="btn btn-primary btn-block">{% trans 'Logout' %}</a>
+                                        </p>
                                     </div>
                                 </div>
                             </li>
@@ -107,6 +129,17 @@
                         </a>
                     </li>
                 {% endif %}
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right" data-sm-skip="true">
+                <li>
+                    <p class="navbar-text">
+                    <span class="badge">Kims Kindertanz München, Rote Gruppe
+                        <a href="#" class="navbar-link"><span
+                                class="glyphicon glyphicon-remove"></span></a>
+                    </span>
+                    </p>
+                </li>
             </ul>
         </div>
     </div>

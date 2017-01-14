@@ -11,6 +11,7 @@
     "jquery": "^3.1.1",
     "bootstrap": "^3.3.7",
     "eonasdan-bootstrap-datetimepicker": "^4.17.43",
-    "chosen": "^1.6.2"
+    "chosen": "^1.6.2",
+    "smartmenus": "^1.0.1"
   }
 }
