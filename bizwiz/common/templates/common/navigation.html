@@ -60,7 +60,6 @@
                                                     <li>
                                                         <a href="{% url 'common:session-filter' %}?&next={{ request.get_full_path|urlencode }}&group={{ group.pk }}">
                                                             {{ group.name }}
-                                                            <span class="caret"></span>
                                                         </a>
                                                     </li>
                                                 {% endfor %}
@@ -126,16 +125,20 @@
                 {% endif %}
             </ul>
 
-            <ul class="nav navbar-nav navbar-right" data-sm-skip="true">
-                <li>
-                    <p class="navbar-text">
+            {% if session_filter_label %}
+                <ul class="nav navbar-nav navbar-right" data-sm-skip="true">
+                    <li>
+                        <p class="navbar-text">
                     <span class="badge">{{ session_filter_label }}
-                        <a href="#" class="navbar-link"><span
-                                class="glyphicon glyphicon-remove"></span></a>
+                        <a href="{% url 'common:session-filter' %}?&next={{ request.get_full_path|urlencode }}"
+                           class="navbar-link">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
                     </span>
-                    </p>
-                </li>
-            </ul>
+                        </p>
+                    </li>
+                </ul>
+            {% endif %}
         </div>
     </div>
 </nav>
