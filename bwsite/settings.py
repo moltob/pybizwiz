@@ -70,6 +70,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'bizwiz.common.context_processors.projects',
+                'bizwiz.common.context_processors.session_filter',
             ],
         },
     },

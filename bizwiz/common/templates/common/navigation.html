@@ -45,17 +45,23 @@
                         <li><a href="{% url 'projects:list' %}">{% trans 'Browse' %}</a></li>
                         <li class="divider"></li>
                         <li class="{{ user.is_authenticated|yesno:',disabled' }}">
-                            <a href="#">{% trans 'Activate filter' %} <span class="caret"></span></a>
+                            <a href="#">{% trans 'Activate filter' %} <span
+                                    class="caret"></span></a>
                             {% if user.is_authenticated and projects %}
                                 <ul class="dropdown-menu">
                                     {% for project in projects %}
                                         <li>
-                                            <a href="#">{{ project.name }} <span
-                                                    class="caret"></span></a>
+                                            <a href="{% url 'common:session-filter' %}?&next={{ request.get_full_path|urlencode }}&project={{ project.pk }}">
+                                                {{ project.name }}
+                                                <span class="caret"></span>
+                                            </a>
                                             <ul class="dropdown-menu">
                                                 {% for group in project.customergroup_set.all|dictsort:'name' %}
                                                     <li>
-                                                        <a href="#">{{ group.name }}</a>
+                                                        <a href="{% url 'common:session-filter' %}?&next={{ request.get_full_path|urlencode }}&group={{ group.pk }}">
+                                                            {{ group.name }}
+                                                            <span class="caret"></span>
+                                                        </a>
                                                     </li>
                                                 {% endfor %}
                                             </ul>
@@ -123,7 +129,7 @@
             <ul class="nav navbar-nav navbar-right" data-sm-skip="true">
                 <li>
                     <p class="navbar-text">
-                    <span class="badge">Kims Kindertanz München, Rote Gruppe
+                    <span class="badge">{{ session_filter_label }}
                         <a href="#" class="navbar-link"><span
                                 class="glyphicon glyphicon-remove"></span></a>
                     </span>
