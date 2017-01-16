@@ -8,6 +8,7 @@ from django.views import generic
 
 from bizwiz.articles.forms import UpdateForm, CreateForm, ArticleFormset
 from bizwiz.articles.models import Article
+from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
 
 
@@ -44,9 +45,14 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView)
                                         **kwargs)
 
     def get_queryset(self):
-        self.queryset = Article.objects.all()
+        # apply project filter if active:
+        filtered_project = get_session_filter(self.request.session).project
+        if filtered_project:
+            self.queryset = filtered_project.articles
+        else:
+            self.queryset = Article.objects.all()
 
-        # only show inactive elements if requested:
+        # only if requested, show inactive elements:
         if not self.kwargs['show_inactive']:
             self.count_inactive = self.queryset.filter(inactive=True).count()
             self.queryset = self.queryset.filter(inactive=False)
