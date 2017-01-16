@@ -4,7 +4,6 @@ from bizwiz.common.session_filter import set_session_filter
 from bizwiz.version import BIZWIZ_VERSION
 
 
-
 class Welcome(generic.TemplateView):
     template_name = 'common/welcome.html'
 
