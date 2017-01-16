@@ -32,11 +32,17 @@ def get_session_filter(session) -> SessionFilterData:
                 customer_group = customer_groups[0]
                 project = customer_group.project
                 label = '{}, {}'.format(project.name, customer_group.name)
+            else:
+                _logger.warning('Customer group {} not found, possibly recently deleted.'
+                                .format(customer_group_pk))
         elif project_pk:
             projects = Project.objects.filter(pk=project_pk)
             if projects:
                 project = Project.objects.get(pk=project_pk)
                 label = project.name
+            else:
+                _logger.warning('Project {} not found, possibly recently deleted.'
+                                .format(project_pk))
 
     return SessionFilterData(project, customer_group, label)
 
