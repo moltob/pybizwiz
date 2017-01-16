@@ -27,12 +27,16 @@ def get_session_filter(session) -> SessionFilterData:
         customer_group_pk = f.get(CUSTOMER_GROUP_KEY, 0)
         project_pk = f.get(PROJECT_KEY, 0)
         if customer_group_pk:
-            customer_group = CustomerGroup.objects.get(pk=customer_group_pk)
-            project = customer_group.project
-            label = '{}, {}'.format(project.name, customer_group.name)
+            customer_groups = CustomerGroup.objects.filter(pk=customer_group_pk)
+            if customer_groups:
+                customer_group = customer_groups[0]
+                project = customer_group.project
+                label = '{}, {}'.format(project.name, customer_group.name)
         elif project_pk:
-            project = Project.objects.get(pk=project_pk)
-            label = project.name
+            projects = Project.objects.filter(pk=project_pk)
+            if projects:
+                project = Project.objects.get(pk=project_pk)
+                label = project.name
 
     return SessionFilterData(project, customer_group, label)
 

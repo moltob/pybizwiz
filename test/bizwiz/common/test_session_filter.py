@@ -48,3 +48,24 @@ def test_empty():
     assert not data.project
     assert not data.customer_group
     assert not data.label
+
+@pytest.mark.django_db
+def test_deleted_customer_group(project):
+    session = {}
+    customer_group = project.customergroup_set.first()
+    set_session_filter(session, 0, customer_group.pk + 1)
+
+    data = get_session_filter(session)
+    assert not data.project
+    assert not data.customer_group
+    assert not data.label
+
+@pytest.mark.django_db
+def test_deleted_project(project):
+    session = {}
+    set_session_filter(session, project.pk + 1, 0)
+
+    data = get_session_filter(session)
+    assert not data.project
+    assert not data.customer_group
+    assert not data.label
