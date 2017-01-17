@@ -6,6 +6,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.views import generic
 
+from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
 from bizwiz.customers.forms import UpdateForm
 from bizwiz.customers.models import Customer
@@ -30,7 +31,16 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView)
     column_widths = ('20%', '15%', '20%', '20%', '10%', '15%',)
 
     def get_queryset(self):
-        self.queryset = Customer.objects.all()
+        # apply session filter if set:
+        session_filter = get_session_filter(self.request.session)
+        filtered_project = session_filter.project
+        filtered_customer_group = session_filter.customer_group
+        if filtered_customer_group:
+            self.queryset = Customer.objects.filter(customergroup=filtered_customer_group)
+        elif filtered_project:
+            self.queryset = Customer.objects.filter(customergroup__project=filtered_project)
+        else:
+            self.queryset = Customer.objects.all()
 
         strfilter = self.request.GET.get('q')
         if strfilter:
