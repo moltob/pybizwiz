@@ -112,7 +112,15 @@ class Create(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.FormV
 
         if article_formset.new_objects:
             names = (str(a) for a in article_formset.new_objects)
-            self.success_message = _("Added: {}.").format(", ".join(names))
+
+            session_filter = get_session_filter(self.request.session)
+            if session_filter.project:
+                for article in article_formset.new_objects:
+                    article.project_set.add(session_filter.project)
+                self.success_message = _("Added to project {}: {}.").format(session_filter.label,
+                                                                            ", ".join(names))
+            else:
+                self.success_message = _("Added: {}.").format(", ".join(names))
         else:
             self.success_message = ""
 

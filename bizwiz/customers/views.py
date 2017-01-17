@@ -73,4 +73,20 @@ class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
 
 
 class Create(mixins.LoginRequiredMixin, EditMixin, generic.CreateView):
-    specific_success_message = _("Created: %(last_name)s, %(first_name)s")
+    specific_success_message = None
+
+    def form_valid(self, form):
+        if form.has_changed():
+            # apply session filter to new customer if set:
+            session_filter = get_session_filter(self.request.session)
+            customer_group = session_filter.customer_group
+            label = session_filter.label
+            if customer_group:
+                form.save()
+                customer_group.customers.add(form.instance)
+                self.specific_success_message = _("Added to {}: %(last_name)s, %(first_name)s"
+                                                  .format(label))
+            else:
+                self.specific_success_message = _("Added: %(last_name)s, %(first_name)s")
+
+        return super().form_valid(form)
