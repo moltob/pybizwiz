@@ -77,16 +77,23 @@ class Create(mixins.LoginRequiredMixin, EditMixin, generic.CreateView):
 
     def form_valid(self, form):
         if form.has_changed():
+            # must save new instance before it (possibly) can be added to active customer group:
+            form.save()
+
             # apply session filter to new customer if set:
-            session_filter = get_session_filter(self.request.session)
-            customer_group = session_filter.customer_group
-            label = session_filter.label
-            if customer_group:
-                form.save()
-                customer_group.customers.add(form.instance)
-                self.specific_success_message = _("Added to {}: %(last_name)s, %(first_name)s"
-                                                  .format(label))
+            if apply_session_filter(self.request.session, form.instance):
+                self.specific_success_message = _("Added to current customer group: "
+                                                  "%(last_name)s, %(first_name)s")
             else:
                 self.specific_success_message = _("Added: %(last_name)s, %(first_name)s")
 
         return super().form_valid(form)
+
+
+def apply_session_filter(session, customer):
+    session_filter = get_session_filter(session)
+    customer_group = session_filter.customer_group
+    if customer_group:
+        customer_group.customers.add(customer)
+        return True
+    return False

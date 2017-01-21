@@ -131,5 +131,3 @@ def apply_session_filter(session, articles):
             article.project_set.add(session_filter.project)
         return True
     return False
-
-# TODO: TEST & do same for customers
