@@ -8,7 +8,7 @@ class Salutation:
     FAMILY = 'FAMILY'
 
 
-class Customer(models.Model):
+class CustomerBase(models.Model):
     last_name = models.CharField(
         _("Last name"),
         max_length=50
@@ -51,6 +51,23 @@ class Customer(models.Model):
         max_length=50,
         blank=True
     )
+
+    class Meta:
+        abstract = True
+
+    def full_name(self):
+        return '{}, {}'.format(self.last_name, self.first_name)
+
+    def __str__(self):
+        data = [self.full_name()]
+        if self.company_name:
+            data.append('({})'.format(self.company_name))
+        if self.street_address or self.city:
+            data.append('@ {}, {} {}'.format(self.street_address, self.zip_code, self.city))
+        return ' '.join(data)
+
+
+class Customer(CustomerBase):
     phone_number = models.CharField(
         _("Phone number"),
         max_length=50,
@@ -74,14 +91,3 @@ class Customer(models.Model):
     class Meta:
         verbose_name = _("Customer")
         verbose_name_plural = _("Customers")
-
-    def full_name(self):
-        return '{}, {}'.format(self.last_name, self.first_name)
-
-    def __str__(self):
-        data = [self.full_name()]
-        if self.company_name:
-            data.append('({})'.format(self.company_name))
-        if self.street_address or self.city:
-            data.append('@ {}, {} {}'.format(self.street_address, self.zip_code, self.city))
-        return ' '.join(data)
