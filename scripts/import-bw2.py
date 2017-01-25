@@ -30,6 +30,11 @@ Bw2CustomerInGroupAssoc = collections.namedtuple('Bw2CustomerInGroupAssoc', 'id 
                                                                             'customer_id')
 Bw2ArticleInProjectAssoc = collections.namedtuple('Bw2ArticleInProjectAssoc', 'id article_id '
                                                                               'project_id')
+Bw2ArticleList = collections.namedtuple('Bw2ArticleList', 'id, invoice_number invoice_date '
+                                                          'payment_date offer_date order_date '
+                                                          'taxes_filed customer_in_group_assoc_id '
+                                                          'pay_before_ship '
+                                                          'offer_with_articles_pending')
 
 
 class Bw2Importer:
@@ -43,7 +48,12 @@ class Bw2Importer:
         articles, rebate_ids = self.import_articles()
         customers = self.import_customers()
         projects = self.import_projects(articles, rebate_ids)
-        customer_groups = self.import_customer_groups(projects, customers)
+        customer_groups, group_customer_assocs = self.import_customer_groups(projects, customers)
+        invoices = self.import_invoices(group_customer_assocs, articles)
+
+    @staticmethod
+    def date(s):
+        return datetime.datetime.strptime(s, '%Y-%m-%d %H:%M:%S')
 
     def exported_filepath(self, modelname):
         filename = '{}{}.csv'.format(self.prefix, modelname)
@@ -134,8 +144,7 @@ class Bw2Importer:
 
         for bw2_project in bw2_projects:
             project = Project(name=bw2_project.name,
-                              start_date=datetime.datetime.strptime(bw2_project.start_date,
-                                                                    '%Y-%m-%d %H:%M:%S'),
+                              start_date=self.date(bw2_project.start_date),
                               notes=bw2_project.notes)
             project.save()
             projects[int(bw2_project.id)] = project
@@ -180,13 +189,18 @@ class Bw2Importer:
         bw2_assocs = (Bw2CustomerInGroupAssoc(*fields) for fields in
                       self.imported_objects('CustomerInGroupAssoc', None))
 
+        group_customer_assocs = {}
+        assoc_ids_by_group_id = collections.defaultdict(set)
         count = 0
         for bw2_assoc in bw2_assocs:
+            assoc_id = int(bw2_assoc.id)
             group_id = int(bw2_assoc.customer_group_id)
             customer_id = int(bw2_assoc.customer_id)
 
             group = customer_groups[group_id]
             customer = customers[customer_id]
+            group_customer_assocs[assoc_id] = group, customer
+            assoc_ids_by_group_id[group_id].add(assoc_id)
             group.customers.add(customer)
             group.save()
             count += 1
@@ -207,6 +221,8 @@ class Bw2Importer:
             if remove:
                 group.delete()
                 del customer_groups[customer_group_id]
+                for assoc_id in assoc_ids_by_group_id[customer_group_id]:
+                    del group_customer_assocs[assoc_id]
 
         # remove projects without customer groups:
         projects_copy = projects.copy()
@@ -216,7 +232,7 @@ class Bw2Importer:
                 project.delete()
                 del projects[project_id]
 
-        return customer_groups
+        return customer_groups, group_customer_assocs
 
     @staticmethod
     def delete_duplicates(description, objects, keep_id, duplicate_ids):
@@ -229,6 +245,36 @@ class Bw2Importer:
                                                                               keep_object))
             if duplicate_object:
                 duplicate_object.delete()
+
+    def import_invoices(self, group_customer_assocs, articles):
+        from bizwiz.invoices.models import Invoice
+        invoices = {}
+
+        bw2_invoices = (Bw2ArticleList(*fields) for fields in
+                        self.imported_objects('CustomersArticleList', Invoice))
+
+        for bw2_invoice in bw2_invoices:
+            bw2_id = int(bw2_invoice.id)
+            number = bw2_invoice.invoice_number
+            invoice_date = self.date(bw2_invoice.invoice_date)
+            payment_date = self.date(bw2_invoice.payment_date) if bw2_invoice.payment_date else None
+            taxes_filed = bw2_invoice.taxes_filed.strip() == '1'
+            customer_in_group_assoc_id = int(bw2_invoice.customer_in_group_assoc_id)
+
+            group, customer = group_customer_assocs.get(customer_in_group_assoc_id, (None, None))
+
+            invoice = Invoice(
+                number=number,
+                date_created=invoice_date,
+                date_paid=payment_date,
+                date_taxes_filed=payment_date if taxes_filed else None,
+                project=group.project if group else None,
+            )
+            invoice.save()
+            invoices[bw2_id] = invoice
+
+        _logger.info('Imported {} invoices.'.format(len(invoices)))
+        return invoices
 
 
 def main():

@@ -13,52 +13,25 @@ from bizwiz.customers.models import CustomerBase, Customer
 from bizwiz.projects.models import Project
 
 
-class InvoiceState:
-    PAYMENT_PENDING = 'PENDING'
-    PAID = 'PAID'
-    TAXES_FILED = 'TAXFILED'
-
-
-class State(models.Model):
-    invoice = models.ForeignKey(
-        'Invoice',
-        verbose_name=_("Invoice"),
-        on_delete=models.CASCADE,
-        related_name='states',
-    )
-    previous = models.OneToOneField(
-        'State',
-        verbose_name=_("Previous Transition"),
-        on_delete=models.SET_NULL,
-        related_name='next',
-        blank=True,
-        null=True
-    )
-    timestamp = models.DateTimeField(
-        _("Timestamp"),
-        auto_now=True,
-    )
-    name = models.CharField(
-        _("State"),
-        max_length=20,
-        choices=(
-            (InvoiceState.PAYMENT_PENDING, _("Payment pending")),
-            (InvoiceState.PAID, _("Paid")),
-            (InvoiceState.TAXES_FILED, _("Taxes filed")),
-        ),
-        default=InvoiceState.PAYMENT_PENDING,
-    )
-
-
 class Invoice(models.Model):
     number = models.CharField(
         _("Invoice number"),
         max_length=7,
         unique=True,
     )
-    date = models.DateField(
-        _("Date"),
+    date_created = models.DateField(
+        _("Created"),
         default=datetime.date.today,
+    )
+    date_paid = models.DateField(
+        _("Paid"),
+        blank=True,
+        null=True,
+    )
+    date_taxes_filed = models.DateField(
+        _("Taxes filed"),
+        blank=True,
+        null=True,
     )
     project = models.ForeignKey(
         Project,
@@ -66,12 +39,6 @@ class Invoice(models.Model):
         on_delete=models.SET_NULL,
         blank=True,
         null=True,
-    )
-    current_state = models.OneToOneField(
-        State,
-        verbose_name=_("Current state"),
-        on_delete=models.PROTECT,
-        related_name='+',
     )
 
     class Meta:
