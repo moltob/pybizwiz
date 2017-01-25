@@ -13,47 +13,41 @@ from bizwiz.customers.models import CustomerBase, Customer
 from bizwiz.projects.models import Project
 
 
-class InvoicedArticle(ArticleBase):
-    original_article = models.ForeignKey(
-        Article,
-        on_delete=models.SET_NULL,
-        verbose_name=_("Original article"),
-        blank=True,
-        null=True,
-        related_name='invoiced_article',
-    )
-    amount = models.PositiveSmallIntegerField(_("Amount"))
+class InvoiceState:
+    PAYMENT_PENDING = 'PENDING'
+    PAID = 'PAID'
+    TAXES_FILED = 'TAXFILED'
+
+
+class State(models.Model):
     invoice = models.ForeignKey(
-        Invoice,
-        _("Invoice"),
+        'Invoice',
+        verbose_name=_("Invoice"),
         on_delete=models.CASCADE,
-        related_name='invoiced_articles',
+        related_name='states',
     )
-
-    class Meta:
-        verbose_name = _("Invoiced article")
-        verbose_name_plural = _("Invoiced articles")
-
-
-class InvoicedCustomer(CustomerBase):
-    original_customer = models.ForeignKey(
-        Customer,
+    previous = models.OneToOneField(
+        'State',
+        verbose_name=_("Previous Transition"),
         on_delete=models.SET_NULL,
-        verbose_name=_("Original customer"),
+        related_name='next',
         blank=True,
-        null=True,
-        related_name='invoiced_customer',
+        null=True
     )
-    invoice = models.OneToOneField(
-        Invoice,
-        _("Invoice"),
-        on_delete=models.CASCADE,
-        related_name='invoiced_customer',
+    timestamp = models.DateTimeField(
+        _("Timestamp"),
+        auto_now=True,
     )
-
-    class Meta:
-        verbose_name = _("Invoiced customer")
-        verbose_name_plural = _("Invoiced customers")
+    name = models.CharField(
+        _("State"),
+        max_length=20,
+        choices=(
+            (InvoiceState.PAYMENT_PENDING, _("Payment pending")),
+            (InvoiceState.PAID, _("Paid")),
+            (InvoiceState.TAXES_FILED, _("Taxes filed")),
+        ),
+        default=InvoiceState.PAYMENT_PENDING,
+    )
 
 
 class Invoice(models.Model):
@@ -85,37 +79,44 @@ class Invoice(models.Model):
         verbose_name_plural = _("Invoices")
 
 
-class InvoiceState:
-    PAYMENT_PENDING = 'PENDING'
-    PAID = 'PAID'
-    TAXES_FILED = 'TAXFILED'
-
-
-class State(models.Model):
+class InvoicedArticle(ArticleBase):
+    original_article = models.ForeignKey(
+        Article,
+        on_delete=models.SET_NULL,
+        verbose_name=_("Original article"),
+        blank=True,
+        null=True,
+        related_name='invoiced_article',
+    )
+    amount = models.PositiveSmallIntegerField(_("Amount"))
     invoice = models.ForeignKey(
         Invoice,
         verbose_name=_("Invoice"),
         on_delete=models.CASCADE,
-        related_name='states',
+        related_name='invoiced_articles',
     )
-    previous = models.OneToOneField(
-        'State',
-        verbose_name=_("Previous Transition"),
+
+    class Meta:
+        verbose_name = _("Invoiced article")
+        verbose_name_plural = _("Invoiced articles")
+
+
+class InvoicedCustomer(CustomerBase):
+    original_customer = models.ForeignKey(
+        Customer,
         on_delete=models.SET_NULL,
-        related_name='next',
+        verbose_name=_("Original customer"),
         blank=True,
+        null=True,
+        related_name='invoiced_customer',
     )
-    timestamp = models.DateTimeField(
-        _("Timestamp"),
-        auto_now=True,
+    invoice = models.OneToOneField(
+        Invoice,
+        verbose_name=_("Invoice"),
+        on_delete=models.CASCADE,
+        related_name='invoiced_customer',
     )
-    name = models.CharField(
-        _("State"),
-        max_length=20,
-        choices=(
-            (InvoiceState.PAYMENT_PENDING, _("Payment pending")),
-            (InvoiceState.PAID, _("Paid")),
-            (InvoiceState.TAXES_FILED, _("Taxes filed")),
-        ),
-        default=InvoiceState.PAYMENT_PENDING,
-    )
+
+    class Meta:
+        verbose_name = _("Invoiced customer")
+        verbose_name_plural = _("Invoiced customers")
