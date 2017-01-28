@@ -19,22 +19,40 @@ import django.db.transaction
 
 _logger = logging.getLogger('import-bw2')
 
-Bw2Article = collections.namedtuple('Bw2Article', 'id invoice_text last_price outdated')
-Bw2Customer = collections.namedtuple('Bw2Customer', 'id last_name first_name title company_name '
-                                                    'street_address zip_code city salutation '
-                                                    'phone_number mobile_number email shoot_1_date '
-                                                    'shoot_2_date shoot_3_date shoot_4_date notes')
-Bw2Project = collections.namedtuple('Bw2Project', 'id name notes start_date')
-Bw2CustomerGroup = collections.namedtuple('Bw2CustomerGroup', 'id name project_id')
-Bw2CustomerInGroupAssoc = collections.namedtuple('Bw2CustomerInGroupAssoc', 'id customer_group_id '
-                                                                            'customer_id')
-Bw2ArticleInProjectAssoc = collections.namedtuple('Bw2ArticleInProjectAssoc', 'id article_id '
-                                                                              'project_id')
-Bw2ArticleList = collections.namedtuple('Bw2ArticleList', 'id, invoice_number invoice_date '
-                                                          'payment_date offer_date order_date '
-                                                          'taxes_filed customer_in_group_assoc_id '
-                                                          'pay_before_ship '
-                                                          'offer_with_articles_pending')
+Bw2Article = collections.namedtuple(
+    'Bw2Article',
+    'id invoice_text last_price outdated'
+)
+Bw2Customer = collections.namedtuple(
+    'Bw2Customer',
+    'id last_name first_name title company_name street_address zip_code city salutation '
+    'phone_number mobile_number email shoot_1_date shoot_2_date shoot_3_date shoot_4_date notes'
+)
+Bw2Project = collections.namedtuple(
+    'Bw2Project',
+    'id name notes start_date'
+)
+Bw2CustomerGroup = collections.namedtuple(
+    'Bw2CustomerGroup',
+    'id name project_id'
+)
+Bw2CustomerInGroupAssoc = collections.namedtuple(
+    'Bw2CustomerInGroupAssoc',
+    'id customer_group_id customer_id'
+)
+Bw2ArticleInProjectAssoc = collections.namedtuple(
+    'Bw2ArticleInProjectAssoc',
+    'id article_id project_id'
+)
+Bw2ArticleList = collections.namedtuple(
+    'Bw2ArticleList',
+    'id invoice_number invoice_date payment_date offer_date order_date taxes_filed '
+    'customer_in_group_assoc_id pay_before_ship offer_with_articles_pending'
+)
+Bw2ArticleListItem = collections.namedtuple(
+    'Bw2ArticleListItem',
+    'id article_list_id article_id price amount'
+)
 
 
 class Bw2Importer:
@@ -49,7 +67,7 @@ class Bw2Importer:
         customers = self.import_customers()
         projects = self.import_projects(articles, rebate_ids)
         customer_groups, group_customer_assocs = self.import_customer_groups(projects, customers)
-        invoices = self.import_invoices(group_customer_assocs, articles)
+        invoices = self.import_invoices(group_customer_assocs, articles, rebate_ids)
 
     @staticmethod
     def date(s):
@@ -222,7 +240,9 @@ class Bw2Importer:
                 group.delete()
                 del customer_groups[customer_group_id]
                 for assoc_id in assoc_ids_by_group_id[customer_group_id]:
-                    del group_customer_assocs[assoc_id]
+                    # tag group as being deleted but keep customer information:
+                    _, customer = group_customer_assocs[assoc_id]
+                    group_customer_assocs[assoc_id] = None, customer
 
         # remove projects without customer groups:
         projects_copy = projects.copy()
@@ -246,8 +266,8 @@ class Bw2Importer:
             if duplicate_object:
                 duplicate_object.delete()
 
-    def import_invoices(self, group_customer_assocs, articles):
-        from bizwiz.invoices.models import Invoice
+    def import_invoices(self, group_customer_assocs, articles, rebate_ids):
+        from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
         invoices = {}
 
         bw2_invoices = (Bw2ArticleList(*fields) for fields in
@@ -255,7 +275,7 @@ class Bw2Importer:
 
         for bw2_invoice in bw2_invoices:
             bw2_id = int(bw2_invoice.id)
-            number = bw2_invoice.invoice_number
+            number = bw2_invoice.invoice_number.strip()
             invoice_date = self.date(bw2_invoice.invoice_date)
             payment_date = self.date(bw2_invoice.payment_date) if bw2_invoice.payment_date else None
             taxes_filed = bw2_invoice.taxes_filed.strip() == '1'
@@ -272,6 +292,38 @@ class Bw2Importer:
             )
             invoice.save()
             invoices[bw2_id] = invoice
+
+            if customer:
+                _logger.debug('Invoice {} for {}.'.format(invoice.number, customer.full_name()))
+                invoiced_customer = InvoicedCustomer.create(invoice, customer)
+                invoiced_customer.save()
+            else:
+                _logger.debug('Invoice {} has no customer.'.format(invoice.number))
+
+        bw2_article_list_items = (Bw2ArticleListItem(*fields) for fields in
+                                  self.imported_objects('ArticleListItem', InvoicedArticle))
+
+        for bw2_article_list_item in bw2_article_list_items:
+            article_list_id = int(bw2_article_list_item.article_list_id)
+            article_id = int(bw2_article_list_item.article_id)
+            price = float(bw2_article_list_item.price)
+            amount = int(bw2_article_list_item.amount)
+
+            is_rebate = article_id in rebate_ids
+            if is_rebate:
+                article = None
+                if price > 0:
+                    _logger.warning('Article list item {} recognized as rebate with article ID {}, '
+                                    'but has price of {}.'
+                                    .format(bw2_article_list_item.id, article_id, price))
+            else:
+                article = articles[article_id]
+            invoice = invoices[article_list_id]
+            invoiced_article = InvoicedArticle.create(invoice, article, amount)
+            invoiced_article.price = price
+            if is_rebate:
+                invoiced_article.name = 'Rabatt (alt)'
+            invoiced_article.save()
 
         _logger.info('Imported {} invoices.'.format(len(invoices)))
         return invoices

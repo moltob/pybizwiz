@@ -67,6 +67,17 @@ class InvoicedArticle(ArticleBase):
         verbose_name = _("Invoiced article")
         verbose_name_plural = _("Invoiced articles")
 
+    @classmethod
+    def create(cls, invoice, article, amount):
+        invoiced_article = InvoicedArticle(invoice=invoice, original_article=article, amount=amount)
+        if article:
+            copy_field_data(ArticleBase, article, invoiced_article)
+        return invoiced_article
+
+
+# invoiced articles copy the article name and may be duplicates:
+InvoicedArticle._meta.get_field('name')._unique = False
+
 
 class InvoicedCustomer(CustomerBase):
     original_customer = models.ForeignKey(
@@ -87,3 +98,25 @@ class InvoicedCustomer(CustomerBase):
     class Meta:
         verbose_name = _("Invoiced customer")
         verbose_name_plural = _("Invoiced customers")
+
+    @classmethod
+    def create(cls, invoice, customer):
+        invoiced_customer = InvoicedCustomer(invoice=invoice, original_customer=customer)
+        copy_field_data(CustomerBase, customer, invoiced_customer)
+        return invoiced_customer
+
+
+def copy_field_data(model, src, dst):
+    """Copies all non-automatic fields.
+
+    Helper useful when copying common base class data.
+
+    :model: Model class for which fields are copied, a common ancestor of src and dst.
+    :src: Instance from which field data is copied.
+    :dst: Instance to which field data is copied.
+    """
+    for field in model._meta.get_fields():
+        if not (isinstance(field, models.AutoField) or isinstance(field, models.BigAutoField)):
+            name = field.name
+            value = getattr(src, name)
+            setattr(dst, name, value)
