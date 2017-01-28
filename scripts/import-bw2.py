@@ -63,11 +63,11 @@ class Bw2Importer:
     def run(self):
         _logger.info('Importing Bizwiz 2 data from {}.'.format(self.folderpath))
         django.setup()
-        articles, rebate_ids = self.import_articles()
+        articles = self.import_articles()
         customers = self.import_customers()
-        projects = self.import_projects(articles, rebate_ids)
+        projects = self.import_projects(articles)
         customer_groups, group_customer_assocs = self.import_customer_groups(projects, customers)
-        invoices = self.import_invoices(group_customer_assocs, articles, rebate_ids)
+        invoices = self.import_invoices(group_customer_assocs, articles)
 
     @staticmethod
     def date(s):
@@ -92,30 +92,29 @@ class Bw2Importer:
         from bizwiz.articles.models import Article
 
         articles = {}
-        rebate_ids = set()
         unique_article_names = set()
         bw2_articles = (Bw2Article(*fields) for fields in self.imported_objects('Article', Article))
         for bw2_article in bw2_articles:
-            if "rabatt" in bw2_article.invoice_text.lower():
-                _logger.info('Skipping import of rebate: {}.'.format(bw2_article.invoice_text))
-                rebate_ids.add(int(bw2_article.id))
-            else:
-                article = Article(name=bw2_article.invoice_text.strip(),
-                                  price=bw2_article.last_price.strip(),
-                                  inactive=bw2_article.outdated.strip())
+            article = Article(name=bw2_article.invoice_text.strip(),
+                              price=float(bw2_article.last_price.strip()),
+                              inactive=bool(int(bw2_article.outdated)))
 
-                if article.name in unique_article_names:
-                    _logger.warning('Article {} {} violates unique naming condition and'
-                                    ' must be deduplicated.'.
-                                    format(bw2_article.id, bw2_article.invoice_text))
-                else:
-                    unique_article_names.add(article.name)
-                    article.save()
-                    articles[int(bw2_article.id)] = article
+            if "rabatt" in article.name.lower() and not article.inactive:
+                _logger.info('Deactivating old rebate article: {}.'.format(article.name))
+                article.inactive = True
+
+            if article.name in unique_article_names:
+                _logger.warning('Article {} {} violates unique naming condition and'
+                                ' must be deduplicated.'.
+                                format(bw2_article.id, bw2_article.invoice_text))
+            else:
+                unique_article_names.add(article.name)
+                article.save()
+                articles[int(bw2_article.id)] = article
 
         _logger.info('Imported {} articles.'.format(len(articles)))
         self.delete_duplicates('Kontaktabzug behalten', articles, 115, (118,))
-        return articles, rebate_ids
+        return articles
 
     def import_customers(self):
         from bizwiz.customers.models import Customer, Salutation
@@ -154,7 +153,7 @@ class Bw2Importer:
         self.delete_duplicates('Konstantin Körner', customers, 1105, (1116, 1117))
         return customers
 
-    def import_projects(self, articles, rebate_ids):
+    def import_projects(self, articles):
         from bizwiz.projects.models import Project
 
         projects = {}
@@ -178,13 +177,10 @@ class Bw2Importer:
             project_id = int(bw2_assoc.project_id)
 
             project = projects[project_id]
-            if article_id in rebate_ids:
-                _logger.debug('Skipping rebate association with {}.'.format(project.name))
-            else:
-                article = articles[article_id]
-                project.articles.add(article)
-                project.save()
-                count += 1
+            article = articles[article_id]
+            project.articles.add(article)
+            project.save()
+            count += 1
 
         _logger.info('Added {} articles to projects.'.format(count))
         return projects
@@ -266,7 +262,7 @@ class Bw2Importer:
             if duplicate_object:
                 duplicate_object.delete()
 
-    def import_invoices(self, group_customer_assocs, articles, rebate_ids):
+    def import_invoices(self, group_customer_assocs, articles):
         from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
         invoices = {}
 
@@ -309,20 +305,10 @@ class Bw2Importer:
             price = float(bw2_article_list_item.price)
             amount = int(bw2_article_list_item.amount)
 
-            is_rebate = article_id in rebate_ids
-            if is_rebate:
-                article = None
-                if price > 0:
-                    _logger.warning('Article list item {} recognized as rebate with article ID {}, '
-                                    'but has price of {}.'
-                                    .format(bw2_article_list_item.id, article_id, price))
-            else:
-                article = articles[article_id]
+            article = articles[article_id]
             invoice = invoices[article_list_id]
             invoiced_article = InvoicedArticle.create(invoice, article, amount)
             invoiced_article.price = price
-            if is_rebate:
-                invoiced_article.name = 'Rabatt (alt)'
             invoiced_article.save()
 
         _logger.info('Imported {} invoices.'.format(len(invoices)))
