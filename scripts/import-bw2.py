@@ -15,6 +15,8 @@ import os
 import collections
 
 import datetime
+
+import decimal
 import django.db.transaction
 
 _logger = logging.getLogger('import-bw2')
@@ -314,6 +316,30 @@ class Bw2Importer:
         _logger.info('Imported {} invoices.'.format(len(invoices)))
         return invoices
 
+    def verify_invoices(self):
+        bw2_article_list_items = (Bw2ArticleListItem(*fields) for fields in
+                                  self.imported_objects('ArticleListItem', None))
+
+        invoice_total_bw2 = 0.0
+
+        for bw2_article_list_item in bw2_article_list_items:
+            price = float(bw2_article_list_item.price)
+            amount = int(bw2_article_list_item.amount)
+            invoice_total_bw2 += price * amount
+
+        _logger.info('Total of all invoiced items in Bizwiz 2: %.2f' % invoice_total_bw2)
+
+        invoice_total_bw4 = decimal.Decimal(0)
+
+        from bizwiz.invoices.models import Invoice
+        for invoice in Invoice.objects.all():
+            for item in invoice.invoiced_articles.all():
+                invoice_total_bw4 += item.price * item.amount
+
+        _logger.info('Total of all invoiced items in Bizwiz 4: %.2f' % invoice_total_bw4)
+
+        assert abs(invoice_total_bw2 - float(invoice_total_bw4)) < 0.01
+
 
 def main():
     logging.basicConfig(level=logging.DEBUG,
@@ -327,6 +353,7 @@ def main():
 
     importer = Bw2Importer(args.folderpath)
     importer.run()
+    importer.verify_invoices()
 
 
 if __name__ == '__main__':
