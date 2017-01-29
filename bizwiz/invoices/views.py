@@ -9,6 +9,7 @@ from django.views import generic
 
 from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
+from bizwiz.invoices.forms import InvoiceAction, ListActionForm
 from bizwiz.invoices.models import Invoice
 
 
@@ -24,14 +25,17 @@ class InvoiceTable(tables.Table):
         'th': {'class': 'text-right'},
         'td': {'class': 'text-right'}
     })
+    selected = tables.CheckBoxColumn(accessor='pk', attrs={
+        'th__input': {'hidden': ''},  # no checkbox in table header
+    })
 
     class Meta:
         template = 'common/table.html'
         attrs = {'class': 'table table-striped'}
         per_page = 15
         model = Invoice
-        fields = ('number', 'invoiced_customer', 'date_created', 'date_paid', 'date_taxes_filed',
-                  'project', 'total')
+        fields = ('selected', 'number', 'invoiced_customer', 'date_created', 'date_paid',
+                  'date_taxes_filed', 'project', 'total')
         order_by = ('-number',)
 
     def render_invoiced_customer(self, record: Invoice):
@@ -48,7 +52,7 @@ class InvoiceTable(tables.Table):
 class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
     model = Invoice
     table_class = InvoiceTable
-    column_widths = ('15%', '20%', '10%', '10%', '10%', '35%', '10%')
+    column_widths = ('5%', '15%', '20%', '10%', '10%', '10%', '30%', '10%')
 
     def get_queryset(self):
         # apply project filter if active:
@@ -71,3 +75,8 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView)
             )
 
         return super().get_queryset()
+
+    def get_context_data(self, **kwargs):
+        # TODO: distinguish POST and GET later
+        action_form = ListActionForm()
+        return super().get_context_data(action_form=action_form, **kwargs)
