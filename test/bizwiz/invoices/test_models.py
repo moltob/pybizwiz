@@ -1,5 +1,8 @@
 from unittest import mock
 
+import decimal
+import pytest
+
 from bizwiz.articles.models import ArticleBase, Article
 from bizwiz.customers.models import Customer, Salutation, CustomerBase
 from bizwiz.invoices.models import InvoicedCustomer, Invoice, InvoicedArticle
@@ -45,3 +48,18 @@ def test__invoiced_article__create():
     assert a2.name == 'NAME'
     assert a2.price == 1.2
     assert a2.amount == 1
+
+
+@pytest.mark.django_db
+def test__invoice__total():
+    invoice = Invoice()
+    invoice.save()
+
+    a = InvoicedArticle(invoice=invoice, price=1.2, amount=1)
+    a.save()
+    a = InvoicedArticle(invoice=invoice, price=3.4, amount=0)
+    a.save()
+    a = InvoicedArticle(invoice=invoice, price=-0.5, amount=2)
+    a.save()
+
+    assert invoice.total() == decimal.Decimal('0.20')

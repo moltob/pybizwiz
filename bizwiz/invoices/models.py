@@ -48,6 +48,10 @@ class Invoice(models.Model):
     def __str__(self):
         return '{} ({})'.format(self.number, self.invoiced_customer.full_name())
 
+    def total(self):
+        """Total amount of invoice."""
+        return sum(item.price * item.amount for item in self.invoiced_articles.all())
+
 
 class InvoicedArticle(ArticleBase):
     original_article = models.ForeignKey(

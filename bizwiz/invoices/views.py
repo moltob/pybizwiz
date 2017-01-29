@@ -16,28 +16,39 @@ class InvoiceTable(tables.Table):
     #number = tables.LinkColumn('invoices:list', args=[tables.utils.A('pk')])
     number = tables.LinkColumn('invoices:list')
     invoiced_customer = tables.Column(_("Customer"), order_by=(
-        tables.utils.A('invoiced_customer.last_name'),
-        tables.utils.A('invoiced_customer.first_name')
+        'invoiced_customer.last_name',
+        'invoiced_customer.first_name'
     ))
-    project = tables.Column(_("Project"), order_by=(tables.utils.A('project.name')))
+    project = tables.Column(_("Project"), order_by='project.name')
+    total = tables.Column(order_by=tables.utils.A('total'), attrs={
+        'th': {'class': 'text-right'},
+        'td': {'class': 'text-right'}
+    })
 
     class Meta:
         template = 'common/table.html'
         attrs = {'class': 'table table-striped'}
         per_page = 15
         model = Invoice
-        fields = ('number', 'date_created', 'date_paid', 'date_taxes_filed', 'project',
-                  'invoiced_customer')
+        fields = ('number', 'invoiced_customer', 'total', 'date_created', 'date_paid',
+                  'date_taxes_filed', 'project',)
         order_by = ('-number',)
 
     def render_invoiced_customer(self, record: Invoice):
         return record.invoiced_customer.full_name()
 
+    def order_total(self, queryset, descending):
+        queryset = queryset.annotate(
+            total=models.Sum(models.F('invoiced_articles__price') *
+                             models.F('invoiced_articles__amount'))
+        ).order_by(('-' if descending else '') + 'total')
+        return queryset, True
+
 
 class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
     model = Invoice
     table_class = InvoiceTable
-    column_widths = ('15%', '10%', '10%', '10%', '30%', '25%')
+    column_widths = ('15%', '20%', '10%', '10%', '10%', '10%', '35%')
 
     def get_queryset(self):
         # apply project filter if active:
