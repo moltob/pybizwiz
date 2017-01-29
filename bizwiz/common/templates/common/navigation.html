@@ -15,8 +15,14 @@
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav" data-sm-options="{showOnClick:true}">
-                <li class="{% if 'overview' in request.path %}active{% endif %}">
-                    <a href="{% comment %}{% url 'invoice:overview' %}{% endcomment %}#">{% trans 'Invoices' %}</a>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">
+                        {% trans 'Invoices' %} <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        {% comment %}<li><a href="{% url 'articles:create' %}">{% trans 'New' %}</a></li>{% endcomment %}
+                        <li><a href="{% url 'invoices:list' %}">{% trans 'Browse' %}</a></li>
+                    </ul>
                 </li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button">

@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^accounts/', include('bizwiz.accounts.urls', namespace='accounts')),
     url(r'^articles/', include('bizwiz.articles.urls', namespace='articles')),
     url(r'^customers/', include('bizwiz.customers.urls', namespace='customers')),
+    url(r'^invoices/', include('bizwiz.invoices.urls', namespace='invoices')),
     url(r'^projects/', include('bizwiz.projects.urls', namespace='projects')),
     url(r'^admin/', admin.site.urls),
 ]

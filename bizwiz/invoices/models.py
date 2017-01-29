@@ -45,6 +45,9 @@ class Invoice(models.Model):
         verbose_name = _("Invoice")
         verbose_name_plural = _("Invoices")
 
+    def __str__(self):
+        return '{} ({})'.format(self.number, self.invoiced_customer.full_name())
+
 
 class InvoicedArticle(ArticleBase):
     original_article = models.ForeignKey(
