@@ -30,8 +30,8 @@ class InvoiceTable(tables.Table):
         attrs = {'class': 'table table-striped'}
         per_page = 15
         model = Invoice
-        fields = ('number', 'invoiced_customer', 'total', 'date_created', 'date_paid',
-                  'date_taxes_filed', 'project',)
+        fields = ('number', 'invoiced_customer', 'date_created', 'date_paid', 'date_taxes_filed',
+                  'project', 'total')
         order_by = ('-number',)
 
     def render_invoiced_customer(self, record: Invoice):
@@ -48,7 +48,7 @@ class InvoiceTable(tables.Table):
 class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
     model = Invoice
     table_class = InvoiceTable
-    column_widths = ('15%', '20%', '10%', '10%', '10%', '10%', '35%')
+    column_widths = ('15%', '20%', '10%', '10%', '10%', '35%', '10%')
 
     def get_queryset(self):
         # apply project filter if active:
