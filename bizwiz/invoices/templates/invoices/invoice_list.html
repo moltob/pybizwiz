@@ -47,46 +47,50 @@
     </div>
 
     <script>
-        var previewBtn = $("#preview");
+        var previewButton = $("#preview");
+        var previewHeader = $("#preview-headline");
+        var previewInvoices = $("#preview-list");
 
-        function setPreviewButtonState() {
+        function setPreviewStates() {
             // preview button enabled or not:
             var optionValue = $("#id_action").find("option:selected").first().val();
             var numSelected = $("input:checked").length;
             var disabled = (numSelected < 1) || (optionValue === "");
-            previewBtn.prop("disabled", disabled);
+            previewButton.prop("disabled", disabled);
 
             // preview dialog headline:
-            var question = "Are you sure you want to ";
-            switch (optionValue) {
-                case "PAY":
-                    question += "mark the following invoices as paid?";
-                    break;
-                case "TAX":
-                    question += "file taxes for the following invoices?";
-                    break;
-                case "DELETE":
-                    question += "delete the following invoices?";
-                    break;
+            if (!disabled) {
+                var question = "Are you sure you want to ";
+                switch (optionValue) {
+                    case "PAY":
+                        question += "mark the following invoices as paid?";
+                        break;
+                    case "TAX":
+                        question += "file taxes for the following invoices?";
+                        break;
+                    case "DELETE":
+                        question += "delete the following invoices?";
+                        break;
+                }
+                previewHeader.text(question);
             }
-            $("#preview-headline").text(question);
         }
 
         // hook up event handlers for preview state changes:
-        $("#id_action").change(setPreviewButtonState);
+        $("#id_action").change(setPreviewStates);
         $("tr td input").each(function () {
-            $(this).click(setPreviewButtonState);
+            $(this).click(setPreviewStates);
         });
 
-        previewBtn.click(function () {
-            var list = $("#preview-list");
-            list.empty();
+        // hook up update of invoice list after preview button was clicked:
+        previewButton.click(function () {
+            previewInvoices.empty();
             $("input:checked").each(function () {
                 var row = $(this).parent().parent();
                 var number = row.find(".number").first().text();
                 var name = row.find(".invoiced_customer").first().text();
                 var total = row.find(".total").first().text();
-                list.append("<li>" + number + ', ' + name + ", " + total + "</li>");
+                previewInvoices.append("<li>" + number + ', ' + name + ", " + total + "</li>");
             });
         });
     </script>
