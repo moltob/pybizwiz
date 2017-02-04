@@ -14,7 +14,7 @@ class ListActionForm(forms.Form):
     action = forms.ChoiceField(choices=BLANK_CHOICE_DASH + [
         (InvoiceAction.PAY, _("Mark as paid")),
         (InvoiceAction.TAX, _("File taxes")),
-        (InvoiceAction.PAY, _("Delete")),
+        (InvoiceAction.DELETE, _("Delete")),
     ])
 
     helper = helper.FormHelper()
@@ -22,3 +22,4 @@ class ListActionForm(forms.Form):
         layout.Field('action'),
         layout.Submit('submit', _("Submit"))
     )
+    helper.form_tag = False

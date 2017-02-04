@@ -14,9 +14,11 @@
         </div>
     </div>
 
-    {% crispy action_form %}
+    <form method="post">
+        {% crispy action_form %}
 
-    <div class="voffset3">
-        {% render_table table %}
-    </div>
+        <div class="voffset3">
+            {% render_table table %}
+        </div>
+    </form>
 {% endblock content %}
