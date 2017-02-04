@@ -19,9 +19,18 @@ class ListActionForm(forms.Form):
 
     helper = helper.FormHelper()
     helper.layout = layout.Layout(
-        layout.Field('action'),
-        bootstrap.StrictButton(_("Submit"), name='preview', css_class='btn-primary',
-                               data_toggle='modal', data_target='#previewModal', css_id='preview',
-                               disabled=True),
+        layout.Row(
+            layout.Div(
+                layout.Field('action'),
+                css_class='col-lg-offset-8 col-lg-3'
+            ),
+            layout.Div(
+                bootstrap.StrictButton(_("Apply"), name='preview', css_class='btn-default',
+                                       data_toggle='modal', data_target='#previewModal',
+                                       css_id='preview', disabled=True),
+                css_class='col-lg-1'
+            ),
+        ),
     )
     helper.form_tag = False
+    helper.form_show_labels = False
