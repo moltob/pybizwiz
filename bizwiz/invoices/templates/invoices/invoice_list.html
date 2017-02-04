@@ -21,4 +21,73 @@
             {% render_table table %}
         </div>
     </form>
+
+    <!-- Modal -->
+    <div class="modal fade" id="previewModal" tabindex="-1" role="dialog"
+         aria-labelledby="previewModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="previewModalLabel">Invoice modification</h4>
+                </div>
+                <div class="modal-body">
+                    <p id="preview-headline">
+                    </p>
+                    <ul id="preview-list">
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var previewBtn = $("#preview");
+
+        function setPreviewButtonState() {
+            // preview button enabled or not:
+            var optionValue = $("#id_action").find("option:selected").first().val();
+            var numSelected = $("input:checked").length;
+            var disabled = (numSelected < 1) || (optionValue === "");
+            previewBtn.prop("disabled", disabled);
+
+            // preview dialog headline:
+            var question = "Are you sure you want to ";
+            switch (optionValue) {
+                case "PAY":
+                    question += "mark the following invoices as paid?";
+                    break;
+                case "TAX":
+                    question += "file taxes for the following invoices?";
+                    break;
+                case "DELETE":
+                    question += "delete the following invoices?";
+                    break;
+            }
+            $("#preview-headline").text(question);
+        }
+
+        // hook up event handlers for preview state changes:
+        $("#id_action").change(setPreviewButtonState);
+        $("tr td input").each(function () {
+            $(this).click(setPreviewButtonState);
+        });
+
+        previewBtn.click(function () {
+            var list = $("#preview-list");
+            list.empty();
+            $("input:checked").each(function () {
+                var row = $(this).parent().parent();
+                var number = row.find(".number").first().text();
+                var name = row.find(".invoiced_customer").first().text();
+                var total = row.find(".total").first().text();
+                list.append("<li>" + number + ', ' + name + ", " + total + "</li>");
+            });
+        });
+    </script>
 {% endblock content %}

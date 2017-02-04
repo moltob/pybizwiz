@@ -1,4 +1,4 @@
-from crispy_forms import layout, helper
+from crispy_forms import layout, helper, bootstrap
 from django import forms
 from django.db.models import BLANK_CHOICE_DASH
 from django.utils.translation import ugettext as _
@@ -20,6 +20,9 @@ class ListActionForm(forms.Form):
     helper = helper.FormHelper()
     helper.layout = layout.Layout(
         layout.Field('action'),
+        bootstrap.StrictButton(_("Submit"), name='preview', css_class='btn-primary',
+                               data_toggle='modal', data_target='#previewModal', css_id='preview',
+                               disabled=True),
         layout.Submit('submit', _("Submit"))
     )
     helper.form_tag = False
