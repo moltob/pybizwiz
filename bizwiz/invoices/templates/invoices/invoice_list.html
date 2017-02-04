@@ -85,8 +85,12 @@
 
         // hook up event handlers for preview state changes:
         $("#id_action").change(setPreviewStates);
+        var i = 0;
         $("tr td input").each(function () {
             $(this).click(setPreviewStates);
+
+            // rename check boxes to have unique names, to allow posting them directly to server:
+            $(this).attr("name", "selected_" + i++);
         });
 
         // hook up update of invoice list after preview button was clicked:

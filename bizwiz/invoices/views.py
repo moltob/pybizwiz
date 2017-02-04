@@ -26,7 +26,7 @@ class InvoiceTable(tables.Table):
         'td': {'class': 'text-right'}
     })
     selected = tables.CheckBoxColumn(accessor='pk', attrs={
-        'th__input': {'hidden': ''},  # no checkbox in table header
+        'th__input': {'id': 'id-select-all'},
     })
 
     class Meta:
