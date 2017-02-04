@@ -23,6 +23,5 @@ class ListActionForm(forms.Form):
         bootstrap.StrictButton(_("Submit"), name='preview', css_class='btn-primary',
                                data_toggle='modal', data_target='#previewModal', css_id='preview',
                                disabled=True),
-        layout.Submit('submit', _("Submit"))
     )
     helper.form_tag = False
