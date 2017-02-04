@@ -49,10 +49,13 @@ class InvoiceTable(tables.Table):
         return queryset, True
 
 
-class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
+class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
+           tables.SingleTableView):
     model = Invoice
     table_class = InvoiceTable
     column_widths = ('5%', '15%', '20%', '10%', '10%', '10%', '30%', '10%')
+    form_class = ListActionForm
+    success_url = urls.reverse_lazy('invoices:list')
 
     def get_queryset(self):
         # apply project filter if active:
@@ -76,7 +79,9 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView)
 
         return super().get_queryset()
 
-    def get_context_data(self, **kwargs):
-        # TODO: distinguish POST and GET later
-        action_form = ListActionForm()
-        return super().get_context_data(action_form=action_form, **kwargs)
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
