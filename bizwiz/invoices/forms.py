@@ -16,12 +16,15 @@ class ListActionForm(forms.Form):
         (InvoiceAction.TAX, _("File taxes")),
         (InvoiceAction.DELETE, _("Delete")),
     ])
+    # whitespace separated list of invoice IDs to be modified, filled by JS before form submission:
+    invoice_ids = forms.CharField(strip=True)
 
     helper = helper.FormHelper()
     helper.layout = layout.Layout(
         layout.Row(
             layout.Div(
                 layout.Field('action'),
+                layout.Field('invoice_ids', type='hidden'),
                 css_class='col-lg-offset-8 col-lg-3'
             ),
             layout.Div(
@@ -34,3 +37,5 @@ class ListActionForm(forms.Form):
     )
     helper.form_tag = False
     helper.form_show_labels = False
+
+

@@ -57,6 +57,7 @@
         var previewButton = $("#preview");
         var previewHeader = $("#preview-headline");
         var previewInvoices = $("#preview-list");
+        var invoice_ids = $("#id_invoice_ids");
 
         function setPreviewStates() {
             // preview button enabled or not:
@@ -99,24 +100,26 @@
             setPreviewStates();
         });
 
-        // hook up event for checkbox clicks and change their names to unique:
-        var i = 0;
+        // hook up event for checkbox clicks:
         $("tr td input").each(function () {
-            var input = $(this);
-            input.click(setPreviewStates);
-            input.attr("name", "selected_" + i++);
+            $(this).click(setPreviewStates);
         });
 
         // hook up update of invoice list after preview button was clicked:
         previewButton.click(function () {
             previewInvoices.empty();
+            var ids = "";
             $("tr td input:checked").each(function () {
-                var row = $(this).parent().parent();
+                var box = $(this);
+                var row = box.parent().parent();
+                var id = box.val();
                 var number = row.find(".number").first().text();
                 var name = row.find(".invoiced_customer").first().text();
                 var total = row.find(".total").first().text();
                 previewInvoices.append("<li>" + number + ', ' + name + ", " + total + "</li>");
+                ids += ' ' + id;
             });
+            invoice_ids.val(ids);
         });
 
         $("#preview-yes").click(function () {
