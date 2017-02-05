@@ -63,7 +63,7 @@ class ListActionForm(forms.Form):
             found_ids = {invoice.pk for invoice in invoices}
             missing_ids = invoice_ids - found_ids
             _logger.warning('Invoice with the following IDs not found in database: {}'
-                            .format(',').join(str(id_) for id_ in missing_ids))
+                            .format(','.join(str(id_) for id_ in missing_ids)))
             raise forms.ValidationError(
                 _("%(num)d invoices have not been found in the database, please refresh browser and"
                   " reselect."),
