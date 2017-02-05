@@ -67,16 +67,22 @@
 
             // preview dialog headline:
             if (!disabled) {
-                var question = "{% trans 'Are you sure you want to' %} ";
+                var question = "{% trans 'Are you sure you want to' context 'confirm 1'%} ";
                 switch (optionValue) {
                     case "PAY":
-                        question += "{% trans 'mark the following ' %}" + numSelected  + "{% trans ' invoices as paid?' %}";
+                        question += "{% trans 'mark the following' context 'confirm 2 pay' %}";
+                        question += " " + numSelected + " ";
+                        question += "{% trans 'invoices as paid?' context 'confirm 3 pay' %}";
                         break;
                     case "TAX":
-                        question += "{% trans 'file taxes for the following ' %}" + numSelected  + "{% trans ' invoices?' %}";
+                        question += "{% trans 'file taxes for the following' context 'confirm 2 tax' %}";
+                        question += " " + numSelected + " ";
+                        question += "{% trans 'invoices?' context 'confirm 3 tax' %}";
                         break;
                     case "DELETE":
-                        question += "{% trans 'delete the following ' %}" + numSelected  + "{% trans ' invoices?' %}";
+                        question += "{% trans 'delete the following' context 'confirm 2 del' %}";
+                        question += " " + numSelected + " ";
+                        question += "{% trans 'invoices?' context 'confirm 3 del' %}";
                         break;
                 }
                 previewHeader.text(question);

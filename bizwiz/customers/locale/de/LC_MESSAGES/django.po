@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-14 13:38+0100\n"
+"POT-Creation-Date: 2017-02-05 10:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -74,27 +74,27 @@ msgstr "Postleitzahl"
 msgid "City"
 msgstr "Stadt"
 
-#: .\bizwiz\customers\models.py:55
+#: .\bizwiz\customers\models.py:72
 msgid "Phone number"
 msgstr "Telefon"
 
-#: .\bizwiz\customers\models.py:60
+#: .\bizwiz\customers\models.py:77
 msgid "Mobile number"
 msgstr "Mobiltelefon"
 
-#: .\bizwiz\customers\models.py:65
+#: .\bizwiz\customers\models.py:82
 msgid "Email address"
 msgstr "Email Adresse"
 
-#: .\bizwiz\customers\models.py:70
+#: .\bizwiz\customers\models.py:87
 msgid "Notes"
 msgstr "Notizen"
 
-#: .\bizwiz\customers\models.py:75
+#: .\bizwiz\customers\models.py:92
 msgid "Customer"
 msgstr "Kunde"
 
-#: .\bizwiz\customers\models.py:76
+#: .\bizwiz\customers\models.py:93
 #: .\bizwiz\customers\templates\customers\customer_list.html:8
 msgid "Customers"
 msgstr "Kunden"
@@ -136,12 +136,17 @@ msgstr ""
 "Sie den aktuellen Namen mithilfe der angezeigten Checkbox.\n"
 "                    "
 
-#: .\bizwiz\customers\views.py:62
+#: .\bizwiz\customers\views.py:72
 #, python-format
 msgid "Updated: %(last_name)s, %(first_name)s"
 msgstr "Bearbeitet: %(last_name)s, %(first_name)s"
 
-#: .\bizwiz\customers\views.py:66
+#: .\bizwiz\customers\views.py:85
 #, python-format
-msgid "Created: %(last_name)s, %(first_name)s"
-msgstr "Erstellt: %(last_name)s, %(first_name)s"
+msgid "Added to current customer group: %(last_name)s, %(first_name)s"
+msgstr "Zur aktuellen Kundengruppe hinzugefügt: %(last_name)s, %(first_name)s"
+
+#: .\bizwiz\customers\views.py:88
+#, python-format
+msgid "Added: %(last_name)s, %(first_name)s"
+msgstr "Hinzugefügt: %(last_name)s, %(first_name)s"

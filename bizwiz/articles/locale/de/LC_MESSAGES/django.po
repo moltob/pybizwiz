@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-14 13:38+0100\n"
+"POT-Creation-Date: 2017-02-05 10:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,29 +22,29 @@ msgstr ""
 msgid "Submit"
 msgstr "Abschicken"
 
-#: .\bizwiz\articles\models.py:8
+#: .\bizwiz\articles\models.py:7
 msgid "Invoice text"
 msgstr "Rechnungstext"
 
-#: .\bizwiz\articles\models.py:13
+#: .\bizwiz\articles\models.py:12
 msgid "Unit price"
 msgstr "Stückpreis"
 
-#: .\bizwiz\articles\models.py:18
+#: .\bizwiz\articles\models.py:27
 msgid "Inactive"
 msgstr "Inaktiv"
 
-#: .\bizwiz\articles\models.py:20
+#: .\bizwiz\articles\models.py:29
 msgid "Inactive articles can no longer be used in projects and invoices."
 msgstr ""
 "Inaktive Artikel können nicht mehr in Projekten und Rechnungen verwendet "
 "werden."
 
-#: .\bizwiz\articles\models.py:27
+#: .\bizwiz\articles\models.py:33
 msgid "Article"
 msgstr "Artikel"
 
-#: .\bizwiz\articles\models.py:28
+#: .\bizwiz\articles\models.py:34
 #: .\bizwiz\articles\templates\articles\article_list.html:9
 msgid "Articles"
 msgstr "Artikel"
@@ -65,11 +65,15 @@ msgstr "Inaktive ausblenden"
 msgid "Show inactive"
 msgstr "Inaktive anzeigen"
 
-#: .\bizwiz\articles\views.py:77
+#: .\bizwiz\articles\views.py:83
 #, python-format
 msgid "Updated: %(name)s"
 msgstr "Bearbeitet: %(name)s"
 
-#: .\bizwiz\articles\views.py:109
+#: .\bizwiz\articles\views.py:117
+msgid "Added to current project: {}."
+msgstr "Zum aktuellen Projekt hinzugefügt: {}."
+
+#: .\bizwiz\articles\views.py:119
 msgid "Added: {}."
 msgstr "Erstellt: {}"

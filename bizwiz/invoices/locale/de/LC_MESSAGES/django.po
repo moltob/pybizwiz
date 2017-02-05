@@ -1,0 +1,144 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-05 10:40+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\bizwiz\invoices\forms.py:15
+msgid "Mark as paid"
+msgstr "Kunde hat gezahlt"
+
+#: .\bizwiz\invoices\forms.py:16
+msgid "File taxes"
+msgstr "Versteuern"
+
+#: .\bizwiz\invoices\forms.py:17
+msgid "Delete"
+msgstr "Löschen"
+
+#: .\bizwiz\invoices\forms.py:28
+msgid "Apply"
+msgstr "Anwenden"
+
+#: .\bizwiz\invoices\models.py:18
+msgid "Invoice number"
+msgstr "Rechnungsnummer"
+
+#: .\bizwiz\invoices\models.py:23
+msgid "Created"
+msgstr "Erstellt"
+
+#: .\bizwiz\invoices\models.py:27
+msgid "Paid"
+msgstr "Bezahlt"
+
+#: .\bizwiz\invoices\models.py:32
+msgid "Taxes filed"
+msgstr "Verteuert"
+
+#: .\bizwiz\invoices\models.py:38 .\bizwiz\invoices\views.py:23
+msgid "Project"
+msgstr "Projekt"
+
+#: .\bizwiz\invoices\models.py:45 .\bizwiz\invoices\models.py:68
+#: .\bizwiz\invoices\models.py:100
+msgid "Invoice"
+msgstr "Rechnung"
+
+#: .\bizwiz\invoices\models.py:46
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:9
+msgid "Invoices"
+msgstr "Rechnungen"
+
+#: .\bizwiz\invoices\models.py:60
+msgid "Original article"
+msgstr "Original Artikel"
+
+#: .\bizwiz\invoices\models.py:65
+msgid "Amount"
+msgstr "Anzahl"
+
+#: .\bizwiz\invoices\models.py:74
+msgid "Invoiced article"
+msgstr "Berechneter Artikel"
+
+#: .\bizwiz\invoices\models.py:75
+msgid "Invoiced articles"
+msgstr "Berechnete Artikel"
+
+#: .\bizwiz\invoices\models.py:93
+msgid "Original customer"
+msgstr "Original Kunde"
+
+#: .\bizwiz\invoices\models.py:106
+msgid "Invoiced customer"
+msgstr "Berechneter Kunde"
+
+#: .\bizwiz\invoices\models.py:107
+msgid "Invoiced customers"
+msgstr "Berechnete Kunden"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:34
+msgid "Invoice modification"
+msgstr "Rechnungsänderungen"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:46
+msgid "Yes"
+msgstr "Ja"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:49
+msgid "No"
+msgstr "Nein"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:70
+msgctxt "confirm 1"
+msgid "Are you sure you want to"
+msgstr "Sind Sie sicher, dass Sie"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:73
+msgctxt "confirm 2 pay"
+msgid "mark the following"
+msgstr "die folgenden"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:75
+msgctxt "confirm 3 pay"
+msgid "invoices as paid?"
+msgstr "Rechnungen als bezahlt markieren möchten?"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:78
+msgctxt "confirm 2 tax"
+msgid "file taxes for the following"
+msgstr "die folgenden"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:80
+msgctxt "confirm 3 tax"
+msgid "invoices?"
+msgstr "Rechnungen versteuern möchten?"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:83
+msgctxt "confirm 2 del"
+msgid "delete the following"
+msgstr "die folgenden"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:85
+msgctxt "confirm 3 del"
+msgid "invoices?"
+msgstr "Rechnungen löschen möchten?"
+
+#: .\bizwiz\invoices\views.py:19
+msgid "Customer"
+msgstr "Kunde"

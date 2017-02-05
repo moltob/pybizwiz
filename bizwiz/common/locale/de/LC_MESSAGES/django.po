@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-14 20:20+0100\n"
+"POT-Creation-Date: 2017-02-05 10:40+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -31,39 +31,40 @@ msgstr "Eingabe beginnen..."
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#: .\bizwiz\common\templates\common\navigation.html:24
-msgid "Articles"
-msgstr "Artikel"
-
-#: .\bizwiz\common\templates\common\navigation.html:27
-#: .\bizwiz\common\templates\common\navigation.html:36
-#: .\bizwiz\common\templates\common\navigation.html:45
-msgid "New"
-msgstr "Neu"
-
-#: .\bizwiz\common\templates\common\navigation.html:28
-#: .\bizwiz\common\templates\common\navigation.html:37
-#: .\bizwiz\common\templates\common\navigation.html:46
+#: .\bizwiz\common\templates\common\navigation.html:25
+#: .\bizwiz\common\templates\common\navigation.html:34
+#: .\bizwiz\common\templates\common\navigation.html:43
+#: .\bizwiz\common\templates\common\navigation.html:52
 msgid "Browse"
 msgstr "Übersicht"
 
+#: .\bizwiz\common\templates\common\navigation.html:30
+msgid "Articles"
+msgstr "Artikel"
+
 #: .\bizwiz\common\templates\common\navigation.html:33
+#: .\bizwiz\common\templates\common\navigation.html:42
+#: .\bizwiz\common\templates\common\navigation.html:51
+msgid "New"
+msgstr "Neu"
+
+#: .\bizwiz\common\templates\common\navigation.html:39
 msgid "Customers"
 msgstr "Kunden"
 
-#: .\bizwiz\common\templates\common\navigation.html:42
+#: .\bizwiz\common\templates\common\navigation.html:48
 msgid "Projects"
 msgstr "Projekte"
 
-#: .\bizwiz\common\templates\common\navigation.html:49
+#: .\bizwiz\common\templates\common\navigation.html:55
 msgid "Activate filter"
 msgstr "Filter aktivieren"
 
-#: .\bizwiz\common\templates\common\navigation.html:107
+#: .\bizwiz\common\templates\common\navigation.html:118
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: .\bizwiz\common\templates\common\navigation.html:118
+#: .\bizwiz\common\templates\common\navigation.html:129
 msgid "Login"
 msgstr "Einloggen"
 
