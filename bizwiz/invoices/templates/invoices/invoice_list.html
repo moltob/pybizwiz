@@ -71,9 +71,9 @@
                 var question = "{% trans 'Are you sure you want to' context 'confirm 1'%} ";
                 switch (optionValue) {
                     case "PAY":
-                        question += "{% trans 'mark the following' context 'confirm 2 pay' %}";
+                        question += "{% trans 'mark the following' context 'confirm 2 pay_invoices' %}";
                         question += " " + numSelected + " ";
-                        question += "{% trans 'invoices as paid?' context 'confirm 3 pay' %}";
+                        question += "{% trans 'invoices as paid?' context 'confirm 3 pay_invoices' %}";
                         break;
                     case "TAX":
                         question += "{% trans 'file taxes for the following' context 'confirm 2 tax' %}";

@@ -1,14 +1,13 @@
 import django_tables2 as tables
 from django import urls
 from django.contrib.auth import mixins
-from django.contrib.messages import views
 from django.db import models
-from django.db import transaction
 from django.utils.translation import ugettext as _
 from django.views import generic
 
 from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
+from bizwiz.invoices import services
 from bizwiz.invoices.forms import InvoiceAction, ListActionForm
 from bizwiz.invoices.models import Invoice
 
@@ -84,6 +83,21 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
         if form.is_valid():
             return self.form_valid(form)
         else:
-            # provide object list for error message in form:
+            # provide object list for error page, which will need to reproduce the list:
             self.object_list = self.get_queryset()
             return self.form_invalid(form)
+
+    def form_valid(self, form):
+        action = form.cleaned_data['action']
+        invoices = form.invoices
+
+        if action == InvoiceAction.PAY:
+            services.pay_invoices(invoices)
+        elif action == InvoiceAction.TAX:
+            services.taxfile_invoices(invoices)
+        elif action == InvoiceAction.DELETE:
+            services.delete_invoices(invoices)
+
+        return super().form_valid(form)
+
+

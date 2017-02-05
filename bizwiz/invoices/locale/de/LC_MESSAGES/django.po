@@ -142,12 +142,12 @@ msgid "Are you sure you want to"
 msgstr "Sind Sie sicher, dass Sie"
 
 #: .\bizwiz\invoices\templates\invoices\invoice_list.html:74
-msgctxt "confirm 2 pay"
+msgctxt "confirm 2 pay_invoices"
 msgid "mark the following"
 msgstr "die folgenden"
 
 #: .\bizwiz\invoices\templates\invoices\invoice_list.html:76
-msgctxt "confirm 3 pay"
+msgctxt "confirm 3 pay_invoices"
 msgid "invoices as paid?"
 msgstr "Rechnungen als bezahlt markieren möchten?"
 
