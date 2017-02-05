@@ -67,16 +67,16 @@
 
             // preview dialog headline:
             if (!disabled) {
-                var question = "Are you sure you want to ";
+                var question = "{% trans 'Are you sure you want to' %} ";
                 switch (optionValue) {
                     case "PAY":
-                        question += "mark the following invoices as paid?";
+                        question += "{% trans 'mark the following ' %}" + numSelected  + "{% trans ' invoices as paid?' %}";
                         break;
                     case "TAX":
-                        question += "file taxes for the following invoices?";
+                        question += "{% trans 'file taxes for the following ' %}" + numSelected  + "{% trans ' invoices?' %}";
                         break;
                     case "DELETE":
-                        question += "delete the following invoices?";
+                        question += "{% trans 'delete the following ' %}" + numSelected  + "{% trans ' invoices?' %}";
                         break;
                 }
                 previewHeader.text(question);
@@ -104,7 +104,7 @@
         // hook up update of invoice list after preview button was clicked:
         previewButton.click(function () {
             previewInvoices.empty();
-            $("input:checked").each(function () {
+            $("tr td input:checked").each(function () {
                 var row = $(this).parent().parent();
                 var number = row.find(".number").first().text();
                 var name = row.find(".invoiced_customer").first().text();
