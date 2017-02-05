@@ -28,15 +28,15 @@ class ListActionForm(forms.Form):
     helper.layout = layout.Layout(
         layout.Row(
             layout.Div(
-                layout.Field('action'),
+                bootstrap.FieldWithButtons(
+                    layout.Field('action'),
+                    bootstrap.StrictButton(_("Go!"), name='preview', css_class='btn-default',
+                                           data_toggle='modal', data_target='#previewModal',
+                                           css_id='preview', disabled=True),
+                    css_class='moveUpToSearch',
+                ),
                 layout.Field('invoice_ids', type='hidden'),
-                css_class='col-lg-offset-8 col-lg-3'
-            ),
-            layout.Div(
-                bootstrap.StrictButton(_("Apply"), name='preview', css_class='btn-default',
-                                       data_toggle='modal', data_target='#previewModal',
-                                       css_id='preview', disabled=True),
-                css_class='col-lg-1'
+                css_class='col-lg-offset-9 col-lg-3'
             ),
         ),
     )
