@@ -84,4 +84,6 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
         if form.is_valid():
             return self.form_valid(form)
         else:
+            # provide object list for error message in form:
+            self.object_list = self.get_queryset()
             return self.form_invalid(form)

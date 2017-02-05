@@ -102,7 +102,14 @@
 
         // hook up event for checkbox clicks:
         $("tr td input").each(function () {
-            $(this).click(setPreviewStates);
+            var box = $(this);
+            box.click(setPreviewStates);
+
+            var id = box.val();
+            var preselected_ids = invoice_ids.val();
+            if (preselected_ids.match("\\b" + id + "\\b")) {
+                box.prop("checked", true);
+            }
         });
 
         // hook up update of invoice list after preview button was clicked:
@@ -125,5 +132,6 @@
         $("#preview-yes").click(function () {
             $("#invoices-form").submit();
         });
+        setPreviewStates();
     </script>
 {% endblock content %}
