@@ -175,7 +175,7 @@ class InvoicedCustomerForm(forms.ModelForm):
 
 
 class InvoicedArticleForm(forms.ModelForm):
-    # prevent use of number inputs which feature the undesired +/- buttons:
+    # prevent use of number input widgets which feature undesired +/- buttons:
     price = forms.DecimalField(
         widget=forms.TextInput,
         decimal_places=2,
