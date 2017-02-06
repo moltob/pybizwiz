@@ -34,7 +34,7 @@ class ListActionForm(forms.Form):
                     bootstrap.StrictButton(_("Go!"), name='preview', css_class='btn-default',
                                            data_toggle='modal', data_target='#previewModal',
                                            css_id='preview', disabled=True),
-                    css_class='moveUpToSearch',
+                    css_class='next-to-search-box',
                 ),
                 layout.Field('invoice_ids', type='hidden'),
                 css_class='col-lg-offset-9 col-lg-3'
@@ -167,6 +167,12 @@ class InvoicedCustomerForm(forms.ModelForm):
     )
 
 
+class InvoicedArticleForm(forms.ModelForm):
+    # prevent use of number inputs which feature the undesired +/- buttons:
+    price = forms.DecimalField(widget=forms.TextInput, decimal_places=2, localize=True)
+    amount = forms.IntegerField(widget=forms.TextInput, min_value=1)
+
+
 class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
     helper = helper.FormHelper()
     helper.form_show_labels = False
@@ -175,8 +181,14 @@ class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
             # since a dynamic formset is used, there is no need to allow posting empty fields for
             # unused extra forms, so all fields can be explicitly required:
             layout.Div(layout.Field('name', required=''), css_class='col-lg-6'),
-            layout.Div(layout.Field('price', required=''), css_class='col-lg-2', required=''),
-            layout.Div(layout.Field('amount', required=''), css_class='col-lg-1', required=''),
+            layout.Div(
+                layout.Field('price', required='', css_class='text-right'),
+                css_class='col-lg-2',
+            ),
+            layout.Div(
+                layout.Field('amount', required='', css_class='text-right'),
+                css_class='col-lg-1',
+            ),
             layout.Div(remove_form_button_factory(), css_class='col-lg-1'),
             layout.Div(
                 layout.HTML('<p class="form-control-static item-total">0,00</p>'),
@@ -191,7 +203,7 @@ class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
 InvoicedArticleFormset = forms.inlineformset_factory(
     Invoice,
     InvoicedArticle,
-    #form=InvoicedArticleForm,
+    form=InvoicedArticleForm,
     formset=BaseInvoicedArticleFormset,
     can_delete=True,
     min_num=1,

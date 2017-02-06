@@ -24,6 +24,11 @@ class CreateForm(forms.Form):
     helper.form_tag = False
 
 
+class ArticleForm(forms.ModelForm):
+    # prevent use of number inputs which feature the undesired +/- buttons:
+    price = forms.DecimalField(widget=forms.TextInput, decimal_places=2, localize=True)
+
+
 class BaseArticleFormset(forms.BaseModelFormSet):
     helper = helper.FormHelper()
     helper.form_tag = False
@@ -34,7 +39,9 @@ class BaseArticleFormset(forms.BaseModelFormSet):
             # since a dynamic formset is used, there is no need to allow posting empty fields for
             # unused extra forms, so all fields can be explicitly required:
             layout.Div(layout.Field('name', required=''), css_class='col-lg-9'),
-            layout.Div(layout.Field('price', required=''), css_class='col-lg-2', required=''),
+            layout.Div(layout.Field(
+                'price', required='', css_class='text-right'),
+                css_class='col-lg-2'),
             layout.Div(remove_form_button_factory(), css_class='col-lg-1 text-right'),
             layout.Field('DELETE', style='display:none;'),
             data_formset_form='',
@@ -45,6 +52,7 @@ class BaseArticleFormset(forms.BaseModelFormSet):
 ArticleFormset = forms.modelformset_factory(
     Article,
     formset=BaseArticleFormset,
+    form=ArticleForm,
     can_delete=True,
     fields='__all__'
 )
