@@ -122,7 +122,7 @@ class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
     def get_context_data(self, **kwargs):
         # TODO: distinguish between GET and POST later on:
         invoiced_customer_form = InvoicedCustomerForm(instance=self.object.invoiced_customer)
-        invoiced_article_formset = InvoicedArticleFormset(instance=self.object)
+        invoiced_article_formset = InvoicedArticleFormset(instance=self.object, prefix='dumbo')
         return super().get_context_data(invoiced_customer_form=invoiced_customer_form,
                                         invoiced_article_formset=invoiced_article_formset,
                                         **kwargs)

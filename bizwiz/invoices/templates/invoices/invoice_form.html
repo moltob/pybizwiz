@@ -2,41 +2,61 @@
 
 {% load i18n %}
 {% load crispy_forms_tags %}
+{% load common.crispy_forms %}
+{% load common.dynamic_formset %}
 
 {% block content %}
     <div class="page-header"><h1>{% trans 'Edit invoice' %}</h1></div>
 
-    {% crispy form %}
-    <fieldset>
-        <legend>{% trans 'Customer' %}</legend>
-        {% crispy invoiced_customer_form %}
-    </fieldset>
-    <fieldset>
-        <legend>{% trans 'Invoice items' %}</legend>
-        <div class="row">
-            <label class="col-lg-6 control-label requiredField">
-                {{ invoiced_article_formset.empty_form.name.label }}
-            </label>
-            <label class="col-lg-2 control-label requiredField">
-                {{ invoiced_article_formset.empty_form.price.label }}
-            </label>
-            <label class="col-lg-1 control-label requiredField">
-                {{ invoiced_article_formset.empty_form.amount.label }}
-            </label>
-            <label class="col-lg-offset-1 col-lg-2 control-label text-right">
-                {% trans 'Item total' %}
-            </label>
-        </div>
+    <form method="post">
+        {% crispy form %}
+        <fieldset>
+            <legend>{% trans 'Customer' %}</legend>
+            {% crispy invoiced_customer_form %}
+        </fieldset>
+        <fieldset>
+            <legend>{% trans 'Invoice items' %}</legend>
+            {% dynformset 'invoiced_article_formset' invoiced_article_formset %}
+                <div class="row">
+                    <label class="col-lg-6 control-label requiredField">
+                        {{ invoiced_article_formset.empty_form.name.label }}
+                    </label>
+                    <label class="col-lg-2 control-label requiredField">
+                        {{ invoiced_article_formset.empty_form.price.label }}
+                    </label>
+                    <label class="col-lg-1 control-label requiredField">
+                        {{ invoiced_article_formset.empty_form.amount.label }}
+                    </label>
+                    <label class="col-lg-offset-1 col-lg-2 control-label text-right">
+                        {% trans 'Item total' %}
+                    </label>
+                </div>
+                {% dynformset_body invoiced_article_formset %}
 
-        {% crispy invoiced_article_formset %}
+                <div class="row">
+                    {# Custom version of dynformset_add_button to fit page layout. #}
+                    <div class="col-lg-offset-9 col-lg-1">
+                        <button type="button" class="btn btn-default" data-formset-add>
+                            <span class="glyphicon glyphicon-plus"></span>
+                        </button>
+                    </div>
 
-        <div class="row">
-            <div class="col-lg-offset-10 col-lg-2">
-                <p id="invoice-total" class="form-control-static currency-total">
-                    0,00
-                </p>
-            </div>
-        </div>
-    </fieldset>
+                    <div class="col-lg-2">
+                        <p id="invoice-total" class="form-control-static currency-total">
+                            0,00
+                        </p>
+                    </div>
+                </div>
+            {% enddynformset %}
+
+        </fieldset>
+
+        {% include 'common/submit-button.html' %}
+    </form>
+
+    {% datetime_picker form.date_created %}
+    {% datetime_picker form.date_paid %}
+    {% datetime_picker form.date_taxes_filed %}
+    {% dynformset_apply '#invoiced_article_formset' %}
 
 {% endblock content %}

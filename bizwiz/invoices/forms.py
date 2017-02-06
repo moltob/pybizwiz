@@ -4,6 +4,7 @@ from django import forms
 from django.db.models import BLANK_CHOICE_DASH
 from django.utils.translation import ugettext as _
 
+from bizwiz.common.crispy_forms import PickableDateField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
 
@@ -116,7 +117,11 @@ class UpdateForm(forms.ModelForm):
         model = Invoice
         fields = '__all__'
 
+    # form requires assets from custom date picker field:
+    Media = PickableDateField.Media
+
     helper = helper.FormHelper()
+    helper.form_tag = False
     helper.layout = layout.Layout(
         layout.Row(
             layout.Div(
@@ -124,15 +129,15 @@ class UpdateForm(forms.ModelForm):
                 css_class='col-lg-4'
             ),
             layout.Div(
-                layout.Field('date_created'),
+                PickableDateField('date_created'),
                 css_class='col-lg-2'
             ),
             layout.Div(
-                layout.Field('date_paid'),
+                PickableDateField('date_paid'),
                 css_class='col-lg-2'
             ),
             layout.Div(
-                layout.Field('date_taxes_filed'),
+                PickableDateField('date_taxes_filed'),
                 css_class='col-lg-2'
             ),
             layout.Div(
@@ -149,6 +154,8 @@ class InvoicedCustomerForm(forms.ModelForm):
         fields = '__all__'
 
     helper = helper.FormHelper()
+    helper.form_tag = False
+    helper.disable_csrf = True
     helper.layout = layout.Layout(
         layout.Row(
             layout.Div('salutation', css_class='col-lg-3'),
@@ -175,6 +182,8 @@ class InvoicedArticleForm(forms.ModelForm):
 
 class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
     helper = helper.FormHelper()
+    helper.form_tag = False
+    helper.disable_csrf = True
     helper.form_show_labels = False
     helper.layout = layout.Layout(
         layout.Row(
@@ -209,5 +218,5 @@ InvoicedArticleFormset = forms.inlineformset_factory(
     min_num=1,
     validate_min=True,
     extra=0,
-    fields='__all__'
+    fields='__all__',
 )
