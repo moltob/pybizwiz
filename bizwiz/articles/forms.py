@@ -26,7 +26,12 @@ class CreateForm(forms.Form):
 
 class ArticleForm(forms.ModelForm):
     # prevent use of number inputs which feature the undesired +/- buttons:
-    price = forms.DecimalField(widget=forms.TextInput, decimal_places=2, localize=True)
+    price = forms.DecimalField(
+        widget=forms.TextInput,
+        decimal_places=2,
+        localize=True,
+        label=Article._meta.get_field('price').verbose_name
+    )
 
 
 class BaseArticleFormset(forms.BaseModelFormSet):
