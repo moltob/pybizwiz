@@ -63,4 +63,49 @@
     {% datetime_picker form.date_taxes_filed %}
     {% dynformset_apply '#invoiced_article_formset' %}
 
+    <script>
+        function formatCurrency(value) {
+            if (isNaN(value)) return '0,00';
+            return value.toFixed(2).replace(".", ",");
+        }
+
+        function parseCurrency(str) {
+            return parseFloat(str.replace(',', '.'));
+        }
+
+        function updateTotals() {
+            var invoiceTotal = 0.0;
+
+            $(".invoice-item-row").not("[data-formset-form-deleted]").each(function () {
+                var row = $(this);
+                var price = parseCurrency(row.find(".item-price").val());
+                var amount = parseInt(row.find(".item-amount").val());
+                var total = price * amount;
+                invoiceTotal += total;
+                row.find(".item-total").text(formatCurrency(total));
+            });
+
+            $("#invoice-total").text(formatCurrency(invoiceTotal));
+        }
+
+        function reformatCurrencyInputValue() {
+            var element = $(this);
+            var value = parseCurrency(element.val());
+            element.val(formatCurrency(value));
+        }
+
+        function hookUpItemFieldEvents() {
+            // changing item data results in totals recomputation:
+            $(".item-price").on('input', updateTotals).change(reformatCurrencyInputValue);
+            $(".item-amount").on('input', updateTotals);
+            updateTotals();
+        }
+
+        $("#invoiced_article_formset")
+            .on('formAdded', hookUpItemFieldEvents)
+            .on('formDeleted', updateTotals);
+
+        hookUpItemFieldEvents();
+    </script>
+
 {% endblock content %}

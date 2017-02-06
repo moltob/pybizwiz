@@ -196,11 +196,11 @@ class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
             # unused extra forms, so all fields can be explicitly required:
             layout.Div(layout.Field('name', required=''), css_class='col-lg-6'),
             layout.Div(
-                layout.Field('price', required='', css_class='text-right'),
+                layout.Field('price', required='', css_class='text-right item-price'),
                 css_class='col-lg-2',
             ),
             layout.Div(
-                layout.Field('amount', required='', css_class='text-right'),
+                layout.Field('amount', required='', css_class='text-right item-amount'),
                 css_class='col-lg-1',
             ),
             layout.Div(remove_form_button_factory(), css_class='col-lg-1'),
@@ -210,7 +210,8 @@ class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
             ),
             layout.Field('DELETE', style='display:none;'),
             data_formset_form='',
-        )
+            css_class='invoice-item-row',
+        ),
     )
 
 
