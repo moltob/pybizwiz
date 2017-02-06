@@ -20,6 +20,11 @@ body {
     font-size: 10px;
 }
 
+.icon-raised {
+    position: relative;
+    top: -10px;
+}
+
 .voffset {
     margin-top: 2px;
 }

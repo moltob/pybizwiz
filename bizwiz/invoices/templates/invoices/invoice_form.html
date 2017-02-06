@@ -11,11 +11,30 @@
     <form method="post">
         {% crispy form %}
         <fieldset>
-            <legend>{% trans 'Customer' %}</legend>
+            <legend>
+                {% trans 'Customer' %}
+                <a data-toggle="popover"
+                   data-content="{% blocktrans %}Modifications to customer data like name or address
+                   are effective within the context of this invoice only. If you want to
+                   change a customer permanently, do this via the customer menu.{% endblocktrans %}">
+                    <span class="glyphicon glyphicon-info-sign icon-small icon-raised">
+                    </span>
+                </a>
+
+            </legend>
             {% crispy invoiced_customer_form %}
         </fieldset>
         <fieldset>
-            <legend>{% trans 'Invoice items' %}</legend>
+            <legend>
+                {% trans 'Invoice items' %}
+                <a data-toggle="popover"
+                   data-content="{% blocktrans %}Modifications to articles like its name or the
+                   unit price are effective within the context of this invoice only. If you want to
+                   change an article permanently, do this via the article menu.{% endblocktrans %}">
+                    <span class="glyphicon glyphicon-info-sign icon-small icon-raised">
+                    </span>
+                </a>
+            </legend>
             {% dynformset 'invoiced_article_formset' invoiced_article_formset %}
                 <div class="row">
                     <label class="col-lg-6 control-label requiredField">
@@ -64,6 +83,11 @@
     {% dynformset_apply '#invoiced_article_formset' %}
 
     <script>
+        // activate bootstrap popover plugin:
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        });
+
         function formatCurrency(value) {
             if (isNaN(value)) return '0,00';
             return value.toFixed(2).replace(".", ",");
