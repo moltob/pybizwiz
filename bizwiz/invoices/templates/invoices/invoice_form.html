@@ -1,0 +1,42 @@
+{% extends "common/base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="page-header"><h1>{% trans 'Edit invoice' %}</h1></div>
+
+    {% crispy form %}
+    <fieldset>
+        <legend>{% trans 'Customer' %}</legend>
+        {% crispy invoiced_customer_form %}
+    </fieldset>
+    <fieldset>
+        <legend>{% trans 'Invoice items' %}</legend>
+        <div class="row">
+            <label class="col-lg-6 control-label requiredField">
+                {{ invoiced_article_formset.empty_form.name.label }}
+            </label>
+            <label class="col-lg-2 control-label requiredField">
+                {{ invoiced_article_formset.empty_form.price.label }}
+            </label>
+            <label class="col-lg-1 control-label requiredField">
+                {{ invoiced_article_formset.empty_form.amount.label }}
+            </label>
+            <label class="col-lg-offset-1 col-lg-2 control-label text-right">
+                {% trans 'Item total' %}
+            </label>
+        </div>
+
+        {% crispy invoiced_article_formset %}
+
+        <div class="row">
+            <div class="col-lg-offset-10 col-lg-2">
+                <p id="invoice-total" class="form-control-static currency-total">
+                    0,00
+                </p>
+            </div>
+        </div>
+    </fieldset>
+
+{% endblock content %}

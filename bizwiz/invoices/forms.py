@@ -4,7 +4,8 @@ from django import forms
 from django.db.models import BLANK_CHOICE_DASH
 from django.utils.translation import ugettext as _
 
-from bizwiz.invoices.models import Invoice
+from bizwiz.common.dynamic_formset import remove_form_button_factory
+from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
 
 _logger = logging.getLogger(__name__)
 
@@ -108,3 +109,93 @@ class ListActionForm(forms.Form):
 
         if not errors_found:
             self.invoices = invoices
+
+
+class UpdateForm(forms.ModelForm):
+    class Meta:
+        model = Invoice
+        fields = '__all__'
+
+    helper = helper.FormHelper()
+    helper.layout = layout.Layout(
+        layout.Row(
+            layout.Div(
+                layout.Field('project'),
+                css_class='col-lg-4'
+            ),
+            layout.Div(
+                layout.Field('date_created'),
+                css_class='col-lg-2'
+            ),
+            layout.Div(
+                layout.Field('date_paid'),
+                css_class='col-lg-2'
+            ),
+            layout.Div(
+                layout.Field('date_taxes_filed'),
+                css_class='col-lg-2'
+            ),
+            layout.Div(
+                layout.Field('number', readonly=True),
+                css_class='col-lg-2'
+            ),
+        )
+    )
+
+
+class InvoicedCustomerForm(forms.ModelForm):
+    class Meta:
+        model = InvoicedCustomer
+        fields = '__all__'
+
+    helper = helper.FormHelper()
+    helper.layout = layout.Layout(
+        layout.Row(
+            layout.Div('salutation', css_class='col-lg-3'),
+            layout.Div('title', css_class='col-lg-3'),
+        ),
+        layout.Row(
+            layout.Div('first_name', css_class='col-lg-3'),
+            layout.Div('last_name', css_class='col-lg-3'),
+            layout.Div('company_name', css_class='col-lg-6'),
+        ),
+        layout.Row(
+            layout.Div('street_address', css_class='col-lg-6'),
+            layout.Div('zip_code', css_class='col-lg-2'),
+            layout.Div('city', css_class='col-lg-4'),
+        ),
+    )
+
+
+class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
+    helper = helper.FormHelper()
+    helper.form_show_labels = False
+    helper.layout = layout.Layout(
+        layout.Row(
+            # since a dynamic formset is used, there is no need to allow posting empty fields for
+            # unused extra forms, so all fields can be explicitly required:
+            layout.Div(layout.Field('name', required=''), css_class='col-lg-6'),
+            layout.Div(layout.Field('price', required=''), css_class='col-lg-2', required=''),
+            layout.Div(layout.Field('amount', required=''), css_class='col-lg-1', required=''),
+            layout.Div(remove_form_button_factory(), css_class='col-lg-1'),
+            layout.Div(
+                layout.HTML('<p class="form-control-static item-total">0,00</p>'),
+                css_class='col-lg-2 text-right'
+            ),
+            layout.Field('DELETE', style='display:none;'),
+            data_formset_form='',
+        )
+    )
+
+
+InvoicedArticleFormset = forms.inlineformset_factory(
+    Invoice,
+    InvoicedArticle,
+    #form=InvoicedArticleForm,
+    formset=BaseInvoicedArticleFormset,
+    can_delete=True,
+    min_num=1,
+    validate_min=True,
+    extra=0,
+    fields='__all__'
+)

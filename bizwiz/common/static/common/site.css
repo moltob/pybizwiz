@@ -63,3 +63,9 @@ body {
 .moveUpToSearch {
     margin-top: -34px;
 }
+
+.currency-total {
+    border-top: thin solid;
+    border-bottom: double;
+    text-align: right;
+}

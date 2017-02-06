@@ -1,6 +1,7 @@
 import django_tables2 as tables
 from django import urls
 from django.contrib.auth import mixins
+from django.contrib.messages import views
 from django.db import models
 from django.utils.translation import ugettext as _
 from django.views import generic
@@ -8,13 +9,13 @@ from django.views import generic
 from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
 from bizwiz.invoices import services
-from bizwiz.invoices.forms import InvoiceAction, ListActionForm
+from bizwiz.invoices.forms import InvoiceAction, ListActionForm, UpdateForm, InvoicedCustomerForm, \
+    InvoicedArticleFormset
 from bizwiz.invoices.models import Invoice
 
 
 class InvoiceTable(tables.Table):
-    #number = tables.LinkColumn('invoices:list', args=[tables.utils.A('pk')])
-    number = tables.LinkColumn('invoices:list')
+    number = tables.LinkColumn('invoices:update', args=[tables.utils.A('pk')])
     invoiced_customer = tables.Column(_("Customer"), order_by=(
         'invoiced_customer.last_name',
         'invoiced_customer.first_name'
@@ -101,3 +102,27 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
         return super().form_valid(form)
 
 
+class EditMixin(views.SuccessMessageMixin):
+    model = Invoice
+    success_url = urls.reverse_lazy('invoices:list')
+    form_class = UpdateForm
+    specific_success_message = None
+
+    def form_valid(self, form):
+        if form.has_changed():
+            self.success_message = self.specific_success_message
+        else:
+            self.success_message = ""
+        return super().form_valid(form)
+
+
+class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
+    specific_success_message = _("Updated: %(last_name)s, %(first_name)s")
+
+    def get_context_data(self, **kwargs):
+        # TODO: distinguish between GET and POST later on:
+        invoiced_customer_form = InvoicedCustomerForm(instance=self.object.invoiced_customer)
+        invoiced_article_formset = InvoicedArticleFormset(instance=self.object)
+        return super().get_context_data(invoiced_customer_form=invoiced_customer_form,
+                                        invoiced_article_formset=invoiced_article_formset,
+                                        **kwargs)
