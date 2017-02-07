@@ -29,7 +29,7 @@ class ChosenMultiSelectField(layout.Field):
         my_kwargs['css_class'] = 'chosen ' + kwargs.get('css_class', '')
 
         # hide original multi-select to prevent flicker:
-        assert 'style' not in my_kwargs, 'Mixing style attribute not yet implememnted.'
+        assert 'style' not in my_kwargs, 'Mixing style attribute not yet implemented.'
         my_kwargs['style'] = 'visibility:hidden;'
 
         super().__init__(*args, **my_kwargs)
