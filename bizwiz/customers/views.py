@@ -6,10 +6,10 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.views import generic
 
-from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
 from bizwiz.customers.forms import UpdateForm
 from bizwiz.customers.models import Customer
+from bizwiz.customers.services import get_session_filtered_customers, apply_session_filter
 
 
 class CustomerTable(tables.Table):
@@ -32,15 +32,7 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView)
 
     def get_queryset(self):
         # apply session filter if set:
-        session_filter = get_session_filter(self.request.session)
-        filtered_project = session_filter.project
-        filtered_customer_group = session_filter.customer_group
-        if filtered_customer_group:
-            self.queryset = Customer.objects.filter(customergroup=filtered_customer_group)
-        elif filtered_project:
-            self.queryset = Customer.objects.filter(customergroup__project=filtered_project)
-        else:
-            self.queryset = Customer.objects.all()
+        self.queryset = get_session_filtered_customers(self.request.session)
 
         strfilter = self.request.GET.get('q')
         if strfilter:
@@ -90,10 +82,3 @@ class Create(mixins.LoginRequiredMixin, EditMixin, generic.CreateView):
         return super().form_valid(form)
 
 
-def apply_session_filter(session, customer):
-    session_filter = get_session_filter(session)
-    customer_group = session_filter.customer_group
-    if customer_group:
-        customer_group.customers.add(customer)
-        return True
-    return False

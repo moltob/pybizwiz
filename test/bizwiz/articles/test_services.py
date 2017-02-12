@@ -1,9 +1,9 @@
 from unittest import mock
 
-from bizwiz.articles.views import apply_session_filter
+from bizwiz.articles.services import apply_session_filter
 
 
-@mock.patch('bizwiz.articles.views.get_session_filter')
+@mock.patch('bizwiz.articles.services.get_session_filter')
 def test_apply_session_filter_none(mock_get_session_filter):
     session_filter = mock.Mock()
 
@@ -21,7 +21,7 @@ def test_apply_session_filter_none(mock_get_session_filter):
     assert not mock_article2.project_set.add.called
 
 
-@mock.patch('bizwiz.articles.views.get_session_filter')
+@mock.patch('bizwiz.articles.services.get_session_filter')
 def test_apply_session_filter_project(mock_get_session_filter):
     session_filter = mock.Mock()
 

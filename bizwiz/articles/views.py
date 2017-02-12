@@ -8,7 +8,7 @@ from django.views import generic
 
 from bizwiz.articles.forms import UpdateForm, CreateForm, ArticleFormset
 from bizwiz.articles.models import Article
-from bizwiz.common.session_filter import get_session_filter
+from bizwiz.articles.services import get_session_filtered_articles, apply_session_filter
 from bizwiz.common.views import SizedColumnsMixin
 
 
@@ -46,11 +46,7 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView)
 
     def get_queryset(self):
         # apply project filter if active:
-        filtered_project = get_session_filter(self.request.session).project
-        if filtered_project:
-            self.queryset = filtered_project.articles
-        else:
-            self.queryset = Article.objects.all()
+        self.queryset = get_session_filtered_articles(self.request.session)
 
         # only if requested, show inactive elements:
         if not self.kwargs['show_inactive']:
@@ -123,11 +119,3 @@ class Create(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.FormV
         return self.form_valid(form)
 
 
-def apply_session_filter(session, articles):
-    """If active, articles are added to filtered project and True is returned."""
-    session_filter = get_session_filter(session)
-    if session_filter.project:
-        for article in articles:
-            article.project_set.add(session_filter.project)
-        return True
-    return False
