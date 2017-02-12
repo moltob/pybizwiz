@@ -4,6 +4,7 @@
 {% load crispy_forms_tags %}
 {% load common.crispy_forms %}
 {% load common.dynamic_formset %}
+{% load static %}
 
 {% block content %}
     <div class="page-header"><h1>{% trans 'Edit invoice' %}</h1></div>
@@ -75,12 +76,36 @@
                 <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
             </div>
         </div>
+
     </form>
 
     {% datetime_picker form.date_created %}
     {% datetime_picker form.date_paid %}
     {% datetime_picker form.date_taxes_filed %}
     {% dynformset_apply '#invoiced_article_formset' %}
+
+    <script>
+        $('.article-name').selectize({
+            //delimiter: ',',
+            //persist: true,
+            create: true,
+            maxItems: 1,
+            delimiter: null,
+            valueField: 'text',
+            labelField: 'text',
+            options: [
+                {% for article in articles %}
+                    {
+                        //value: {{article.pk}},
+                        text: "{{article.name }}",
+                        price: "{{ article.price }}"
+                    },
+                {% endfor %}
+                {value: 0, text: ""}
+            ]
+        });
+    </script>
+
 
     <script>
         // activate bootstrap popover plugin:

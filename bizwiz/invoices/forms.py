@@ -4,6 +4,7 @@ from django import forms
 from django.db.models import BLANK_CHOICE_DASH
 from django.utils.translation import ugettext as _
 
+from bizwiz.common import selectize
 from bizwiz.common.crispy_forms import PickableDateField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
@@ -118,7 +119,7 @@ class UpdateForm(forms.ModelForm):
         fields = '__all__'
 
     # form requires assets from custom date picker field:
-    Media = PickableDateField.Media
+    Media = PickableDateField.Media + selectize.Media
 
     helper = helper.FormHelper()
     helper.form_tag = False
@@ -194,7 +195,7 @@ class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
         layout.Row(
             # since a dynamic formset is used, there is no need to allow posting empty fields for
             # unused extra forms, so all fields can be explicitly required:
-            layout.Div(layout.Field('name', required=''), css_class='col-lg-6'),
+            layout.Div(layout.Field('name', required='', css_class='article-name'), css_class='col-lg-6'),
             layout.Div(
                 layout.Field('price', required='', css_class='text-right item-price'),
                 css_class='col-lg-2',

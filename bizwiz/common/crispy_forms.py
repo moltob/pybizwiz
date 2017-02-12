@@ -1,23 +1,25 @@
 """Extensions and customizations of cripsy forms."""
 from crispy_forms import layout
 
+from bizwiz.common import media
+
 
 class PickableDateField(layout.Field):
     """Datefield with picker."""
     template = 'common/datetime_picker_field.html'
 
-    class Media:
-        """Media required for this field, include in using form."""
-        css = {
+    """Media required for this field, include in using form."""
+    Media = media.Media(
+        css={
             'all': (
                 'eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker.min.css',
             )
-        }
-
-        js = (
+        },
+        js=(
             'moment/min/moment.min.js',
             'eonasdan-bootstrap-datetimepicker/build/js/bootstrap-datetimepicker.min.js'
         )
+    )
 
 
 class ChosenMultiSelectField(layout.Field):
@@ -34,15 +36,14 @@ class ChosenMultiSelectField(layout.Field):
 
         super().__init__(*args, **my_kwargs)
 
-    class Media:
-        """Media required for this field, include in using form."""
-        css = {
+    Media = media.Media(
+        css={
             'all': (
                 'chosen/chosen.css',
                 'common/chosen-bootstrap.css',
             )
-        }
-
-        js = (
+        },
+        js=(
             'chosen/chosen.jquery.js',
         )
+    )
