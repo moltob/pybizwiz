@@ -35,4 +35,21 @@
     {% dynformset_apply '#formset' %}
     {% chosen_multiselect_apply '#formset' %}
 
+    <script>
+        $(function () {
+            var selectableArticles = [{% for article in articles %}
+                {
+                    value: {{ article.pk }},
+                    text: "{{ article.name }}"
+                }{% if not forloop.last %},{% endif %}
+            {% endfor %}];
+            var selectableCustomers = [{% for customer in customers %}
+                {
+                    value: {{ customer.pk }},
+                    text: "{{ customer }}"
+                }{% if not forloop.last %}, {% endif %}
+            {% endfor %}];
+        });
+    </script>
+
 {% endblock content %}

@@ -6,7 +6,9 @@ from django.db import transaction
 from django.utils.translation import ugettext as _
 from django.views import generic
 
+from bizwiz.articles.models import Article
 from bizwiz.common.views import SizedColumnsMixin
+from bizwiz.customers.models import Customer
 from bizwiz.projects.forms import UpdateForm, CustomerGroupFormset
 from bizwiz.projects.models import Project
 
@@ -62,7 +64,15 @@ class EditMixin(views.SuccessMessageMixin):
             customer_group_formset = CustomerGroupFormset(self.request.POST, instance=self.object)
         else:
             customer_group_formset = CustomerGroupFormset(instance=self.object)
-        return super().get_context_data(formset=customer_group_formset, **kwargs)
+
+        # collections to use for selectables:
+        articles = Article.objects.all().order_by('name')
+        customers = Customer.objects.all().order_by('last_name', 'first_name', 'company_name')
+
+        return super().get_context_data(formset=customer_group_formset,
+                                        articles=articles,
+                                        customers=customers,
+                                        **kwargs)
 
     def forms_valid(self, form, customer_group_formset):
         with transaction.atomic():

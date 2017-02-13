@@ -3,13 +3,16 @@ from bizwiz.articles.models import Article
 from bizwiz.common.session_filter import get_session_filter
 
 
-def get_session_filtered_articles(session):
+def get_session_filtered_articles(session, include_inactive=False):
     """Returns queryset according to optional filter set in session."""
     filtered_project = get_session_filter(session).project
     if filtered_project:
         queryset = filtered_project.articles
     else:
         queryset = Article.objects.all()
+
+    if not include_inactive:
+        queryset = queryset.filter(inactive=False)
 
     return queryset
 
