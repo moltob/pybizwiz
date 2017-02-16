@@ -49,7 +49,9 @@ class BaseCustomerGroupFormset(forms.BaseInlineFormSet):
             # since a dynamic formset is used, there is no need to allow posting empty fields for
             # unused extra forms, so all fields can be explicitly required:
             layout.Div(layout.Field('name', required=''), css_class='col-lg-4'),
-            layout.Div(layout.Field('customers', css_class='customer-name'), css_class='col-lg-7'),
+            layout.Div(
+                layout.Field('customers', css_class='customer-name', required=''),
+                css_class='col-lg-7'),
             layout.Div(remove_form_button_factory(), css_class='col-lg-1 text-right'),
             layout.Field('DELETE', style='display:none;'),
             data_formset_form='',
