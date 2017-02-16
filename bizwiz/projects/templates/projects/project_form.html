@@ -5,7 +5,6 @@
 {% load crispy_forms_tags %}
 {% load common.crispy_forms %}
 {% load common.dynamic_formset %}
-{% load common.chosen %}
 
 {% block content %}
     <div class="page-header"><h1>{% trans 'Edit project' %}</h1></div>
@@ -33,7 +32,6 @@
 
     {% datetime_picker form.start_date %}
     {% dynformset_apply '#formset' %}
-    {% chosen_multiselect_apply '#formset' %}
 
     <script>
         $(function () {

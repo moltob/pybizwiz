@@ -15,8 +15,7 @@ class UpdateForm(forms.ModelForm):
         model = Project
         fields = '__all__'
 
-    articles = ModelMultipleChoiceTextField(queryset=Article.objects.all().order_by('name'),
-                                            label=_("Article set"))
+    articles = ModelMultipleChoiceTextField(queryset=Article.objects.all(), label=_("Article set"))
 
     # form required assets:
     Media = PickableDateField.Media
