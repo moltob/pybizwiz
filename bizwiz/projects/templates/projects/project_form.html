@@ -37,23 +37,19 @@
 
     <script>
         $(function () {
-            var selectableArticles = [{% for article in articles %}
-                {
-                    value: {{ article.pk }},
-                    text: "{{ article.name }}"
-                }{% if not forloop.last %},{% endif %}
-            {% endfor %}];
+            var selectableArticles = [{% for article in articles %}{
+                value: {{ article.pk }},
+                text: "{{ article.name }}"
+            }{% if not forloop.last %}, {% endif %}{% endfor %}
+            ];
 
-            var selectableCustomers = [{% for customer in customers %}
-                {
-                    value: {{ customer.pk }},
-                    text: "{{ customer }}"
-                }{% if not forloop.last %}, {% endif %}
-            {% endfor %}];
+            var selectableCustomers = [{% for customer in customers %}{
+                value: {{ customer.pk }},
+                text: "{{ customer }}"
+            }{% if not forloop.last %}, {% endif %}{% endfor %}];
 
             $('.article-name').selectize({
-                valueField: 'value',
-                labelField: 'text',
+                plugins: ['remove_button'],
                 options: selectableArticles
             });
 
