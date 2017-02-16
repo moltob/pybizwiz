@@ -13,14 +13,16 @@ class Media:
         self.css = dict(css) if css else {}
 
     def __add__(self, other):
-        js = set(self.js) | set(other.js)
+        js = list(self.js)
+        js += [e for e in other.js if e not in js]
 
         css = {}
         for category, v in self.css.items():
-            css_in_category = set(v) | set(other.css.get(category, ()))
+            css_in_category = list(v)
+            css_in_category += [e for e in other.css.get(category, ()) if e not in css_in_category]
             css[category] = css_in_category
         for category, v in other.css.items():
             if category not in self.css:
-                css[category] = v
+                css[category] = list(v)
 
         return Media(js=js, css=css)

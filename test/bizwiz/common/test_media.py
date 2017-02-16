@@ -26,3 +26,18 @@ def test__media__combination():
     assert 'f' in m.css['in1']
     assert len(m.css['in2']) == 1
     assert 'h' in m.css['in2']
+
+
+def test__media__css_order():
+    m1 = Media(css={'all': ('a',)})
+    m2 = Media(css={'all': ('b',)})
+
+    m = m1 + m2
+
+    assert m.css['all'][0] == 'a'
+    assert m.css['all'][1] == 'b'
+
+    m = m2 + m1
+
+    assert m.css['all'][0] == 'b'
+    assert m.css['all'][1] == 'a'

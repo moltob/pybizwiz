@@ -43,12 +43,25 @@
                     text: "{{ article.name }}"
                 }{% if not forloop.last %},{% endif %}
             {% endfor %}];
+
             var selectableCustomers = [{% for customer in customers %}
                 {
                     value: {{ customer.pk }},
                     text: "{{ customer }}"
                 }{% if not forloop.last %}, {% endif %}
             {% endfor %}];
+
+            $('.article-name').selectize({
+                //delimiter: ',',
+                //persist: true,
+                //create: true,
+                //maxItems: 1,
+                //delimiter: null,
+                valueField: 'value',
+                labelField: 'text',
+                options: selectableArticles
+            });
+
         });
     </script>
 

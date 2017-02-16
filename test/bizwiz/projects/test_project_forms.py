@@ -13,6 +13,7 @@ def project():
     p.save()
     return p
 
+
 @pytest.fixture
 def articles():
     article1 = Article(name='Article', price=10.5)
@@ -92,17 +93,18 @@ def test_customer_group_formset_duplicate_deleted(project, customer1):
 def test_project_form_articles_valid(project, articles):
     data = {
         'name': 'Project',
-        'articles': [articles[0].pk, articles[1].pk],
+        'articles': ','.join(str(a.pk) for a in articles),
         'start_date': datetime.date(2000, 1, 1),
     }
     f = UpdateForm(data)
     assert f.is_valid(), f.errors
 
+
 @pytest.mark.django_db
 def test_project_form_articles_empty(project, articles):
     data = {
         'name': 'Project',
-        'articles': [],
+        'articles': '',
         'start_date': datetime.date(2000, 1, 1),
     }
     f = UpdateForm(data)
