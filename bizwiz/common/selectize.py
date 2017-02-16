@@ -3,14 +3,16 @@ from django import forms
 
 from bizwiz.common import media
 
-Media = media.Media(
-    css={'all': ('selectize/dist/css/selectize.bootstrap3.css',)},
-    js=('selectize/dist/js/standalone/selectize.min.js',)
-)
+
+class SelectizeTextInput(forms.TextInput):
+    Media = media.Media(
+        css={'all': ('selectize/dist/css/selectize.bootstrap3.css',)},
+        js=('selectize/dist/js/standalone/selectize.min.js',)
+    )
 
 
 class ModelMultipleChoiceTextField(forms.ModelMultipleChoiceField):
-    widget = forms.TextInput
+    widget = SelectizeTextInput
 
     def widget_attrs(self, widget):
         """Hide this widget, since it will be replaced by selectize or similar in DOM."""

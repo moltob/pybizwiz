@@ -3,9 +3,7 @@ from django import forms
 from django.utils.translation import ugettext as _
 
 from bizwiz.articles.models import Article
-from bizwiz.articles.services import get_session_filtered_articles
-from bizwiz.common import selectize
-from bizwiz.common.crispy_forms import PickableDateField, ChosenMultiSelectField
+from bizwiz.common.crispy_forms import PickableDateField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
 from bizwiz.common.selectize import ModelMultipleChoiceTextField
 from bizwiz.customers.models import Customer
@@ -17,11 +15,11 @@ class UpdateForm(forms.ModelForm):
         model = Project
         fields = '__all__'
 
-    articles = ModelMultipleChoiceTextField(queryset=Article.objects.all(),
+    articles = ModelMultipleChoiceTextField(queryset=Article.objects.all().order_by('name'),
                                             label=_("Article set"))
 
     # form required assets:
-    Media = PickableDateField.Media + selectize.Media
+    Media = PickableDateField.Media
 
     helper = helper.FormHelper()
     helper.form_tag = False
@@ -39,11 +37,7 @@ class UpdateForm(forms.ModelForm):
 
 
 class CustomerGroupForm(forms.ModelForm):
-    customers = forms.ModelMultipleChoiceField(queryset=Customer.objects.all()
-                                               .order_by('last_name', 'first_name', 'company_name'),
-                                               label=_("Customers"))
-
-    Media = ChosenMultiSelectField.Media
+    customers = ModelMultipleChoiceTextField(queryset=Customer.objects.all(), label=_("Customers"))
 
 
 class BaseCustomerGroupFormset(forms.BaseInlineFormSet):
@@ -56,7 +50,7 @@ class BaseCustomerGroupFormset(forms.BaseInlineFormSet):
             # since a dynamic formset is used, there is no need to allow posting empty fields for
             # unused extra forms, so all fields can be explicitly required:
             layout.Div(layout.Field('name', required=''), css_class='col-lg-4'),
-            layout.Div(ChosenMultiSelectField('customers'), css_class='col-lg-7'),
+            layout.Div(layout.Field('customers', css_class='customer-name'), css_class='col-lg-7'),
             layout.Div(remove_form_button_factory(), css_class='col-lg-1 text-right'),
             layout.Field('DELETE', style='display:none;'),
             data_formset_form='',

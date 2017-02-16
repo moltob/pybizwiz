@@ -119,7 +119,7 @@ class UpdateForm(forms.ModelForm):
         fields = '__all__'
 
     # form requires assets from custom date picker field:
-    Media = PickableDateField.Media + selectize.Media
+    Media = PickableDateField.Media
 
     helper = helper.FormHelper()
     helper.form_tag = False
