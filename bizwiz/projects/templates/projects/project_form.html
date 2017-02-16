@@ -39,20 +39,19 @@
         $(function () {
             var selectableArticles = [{% for article in articles %}{
                 value: {{ article.pk }},
-                text: "{{ article.name }}"
+                text: "{{ article.name|escapejs }}"
             }{% if not forloop.last %}, {% endif %}{% endfor %}
             ];
 
             var selectableCustomers = [{% for customer in customers %}{
                 value: {{ customer.pk }},
-                text: "{{ customer }}"
+                text: "{{ customer|escapejs }}"
             }{% if not forloop.last %}, {% endif %}{% endfor %}];
 
             $('.article-name').selectize({
                 plugins: ['remove_button'],
                 options: selectableArticles
             });
-
         });
     </script>
 
