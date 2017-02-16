@@ -37,15 +37,6 @@ class UpdateForm(forms.ModelForm):
         ),
     )
 
-    def clean_articles(self):
-        articles = self.cleaned_data['articles']
-        if not articles:
-            raise forms.ValidationError(
-                _("At least one article must be selected."),
-                code='required'
-            )
-        return articles
-
 
 class CustomerGroupForm(forms.ModelForm):
     customers = forms.ModelMultipleChoiceField(queryset=Customer.objects.all()

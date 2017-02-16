@@ -66,7 +66,7 @@ class EditMixin(views.SuccessMessageMixin):
             customer_group_formset = CustomerGroupFormset(instance=self.object)
 
         # collections to use for selectables:
-        articles = Article.objects.all().order_by('name')
+        articles = Article.objects.all().filter(inactive=False).order_by('name')
         customers = Customer.objects.all().order_by('last_name', 'first_name', 'company_name')
 
         return super().get_context_data(formset=customer_group_formset,
