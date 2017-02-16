@@ -54,84 +54,86 @@
     </div>
 
     <script>
-        var previewButton = $("#preview");
-        var previewHeader = $("#preview-headline");
-        var previewInvoices = $("#preview-list");
-        var invoice_ids = $("#id_invoice_ids");
+        $(function () {
+            var previewButton = $("#preview");
+            var previewHeader = $("#preview-headline");
+            var previewInvoices = $("#preview-list");
+            var invoice_ids = $("#id_invoice_ids");
 
-        function setPreviewStates() {
-            // preview button enabled or not:
-            var optionValue = $("#id_action").find("option:selected").first().val();
-            var numSelected = $("input:checked").length;
-            var disabled = (numSelected < 1) || (optionValue === "");
-            previewButton.prop("disabled", disabled);
+            function setPreviewStates() {
+                // preview button enabled or not:
+                var optionValue = $("#id_action").find("option:selected").first().val();
+                var numSelected = $("input:checked").length;
+                var disabled = (numSelected < 1) || (optionValue === "");
+                previewButton.prop("disabled", disabled);
 
-            // preview dialog headline:
-            if (!disabled) {
-                var question = "{% trans 'Are you sure you want to' context 'confirm 1'%} ";
-                switch (optionValue) {
-                    case "PAY":
-                        question += "{% trans 'mark the following' context 'confirm 2 pay_invoices' %}";
-                        question += " " + numSelected + " ";
-                        question += "{% trans 'invoices as paid?' context 'confirm 3 pay_invoices' %}";
-                        break;
-                    case "TAX":
-                        question += "{% trans 'file taxes for the following' context 'confirm 2 tax' %}";
-                        question += " " + numSelected + " ";
-                        question += "{% trans 'invoices?' context 'confirm 3 tax' %}";
-                        break;
-                    case "DELETE":
-                        question += "{% trans 'delete the following' context 'confirm 2 del' %}";
-                        question += " " + numSelected + " ";
-                        question += "{% trans 'invoices?' context 'confirm 3 del' %}";
-                        break;
+                // preview dialog headline:
+                if (!disabled) {
+                    var question = "{% trans 'Are you sure you want to' context 'confirm 1'%} ";
+                    switch (optionValue) {
+                        case "PAY":
+                            question += "{% trans 'mark the following' context 'confirm 2 pay_invoices' %}";
+                            question += " " + numSelected + " ";
+                            question += "{% trans 'invoices as paid?' context 'confirm 3 pay_invoices' %}";
+                            break;
+                        case "TAX":
+                            question += "{% trans 'file taxes for the following' context 'confirm 2 tax' %}";
+                            question += " " + numSelected + " ";
+                            question += "{% trans 'invoices?' context 'confirm 3 tax' %}";
+                            break;
+                        case "DELETE":
+                            question += "{% trans 'delete the following' context 'confirm 2 del' %}";
+                            question += " " + numSelected + " ";
+                            question += "{% trans 'invoices?' context 'confirm 3 del' %}";
+                            break;
+                    }
+                    previewHeader.text(question);
                 }
-                previewHeader.text(question);
             }
-        }
 
-        $("#id_action").change(setPreviewStates);
-        $("#id-select-all").click(function () {
-            // copy "all" checkbox state:
-            var checked = $(this).prop("checked");
+            $("#id_action").change(setPreviewStates);
+            $("#id-select-all").click(function () {
+                // copy "all" checkbox state:
+                var checked = $(this).prop("checked");
+                $("tr td input").each(function () {
+                    $(this).prop("checked", checked);
+                });
+                setPreviewStates();
+            });
+
+            // hook up event for checkbox clicks:
             $("tr td input").each(function () {
-                $(this).prop("checked", checked);
+                var box = $(this);
+                box.click(setPreviewStates);
+
+                var id = box.val();
+                var preselected_ids = invoice_ids.val();
+                if (preselected_ids.match("\\b" + id + "\\b")) {
+                    box.prop("checked", true);
+                }
+            });
+
+            // hook up update of invoice list after preview button was clicked:
+            previewButton.click(function () {
+                previewInvoices.empty();
+                var ids = "";
+                $("tr td input:checked").each(function () {
+                    var box = $(this);
+                    var row = box.parent().parent();
+                    var id = box.val();
+                    var number = row.find(".number").first().text();
+                    var name = row.find(".invoiced_customer").first().text();
+                    var total = row.find(".total").first().text();
+                    previewInvoices.append("<li>" + number + ', ' + name + ", " + total + "</li>");
+                    ids += ' ' + id;
+                });
+                invoice_ids.val(ids);
+            });
+
+            $("#preview-yes").click(function () {
+                $("#invoices-form").submit();
             });
             setPreviewStates();
         });
-
-        // hook up event for checkbox clicks:
-        $("tr td input").each(function () {
-            var box = $(this);
-            box.click(setPreviewStates);
-
-            var id = box.val();
-            var preselected_ids = invoice_ids.val();
-            if (preselected_ids.match("\\b" + id + "\\b")) {
-                box.prop("checked", true);
-            }
-        });
-
-        // hook up update of invoice list after preview button was clicked:
-        previewButton.click(function () {
-            previewInvoices.empty();
-            var ids = "";
-            $("tr td input:checked").each(function () {
-                var box = $(this);
-                var row = box.parent().parent();
-                var id = box.val();
-                var number = row.find(".number").first().text();
-                var name = row.find(".invoiced_customer").first().text();
-                var total = row.find(".total").first().text();
-                previewInvoices.append("<li>" + number + ', ' + name + ", " + total + "</li>");
-                ids += ' ' + id;
-            });
-            invoice_ids.val(ids);
-        });
-
-        $("#preview-yes").click(function () {
-            $("#invoices-form").submit();
-        });
-        setPreviewStates();
     </script>
 {% endblock content %}
