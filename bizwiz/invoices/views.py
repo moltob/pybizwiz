@@ -3,6 +3,7 @@ from django import urls
 from django.contrib.auth import mixins
 from django.contrib.messages import views
 from django.db import models
+from django.db import transaction
 from django.utils.translation import ugettext as _
 from django.views import generic
 
@@ -104,20 +105,6 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
         return super().form_valid(form)
 
 
-class EditMixin(views.SuccessMessageMixin):
-    model = Invoice
-    success_url = urls.reverse_lazy('invoices:list')
-    form_class = UpdateForm
-    specific_success_message = None
-
-    def form_valid(self, form):
-        if form.has_changed():
-            self.success_message = self.specific_success_message
-        else:
-            self.success_message = ""
-        return super().form_valid(form)
-
-
 class SelectableArticle:
     """Helper class holding article information to be shown in form, without DB relevance."""
 
@@ -135,12 +122,14 @@ class SelectableArticle:
         return hash(self.name)
 
 
-class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
-    specific_success_message = _("Updated: %(last_name)s, %(first_name)s")
+class EditMixin(views.SuccessMessageMixin):
+    model = Invoice
+    success_url = urls.reverse_lazy('invoices:list')
+    form_class = UpdateForm
+    specific_success_message = None
 
-    def get_context_data(self, **kwargs):
-        # TODO: distinguish between GET and POST later on:
-
+    @property
+    def selectable_articles(self):
         # make sure user can pick from active articles (in project) _plus_ the ones currently used:
         visible_articles = get_articles_for_project(self.object.project)
         used_articles = self.object.invoiced_articles.all()
@@ -150,9 +139,60 @@ class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
         selectable_articles |= {SelectableArticle(a) for a in used_articles}
         selectable_articles = sorted(selectable_articles, key=lambda a: a.name)
 
-        invoiced_customer_form = InvoicedCustomerForm(instance=self.object.invoiced_customer)
-        invoiced_article_formset = InvoicedArticleFormset(instance=self.object)
+        return selectable_articles
+
+    def get_context_data(self, **kwargs):
+        if self.request.method in ('POST', 'PUT'):
+            invoiced_customer_form = InvoicedCustomerForm(self.request.POST,
+                                                          instance=self.object.invoiced_customer)
+            invoiced_article_formset = InvoicedArticleFormset(self.request.POST,
+                                                              instance=self.object)
+        else:
+            invoiced_customer_form = InvoicedCustomerForm(instance=self.object.invoiced_customer)
+            invoiced_article_formset = InvoicedArticleFormset(instance=self.object)
+
         return super().get_context_data(invoiced_customer_form=invoiced_customer_form,
                                         invoiced_article_formset=invoiced_article_formset,
-                                        articles=selectable_articles,
+                                        articles=self.selectable_articles,
                                         **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        invoiced_customer_form = InvoicedCustomerForm(self.request.POST,
+                                                      instance=self.object.invoiced_customer)
+        invoiced_article_formset = InvoicedArticleFormset(self.request.POST,
+                                                          instance=self.object)
+        invoice_form = self.get_form()
+
+        valid = True
+        valid &= invoice_form.is_valid()
+        valid &= invoiced_customer_form.is_valid()
+        valid &= invoiced_article_formset.is_valid()
+
+        if valid:
+            return self.forms_valid(invoice_form, invoiced_customer_form, invoiced_article_formset)
+        else:
+            return self.form_invalid(invoice_form)
+
+    def forms_valid(self, invoice_form, invoiced_customer_form, invoiced_article_formset):
+        with transaction.atomic():
+            invoice = invoice_form.save()
+            invoiced_customer_form.instance.invoice = invoice
+            invoiced_article_formset.instance = invoice
+            invoiced_customer_form.save()
+            invoiced_article_formset.save()
+        if invoice_form.has_changed() \
+                or invoiced_customer_form.has_changed() \
+                or invoiced_article_formset.has_changed():
+            self.success_message = self.specific_success_message
+        else:
+            self.success_message = ""
+        return self.form_valid(invoice_form)
+
+
+class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
+    specific_success_message = _("Updated: Invoice %(number)s")
+
+    def post(self, request, *args, **kwargs):
+        # extract object being edited in form:
+        self.object = self.get_object()
+        return super().post(request, *args, **kwargs)

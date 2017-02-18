@@ -117,7 +117,7 @@ class ListActionForm(forms.Form):
 class UpdateForm(forms.ModelForm):
     class Meta:
         model = Invoice
-        fields = '__all__'
+        exclude = ()
 
     # form requires assets from custom date picker field:
     Media = PickableDateField.Media
@@ -153,7 +153,7 @@ class UpdateForm(forms.ModelForm):
 class InvoicedCustomerForm(forms.ModelForm):
     class Meta:
         model = InvoicedCustomer
-        fields = '__all__'
+        exclude = ('original_customer', 'invoice')
 
     helper = helper.FormHelper()
     helper.form_tag = False
@@ -232,5 +232,5 @@ InvoicedArticleFormset = forms.inlineformset_factory(
     min_num=1,
     validate_min=True,
     extra=0,
-    fields='__all__',
+    exclude=('original_article', 'invoice')
 )

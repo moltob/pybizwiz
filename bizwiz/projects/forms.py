@@ -82,5 +82,5 @@ CustomerGroupFormset = forms.inlineformset_factory(
     min_num=1,
     validate_min=True,
     extra=0,
-    fields='__all__'
+    exclude=('project',)
 )
