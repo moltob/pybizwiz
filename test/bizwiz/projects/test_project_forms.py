@@ -43,7 +43,7 @@ def customer_group_data(pos, name, project_, customer, deleted=False):
     data = {
         'customergroup_set-%d-name' % pos: name,
         'customergroup_set-%d-project' % pos: str(project_.pk),
-        'customergroup_set-%d-customers' % pos: [str(customer.pk)],
+        'customergroup_set-%d-customers' % pos: str(customer.pk),
     }
     if deleted:
         data['customergroup_set-%d-DELETE' % pos] = 'on'
