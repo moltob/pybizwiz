@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.translation import ugettext as _
 from django.views import generic
 
-from bizwiz.articles.models import Article
+from bizwiz.articles.models import Article, ArticleBase
 from bizwiz.articles.services import get_articles_for_project
 from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
@@ -121,10 +121,11 @@ class EditMixin(views.SuccessMessageMixin):
 class SelectableArticle:
     """Helper class holding article information to be shown in form, without DB relevance."""
 
-    def __init__(self, name, price, original_pk=0):
-        self.name = name
-        self.price = price
-        self.pk = original_pk
+    def __init__(self, article: ArticleBase):
+        self.name = article.name
+        self.price = article.price
+        # only store PK of original articles:
+        self.pk = article.pk if isinstance(article, Article) else 0
 
     def __eq__(self, other):
         # selection list only shows names:
@@ -145,8 +146,8 @@ class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
         used_articles = self.object.invoiced_articles.all()
 
         selectable_articles = set()
-        selectable_articles |= {SelectableArticle(a.name, a.price, a.pk) for a in visible_articles}
-        selectable_articles |= {SelectableArticle(a.name, a.price) for a in used_articles}
+        selectable_articles |= {SelectableArticle(a) for a in visible_articles}
+        selectable_articles |= {SelectableArticle(a) for a in used_articles}
         selectable_articles = sorted(selectable_articles, key=lambda a: a.name)
 
         invoiced_customer_form = InvoicedCustomerForm(instance=self.object.invoiced_customer)
