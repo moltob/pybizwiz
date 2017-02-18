@@ -151,7 +151,7 @@ class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
         selectable_articles = sorted(selectable_articles, key=lambda a: a.name)
 
         invoiced_customer_form = InvoicedCustomerForm(instance=self.object.invoiced_customer)
-        invoiced_article_formset = InvoicedArticleFormset(instance=self.object, prefix='dumbo')
+        invoiced_article_formset = InvoicedArticleFormset(instance=self.object)
         return super().get_context_data(invoiced_customer_form=invoiced_customer_form,
                                         invoiced_article_formset=invoiced_article_formset,
                                         articles=selectable_articles,

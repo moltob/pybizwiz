@@ -199,7 +199,10 @@ class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
         layout.Row(
             # since a dynamic formset is used, there is no need to allow posting empty fields for
             # unused extra forms, so all fields can be explicitly required:
-            layout.Div(layout.Field('name', required='', css_class='article-name'), css_class='col-lg-6'),
+            layout.Div(
+                layout.Field('name', required='', css_class='item-name'),
+                css_class='col-lg-6'
+            ),
             layout.Div(
                 layout.Field('price', required='', css_class='text-right item-price'),
                 css_class='col-lg-2',

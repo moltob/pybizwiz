@@ -118,25 +118,45 @@
 
         var selectableArticles = [{% for article in articles %}{
             pk: {{ article.pk }},
-            text: "{{ article.name|escapejs }}",
+            name: "{{ article.name|escapejs }}",
             price: {{ article.price|unlocalize }}
         }{% if not forloop.last %}, {% endif %}{% endfor %}
         ];
 
+        function selectedArticleChanged(value) {
+            var row = this.$control.closest(".invoice-item-row");
+
+            // get price of this article if in list:
+            var matchingArticles = $.grep(selectableArticles, function (article, index) {
+                return article.name == value;
+            });
+            if (matchingArticles.length > 0) {
+                var price = matchingArticles[0].price;
+                var priceField = row.find(".item-price");
+                priceField.val(formatCurrency(price));
+                priceField.trigger("input");
+            }
+        }
 
         function hookUpItemFieldEvents() {
             // changing item data results in totals recomputation:
-            $(".item-price").on("input", updateTotals).change(reformatCurrencyInputValue);
-            $(".item-amount").on("input", updateTotals);
-            $("input.article-name").selectize({
-                plugins: ["remove_button", "restore_on_backspace"],
-                options: selectableArticles,
-                maxItems: 1,
-                delimiter: null,
-                valueField: "text",
-                create: true,
-                persist: false
-            });
+            $(".item-price")
+                .on("input", updateTotals)
+                .change(reformatCurrencyInputValue);
+            $(".item-amount")
+                .on("input", updateTotals);
+            $("input.item-name")
+                .selectize({
+                    plugins: ["remove_button", "restore_on_backspace"],
+                    options: selectableArticles,
+                    maxItems: 1,
+                    delimiter: null,
+                    labelField: "name",
+                    valueField: "name",
+                    create: true,
+                    persist: false,
+                    onChange: selectedArticleChanged
+                });
             updateTotals();
         }
 
