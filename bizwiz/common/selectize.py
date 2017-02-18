@@ -11,12 +11,16 @@ class SelectizeTextInput(forms.TextInput):
     )
 
 
-class ModelMultipleChoiceTextField(forms.ModelMultipleChoiceField):
-    widget = SelectizeTextInput
-
+class HiddenWidgetMixin:
     def widget_attrs(self, widget):
         """Hide this widget, since it will be replaced by selectize or similar in DOM."""
-        return {'style': 'display:none'}
+        attrs = super().widget_attrs(widget)
+        attrs.update({'style': 'display:none'})
+        return attrs
+
+
+class ModelMultipleChoiceTextField(HiddenWidgetMixin, forms.ModelMultipleChoiceField):
+    widget = SelectizeTextInput
 
     def prepare_value(self, value):
         """Turn list of PKs into comma separated string for rendering."""
@@ -58,3 +62,7 @@ class ModelMultipleChoiceTextField(forms.ModelMultipleChoiceField):
 
         qs = self._check_values(value)
         return qs
+
+
+class ModelChoiceTextField(HiddenWidgetMixin, forms.ModelChoiceField):
+    widget = SelectizeTextInput

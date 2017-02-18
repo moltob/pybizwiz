@@ -85,34 +85,6 @@
     {% dynformset_apply '#invoiced_article_formset' %}
 
     <script>
-        $('.article-name').selectize({
-            //delimiter: ',',
-            //persist: true,
-            create: true,
-            maxItems: 1,
-            delimiter: null,
-            valueField: 'text',
-            labelField: 'text',
-            options: [
-                {% for article in articles %}
-                    {
-                        //value: {{article.pk}},
-                        text: "{{article.name }}",
-                        price: "{{ article.price }}"
-                    },
-                {% endfor %}
-                {value: 0, text: ""}
-            ]
-        });
-    </script>
-
-
-    <script>
-        // activate bootstrap popover plugin:
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-        });
-
         function formatCurrency(value) {
             if (isNaN(value)) return '0,00';
             return value.toFixed(2).replace(".", ",");
@@ -143,18 +115,39 @@
             element.val(formatCurrency(value));
         }
 
+        var selectableArticles = [{% for article in articles %}{
+            text: "{{ article.name|escapejs }}",
+            price: parseCurrency("{{ article.price }}")
+        }{% if not forloop.last %}, {% endif %}{% endfor %}
+        ];
+
+
         function hookUpItemFieldEvents() {
             // changing item data results in totals recomputation:
-            $(".item-price").on('input', updateTotals).change(reformatCurrencyInputValue);
-            $(".item-amount").on('input', updateTotals);
+            $(".item-price").on("input", updateTotals).change(reformatCurrencyInputValue);
+            $(".item-amount").on("input", updateTotals);
+            $("input.article-name").selectize({
+                plugins: ["remove_button", "restore_on_backspace"],
+                options: selectableArticles,
+                maxItems: 1,
+                delimiter: null,
+                valueField: "text",
+                create: true,
+                persist: false
+            });
             updateTotals();
         }
 
-        $("#invoiced_article_formset")
-            .on('formAdded', hookUpItemFieldEvents)
-            .on('formDeleted', updateTotals);
+        $(function () {
+            // activate bootstrap popover plugin:
+            $('[data-toggle="popover"]').popover();
 
-        hookUpItemFieldEvents();
+            $("#invoiced_article_formset")
+                .on('formAdded', hookUpItemFieldEvents)
+                .on('formDeleted', updateTotals);
+
+            hookUpItemFieldEvents();
+        });
     </script>
 
 {% endblock content %}
