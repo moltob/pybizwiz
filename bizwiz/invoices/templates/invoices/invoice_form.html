@@ -145,7 +145,7 @@
                 .change(reformatCurrencyInputValue);
             $(".item-amount")
                 .on("input", updateTotals);
-            $("input.item-name")
+            $("input.item-name")  // refine selector via element type to not match selectize widget
                 .selectize({
                     plugins: ["remove_button", "restore_on_backspace"],
                     options: selectableArticles,
