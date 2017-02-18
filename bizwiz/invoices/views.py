@@ -7,6 +7,7 @@ from django.utils.translation import ugettext as _
 from django.views import generic
 
 from bizwiz.articles.models import Article
+from bizwiz.articles.services import get_articles_for_project
 from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
 from bizwiz.invoices import services
@@ -122,7 +123,7 @@ class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         # TODO: distinguish between GET and POST later on:
-        articles = Article.objects.all()
+        articles = get_articles_for_project(self.object.project).order_by('name')
         invoiced_customer_form = InvoicedCustomerForm(instance=self.object.invoiced_customer)
         invoiced_article_formset = InvoicedArticleFormset(instance=self.object, prefix='dumbo')
         return super().get_context_data(invoiced_customer_form=invoiced_customer_form,
