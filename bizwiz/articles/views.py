@@ -45,11 +45,13 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView)
                                         **kwargs)
 
     def get_queryset(self):
+        show_inactive = self.kwargs['show_inactive']
+
         # apply project filter if active:
-        self.queryset = get_session_filtered_articles(self.request.session)
+        self.queryset = get_session_filtered_articles(self.request.session, include_inactive=True)
 
         # only if requested, show inactive elements:
-        if not self.kwargs['show_inactive']:
+        if not show_inactive:
             self.count_inactive = self.queryset.filter(inactive=True).count()
             self.queryset = self.queryset.filter(inactive=False)
 
