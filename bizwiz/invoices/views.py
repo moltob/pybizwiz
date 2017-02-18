@@ -118,15 +118,40 @@ class EditMixin(views.SuccessMessageMixin):
         return super().form_valid(form)
 
 
+class SelectableArticle:
+    """Helper class holding article information to be shown in form, without DB relevance."""
+
+    def __init__(self, name, price, original_pk=0):
+        self.name = name
+        self.price = price
+        self.pk = original_pk
+
+    def __eq__(self, other):
+        # selection list only shows names:
+        return self.name == other.name
+
+    def __hash__(self):
+        return hash(self.name)
+
+
 class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
     specific_success_message = _("Updated: %(last_name)s, %(first_name)s")
 
     def get_context_data(self, **kwargs):
         # TODO: distinguish between GET and POST later on:
-        articles = get_articles_for_project(self.object.project).order_by('name')
+
+        # make sure user can pick from active articles (in project) _plus_ the ones currently used:
+        visible_articles = get_articles_for_project(self.object.project)
+        used_articles = self.object.invoiced_articles.all()
+
+        selectable_articles = set()
+        selectable_articles |= {SelectableArticle(a.name, a.price, a.pk) for a in visible_articles}
+        selectable_articles |= {SelectableArticle(a.name, a.price) for a in used_articles}
+        selectable_articles = sorted(selectable_articles, key=lambda a: a.name)
+
         invoiced_customer_form = InvoicedCustomerForm(instance=self.object.invoiced_customer)
         invoiced_article_formset = InvoicedArticleFormset(instance=self.object, prefix='dumbo')
         return super().get_context_data(invoiced_customer_form=invoiced_customer_form,
                                         invoiced_article_formset=invoiced_article_formset,
-                                        articles=articles,
+                                        articles=selectable_articles,
                                         **kwargs)

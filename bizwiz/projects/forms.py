@@ -5,7 +5,7 @@ from django.utils.translation import ugettext as _
 from bizwiz.articles.models import Article
 from bizwiz.common.crispy_forms import PickableDateField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
-from bizwiz.common.selectize import ModelMultipleChoiceTextField
+from bizwiz.common.selectize import ModelMultipleChoiceCharField
 from bizwiz.customers.models import Customer
 from bizwiz.projects.models import Project, CustomerGroup
 
@@ -15,7 +15,7 @@ class UpdateForm(forms.ModelForm):
         model = Project
         fields = '__all__'
 
-    articles = ModelMultipleChoiceTextField(queryset=Article.objects.all(), label=_("Article set"))
+    articles = ModelMultipleChoiceCharField(queryset=Article.objects.all(), label=_("Article set"))
 
     # form required assets:
     Media = PickableDateField.Media
@@ -36,7 +36,7 @@ class UpdateForm(forms.ModelForm):
 
 
 class CustomerGroupForm(forms.ModelForm):
-    customers = ModelMultipleChoiceTextField(queryset=Customer.objects.all(), label=_("Customers"))
+    customers = ModelMultipleChoiceCharField(queryset=Customer.objects.all(), label=_("Customers"))
 
 
 class BaseCustomerGroupFormset(forms.BaseInlineFormSet):

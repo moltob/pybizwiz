@@ -1,6 +1,7 @@
 {% extends "common/base.html" %}
 
 {% load i18n %}
+{% load l10n %}
 {% load crispy_forms_tags %}
 {% load common.crispy_forms %}
 {% load common.dynamic_formset %}
@@ -116,8 +117,9 @@
         }
 
         var selectableArticles = [{% for article in articles %}{
+            pk: {{ article.pk }},
             text: "{{ article.name|escapejs }}",
-            price: parseCurrency("{{ article.price }}")
+            price: {{ article.price|unlocalize }}
         }{% if not forloop.last %}, {% endif %}{% endfor %}
         ];
 

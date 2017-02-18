@@ -7,7 +7,7 @@ from django.utils.translation import ugettext as _
 
 from bizwiz.common.crispy_forms import PickableDateField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
-from bizwiz.common.selectize import SelectizeTextInput
+from bizwiz.common.selectize import ChoiceCharField
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
 
 _logger = logging.getLogger(__name__)
@@ -178,8 +178,7 @@ class InvoicedCustomerForm(forms.ModelForm):
 
 class InvoicedArticleForm(forms.ModelForm):
     # combobox for article name:
-    name = forms.CharField(widget=SelectizeTextInput,
-                           label=InvoicedArticle._meta.get_field('name').verbose_name)
+    name = ChoiceCharField(label=InvoicedArticle._meta.get_field('name').verbose_name)
 
     # prevent use of number input widgets which feature undesired +/- buttons:
     price = forms.DecimalField(

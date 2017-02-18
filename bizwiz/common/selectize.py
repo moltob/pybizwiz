@@ -19,7 +19,7 @@ class HiddenWidgetMixin:
         return attrs
 
 
-class ModelMultipleChoiceTextField(HiddenWidgetMixin, forms.ModelMultipleChoiceField):
+class ModelMultipleChoiceCharField(HiddenWidgetMixin, forms.ModelMultipleChoiceField):
     widget = SelectizeTextInput
 
     def prepare_value(self, value):
@@ -64,5 +64,9 @@ class ModelMultipleChoiceTextField(HiddenWidgetMixin, forms.ModelMultipleChoiceF
         return qs
 
 
-class ModelChoiceTextField(HiddenWidgetMixin, forms.ModelChoiceField):
+class ModelChoiceCharField(HiddenWidgetMixin, forms.ModelChoiceField):
+    widget = SelectizeTextInput
+
+
+class ChoiceCharField(HiddenWidgetMixin, forms.CharField):
     widget = SelectizeTextInput
