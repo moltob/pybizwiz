@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-05 22:54+0100\n"
+"POT-Creation-Date: 2017-02-18 18:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,23 +18,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\bizwiz\invoices\forms.py:20
+#: .\bizwiz\invoices\forms.py:24
 msgid "Mark as paid"
 msgstr "Kunde hat gezahlt"
 
-#: .\bizwiz\invoices\forms.py:21
+#: .\bizwiz\invoices\forms.py:25
 msgid "File taxes"
 msgstr "Versteuern"
 
-#: .\bizwiz\invoices\forms.py:22
+#: .\bizwiz\invoices\forms.py:26
 msgid "Delete"
 msgstr "Löschen"
 
-#: .\bizwiz\invoices\forms.py:33
+#: .\bizwiz\invoices\forms.py:37
 msgid "Go!"
 msgstr "Los!"
 
-#: .\bizwiz\invoices\forms.py:68
+#: .\bizwiz\invoices\forms.py:72
 #, python-format
 msgid ""
 "%(num)d invoices have not been found in the database, please refresh browser "
@@ -43,7 +43,7 @@ msgstr ""
 "%(num)d Rechnungen wurden nicht in der Datenbank gefunden. Bitte laden Sie "
 "die Seite erneut."
 
-#: .\bizwiz\invoices\forms.py:83
+#: .\bizwiz\invoices\forms.py:87
 msgid ""
 "Some of the selected invoices have been paid before, please unselect or "
 "choose another action."
@@ -51,7 +51,7 @@ msgstr ""
 "Einige der gewählten Rechnungen wurden bereits bezahlt. Bitte ändern Sie "
 "Ihre Auswahl."
 
-#: .\bizwiz\invoices\forms.py:95
+#: .\bizwiz\invoices\forms.py:99
 msgid ""
 "Some of the selected invoices have not yet been paid before, please unselect "
 "or choose another action."
@@ -59,7 +59,7 @@ msgstr ""
 "Einige der gewählten Rechnungen wurden noch nicht als bezahlt markiert. "
 "Bitte ändern Sie Ihre Auswahl."
 
-#: .\bizwiz\invoices\forms.py:104
+#: .\bizwiz\invoices\forms.py:108
 msgid ""
 "Some of the selected invoices have filed before, please unselect or choose "
 "another action."
@@ -83,7 +83,7 @@ msgstr "Bezahlt"
 msgid "Taxes filed"
 msgstr "Versteuert"
 
-#: .\bizwiz\invoices\models.py:38 .\bizwiz\invoices\views.py:22
+#: .\bizwiz\invoices\models.py:38 .\bizwiz\invoices\views.py:26
 msgid "Project"
 msgstr "Projekt"
 
@@ -125,6 +125,55 @@ msgstr "Berechneter Kunde"
 msgid "Invoiced customers"
 msgstr "Berechnete Kunden"
 
+#: .\bizwiz\invoices\templates\invoices\invoice_form.html:11
+msgid "Edit invoice"
+msgstr "Rechnungen bearbeiten"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_form.html:17
+#: .\bizwiz\invoices\views.py:22
+msgid "Customer"
+msgstr "Kunde"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_form.html:19
+msgid ""
+"Modifications to customer data like name or address\n"
+"                   are effective within the context of this invoice only. If "
+"you want to\n"
+"                   change a customer permanently, do this via the customer "
+"menu."
+msgstr ""
+"Änderungen an Kundendaten wie Namen oder Adresse\n"
+"                   sind nur im Rahmen dieser Rechnung wirksam. Falls "
+"Sie                    Kundendaten permanent ändern möchten, tun Sie dies "
+"bitte über das\n"
+"                   Kundendaten Menü."
+
+#: .\bizwiz\invoices\templates\invoices\invoice_form.html:31
+msgid "Invoice items"
+msgstr "Rechnungsposten"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_form.html:33
+msgid ""
+"Modifications to articles like its name or the\n"
+"                   unit price are effective within the context of this "
+"invoice only. If you want to\n"
+"                   change an article permanently, do this via the article "
+"menu."
+msgstr ""
+"Änderungen an Artikeln wie Namen oder Preis\n"
+"                   sind nur im Rahmen dieser Rechnung wirksam. Falls "
+"Sie                    Artikel permanent ändern möchten, tun Sie dies bitte "
+"über das\n"
+"                   Artikelstammdaten Menü."
+
+#: .\bizwiz\invoices\templates\invoices\invoice_form.html:52
+msgid "Item total"
+msgstr "Summe"
+
+#: .\bizwiz\invoices\templates\invoices\invoice_form.html:77
+msgid "Submit"
+msgstr "Abschicken"
+
 #: .\bizwiz\invoices\templates\invoices\invoice_list.html:34
 msgid "Invoice modification"
 msgstr "Rechnungsänderungen"
@@ -137,41 +186,42 @@ msgstr "Ja"
 msgid "No"
 msgstr "Nein"
 
-#: .\bizwiz\invoices\templates\invoices\invoice_list.html:71
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:72
 msgctxt "confirm 1"
 msgid "Are you sure you want to"
 msgstr "Sind Sie sicher, dass Sie"
 
-#: .\bizwiz\invoices\templates\invoices\invoice_list.html:74
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:75
 msgctxt "confirm 2 pay_invoices"
 msgid "mark the following"
 msgstr "die folgenden"
 
-#: .\bizwiz\invoices\templates\invoices\invoice_list.html:76
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:77
 msgctxt "confirm 3 pay_invoices"
 msgid "invoices as paid?"
 msgstr "Rechnungen als bezahlt markieren möchten?"
 
-#: .\bizwiz\invoices\templates\invoices\invoice_list.html:79
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:80
 msgctxt "confirm 2 tax"
 msgid "file taxes for the following"
 msgstr "die folgenden"
 
-#: .\bizwiz\invoices\templates\invoices\invoice_list.html:81
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:82
 msgctxt "confirm 3 tax"
 msgid "invoices?"
 msgstr "Rechnungen versteuern möchten?"
 
-#: .\bizwiz\invoices\templates\invoices\invoice_list.html:84
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:85
 msgctxt "confirm 2 del"
 msgid "delete the following"
 msgstr "die folgenden"
 
-#: .\bizwiz\invoices\templates\invoices\invoice_list.html:86
+#: .\bizwiz\invoices\templates\invoices\invoice_list.html:87
 msgctxt "confirm 3 del"
 msgid "invoices?"
 msgstr "Rechnungen löschen möchten?"
 
-#: .\bizwiz\invoices\views.py:18
-msgid "Customer"
-msgstr "Kunde"
+#: .\bizwiz\invoices\views.py:193
+#, python-format
+msgid "Updated: Invoice %(number)s"
+msgstr "Bearbeitet: Rechnung %(number)s"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-05 12:44+0100\n"
+"POT-Creation-Date: 2017-02-18 18:47+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,15 +22,11 @@ msgstr ""
 msgid "Article set"
 msgstr "Artikelauswahl"
 
-#: .\bizwiz\projects\forms.py:41
-msgid "At least one article must be selected."
-msgstr "Mindestens ein Artikel muss ausgewählt werden."
-
-#: .\bizwiz\projects\forms.py:50
+#: .\bizwiz\projects\forms.py:39
 msgid "Customers"
 msgstr "Kunden"
 
-#: .\bizwiz\projects\forms.py:80
+#: .\bizwiz\projects\forms.py:69
 #, python-format
 msgid "Only one customer group may be called %(name)s."
 msgstr "Nur ein Kunde mit Namen %(name)s darf existieren."
@@ -72,21 +68,21 @@ msgstr "Kundengruppe"
 msgid "Customer groups"
 msgstr "Kundengruppen"
 
-#: .\bizwiz\projects\templates\projects\project_form.html:11
+#: .\bizwiz\projects\templates\projects\project_form.html:10
 msgid "Edit project"
 msgstr "Projekt bearbeiten"
 
-#: .\bizwiz\projects\templates\projects\project_form.html:16
-#: .\bizwiz\projects\views.py:16
+#: .\bizwiz\projects\templates\projects\project_form.html:15
+#: .\bizwiz\projects\views.py:18
 msgid "Customer Groups"
 msgstr "Kundengruppen"
 
-#: .\bizwiz\projects\views.py:79
+#: .\bizwiz\projects\views.py:89
 #, python-format
 msgid "Updated: %(name)s"
 msgstr "Bearbeitet: %(name)s"
 
-#: .\bizwiz\projects\views.py:88
+#: .\bizwiz\projects\views.py:98
 #, python-format
 msgid "Created: %(name)s"
 msgstr "Erstellt: %(name)s"

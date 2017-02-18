@@ -187,7 +187,11 @@ class InvoicedArticleForm(forms.ModelForm):
         localize=True,
         label=InvoicedArticle._meta.get_field('price').verbose_name
     )
-    amount = forms.IntegerField(widget=forms.TextInput, min_value=1)
+    amount = forms.IntegerField(
+        widget=forms.TextInput,
+        min_value=1,
+        label=InvoicedArticle._meta.get_field('amount').verbose_name
+    )
 
 
 class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
