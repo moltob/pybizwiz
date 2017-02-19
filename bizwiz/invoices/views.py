@@ -13,7 +13,7 @@ from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
 from bizwiz.invoices import services
 from bizwiz.invoices.forms import InvoiceAction, ListActionForm, UpdateForm, InvoicedCustomerForm, \
-    InvoicedArticleFormset
+    InvoicedArticleFormset, CreateForm
 from bizwiz.invoices.models import Invoice
 
 
@@ -123,9 +123,7 @@ class SelectableArticle:
 
 
 class EditMixin(views.SuccessMessageMixin):
-    model = Invoice
     success_url = urls.reverse_lazy('invoices:list')
-    form_class = UpdateForm
     specific_success_message = None
 
     @property
@@ -190,6 +188,8 @@ class EditMixin(views.SuccessMessageMixin):
 
 
 class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
+    model = Invoice
+    form_class = UpdateForm
     specific_success_message = _("Updated: Invoice %(number)s")
     template_name_suffix = '_update'
 
@@ -197,3 +197,8 @@ class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
         # extract object being edited in form:
         self.object = self.get_object()
         return super().post(request, *args, **kwargs)
+
+
+class Create(mixins.LoginRequiredMixin, generic.FormView):
+    template_name = 'invoices/invoice_create.html'
+    form_class = CreateForm

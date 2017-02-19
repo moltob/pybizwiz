@@ -238,3 +238,7 @@ InvoicedArticleFormset = forms.inlineformset_factory(
     extra=0,
     exclude=('original_article', 'invoice')
 )
+
+
+class CreateForm(forms.Form):
+    pass
