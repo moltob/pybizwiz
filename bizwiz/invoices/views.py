@@ -200,9 +200,11 @@ class SelectableCustomer:
         self.pk = customer.pk
 
 
-class Create(mixins.LoginRequiredMixin, generic.FormView):
+class Create(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.FormView):
     template_name = 'invoices/invoice_create.html'
     form_class = CreateForm
+    success_message = _("Created: Invoice for %(customer)s")
+    success_url = urls.reverse_lazy('invoices:list')
 
     def get_context_data(self, **kwargs):
         customers = get_session_filtered_customers(self.request.session).order_by(
@@ -225,3 +227,25 @@ class Create(mixins.LoginRequiredMixin, generic.FormView):
                                         articles=selectable_articles,
                                         invoiced_article_formset=invoiced_article_formset,
                                         **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        invoice_form = self.get_form()
+        invoiced_article_formset = InvoicedArticleFormset(self.request.POST)
+
+        if invoice_form.is_valid() & invoiced_article_formset.is_valid():
+            return self.forms_valid(invoice_form, invoiced_article_formset)
+        else:
+            return self.form_invalid(invoice_form)
+
+    def forms_valid(self, invoice_form, invoiced_article_formset):
+        project = get_session_filter(self.request.session).project
+        original_customer = invoice_form.cleaned_data['customer']
+        article_dicts = invoiced_article_formset.cleaned_data
+
+        services.create_invoice(
+            project=project,
+            customer=original_customer,
+            article_dicts=article_dicts
+        )
+
+        return self.form_valid(invoice_form)

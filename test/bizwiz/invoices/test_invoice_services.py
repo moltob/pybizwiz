@@ -4,6 +4,8 @@ import datetime
 import pytest
 
 from bizwiz.invoices import services
+from bizwiz.invoices.models import Invoice
+from bizwiz.invoices.services import get_next_invoice_number
 
 
 @pytest.fixture
@@ -41,3 +43,24 @@ def test__delete_invoices(mock_transaction, invoices):
 
     for invoice in invoices:
         invoice.delete.assert_called_once_with()
+
+
+@pytest.mark.django_db
+def test__get_next_invoice_number__first():
+    assert get_next_invoice_number() == '1'
+
+
+@pytest.mark.django_db
+def test__get_next_invoice_number__second():
+    Invoice(number='12345').save()
+    assert get_next_invoice_number() == '12346'
+
+@pytest.mark.django_db
+def test__get_next_invoice_number__many():
+    Invoice(number='12345').save()
+    Invoice(number='789').save()
+    Invoice(number='40000').save()
+    Invoice(number='12346').save()
+    Invoice(number='125').save()
+    Invoice(number='12347').save()
+    assert get_next_invoice_number() == '40001'
