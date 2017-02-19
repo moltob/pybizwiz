@@ -9,6 +9,34 @@
     <div class="page-header"><h1>{% trans 'Create invoice' %}</h1></div>
 
     <form method="post">
+        {% crispy form %}
+        {% include 'invoices/invoiced_articles_fieldset.html' %}
+
+        <div class="row form-group voffset3">
+            <div class="col-lg-offset-10 col-lg-2 text-right">
+                <button type="submit" class="btn btn-primary">{% trans 'Submit' %}</button>
+            </div>
+        </div>
     </form>
+
+    <script>
+        var selectableCustomers = [{% for customer in customers %}{
+            pk: {{ customer.pk }},
+            name: "{{ customer.name|escapejs }}"
+        }{% if not forloop.last %}, {% endif %}{% endfor %}
+        ];
+
+        $(function () {
+            $("input.customer-name")  // refine selector via element type to not match selectize widget
+                .selectize({
+                    options: selectableCustomers,
+                    maxItems: 1,
+                    delimiter: null,
+                    labelField: "name",
+                    valueField: "pk"
+                    //onChange: selectedArticleChanged
+                });
+        });
+    </script>
 
 {% endblock content %}

@@ -7,7 +7,8 @@ from django.utils.translation import ugettext as _
 
 from bizwiz.common.crispy_forms import PickableDateField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
-from bizwiz.common.selectize import ChoiceCharField
+from bizwiz.common.selectize import ChoiceCharField, ModelChoiceCharField
+from bizwiz.customers.models import Customer
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
 
 _logger = logging.getLogger(__name__)
@@ -241,4 +242,13 @@ InvoicedArticleFormset = forms.inlineformset_factory(
 
 
 class CreateForm(forms.Form):
-    pass
+    customer = ModelChoiceCharField(queryset=Customer.objects.all(),
+                                    label=Customer._meta.verbose_name)
+
+    helper = helper.FormHelper()
+    helper.form_tag = False
+    helper.layout = layout.Layout(
+        layout.Row(
+            layout.Div(layout.Field('customer', css_class='customer-name'), css_class='col-lg-6'),
+        ),
+    )

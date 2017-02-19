@@ -8,9 +8,10 @@ from django.utils.translation import ugettext as _
 from django.views import generic
 
 from bizwiz.articles.models import Article, ArticleBase
-from bizwiz.articles.services import get_articles_for_project
+from bizwiz.articles.services import get_articles_for_project, get_session_filtered_articles
 from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
+from bizwiz.customers.services import get_session_filtered_customers
 from bizwiz.invoices import services
 from bizwiz.invoices.forms import InvoiceAction, ListActionForm, UpdateForm, InvoicedCustomerForm, \
     InvoicedArticleFormset, CreateForm
@@ -122,9 +123,12 @@ class SelectableArticle:
         return hash(self.name)
 
 
-class EditMixin(views.SuccessMessageMixin):
+class Update(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.UpdateView):
+    model = Invoice
+    form_class = UpdateForm
+    specific_success_message = _("Updated: Invoice %(number)s")
+    template_name_suffix = '_update'
     success_url = urls.reverse_lazy('invoices:list')
-    specific_success_message = None
 
     @property
     def selectable_articles(self):
@@ -155,6 +159,9 @@ class EditMixin(views.SuccessMessageMixin):
                                         **kwargs)
 
     def post(self, request, *args, **kwargs):
+        # extract object being edited in form:
+        self.object = self.get_object()
+
         invoiced_customer_form = InvoicedCustomerForm(self.request.POST,
                                                       instance=self.object.invoiced_customer)
         invoiced_article_formset = InvoicedArticleFormset(self.request.POST,
@@ -187,18 +194,34 @@ class EditMixin(views.SuccessMessageMixin):
         return self.form_valid(invoice_form)
 
 
-class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
-    model = Invoice
-    form_class = UpdateForm
-    specific_success_message = _("Updated: Invoice %(number)s")
-    template_name_suffix = '_update'
-
-    def post(self, request, *args, **kwargs):
-        # extract object being edited in form:
-        self.object = self.get_object()
-        return super().post(request, *args, **kwargs)
+class SelectableCustomer:
+    def __init__(self, customer):
+        self.name = str(customer)
+        self.pk = customer.pk
 
 
 class Create(mixins.LoginRequiredMixin, generic.FormView):
     template_name = 'invoices/invoice_create.html'
     form_class = CreateForm
+
+    def get_context_data(self, **kwargs):
+        customers = get_session_filtered_customers(self.request.session).order_by(
+            'last_name',
+            'first_name',
+            'company_name'
+        )
+        articles = get_session_filtered_articles(self.request.session).order_by(
+            'name'
+        )
+        selectable_customers = [SelectableCustomer(c) for c in customers]
+        selectable_articles = [SelectableArticle(a) for a in articles]
+
+        if self.request.method in ('POST', 'PUT'):
+            invoiced_article_formset = InvoicedArticleFormset(self.request.POST)
+        else:
+            invoiced_article_formset = InvoicedArticleFormset()
+
+        return super().get_context_data(customers=selectable_customers,
+                                        articles=selectable_articles,
+                                        invoiced_article_formset=invoiced_article_formset,
+                                        **kwargs)

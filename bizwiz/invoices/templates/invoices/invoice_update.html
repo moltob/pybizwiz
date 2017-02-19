@@ -1,10 +1,8 @@
 {% extends "common/base.html" %}
 
 {% load i18n %}
-{% load l10n %}
 {% load crispy_forms_tags %}
 {% load common.crispy_forms %}
-{% load common.dynamic_formset %}
 
 {% block content %}
     <div class="page-header"><h1>{% trans 'Edit invoice' %}</h1></div>
@@ -25,51 +23,7 @@
             </legend>
             {% crispy invoiced_customer_form %}
         </fieldset>
-        <fieldset>
-            <legend>
-                {% trans 'Invoice items' %}
-                <a data-toggle="popover"
-                   data-content="{% blocktrans %}Modifications to articles like its name or the
-                   unit price are effective within the context of this invoice only. If you want to
-                   change an article permanently, do this via the article menu.{% endblocktrans %}">
-                    <span class="glyphicon glyphicon-info-sign icon-small icon-raised">
-                    </span>
-                </a>
-            </legend>
-            {% dynformset 'invoiced_article_formset' invoiced_article_formset %}
-                <div class="row">
-                    <label class="col-lg-6 control-label requiredField">
-                        {{ invoiced_article_formset.empty_form.name.label }}
-                    </label>
-                    <label class="col-lg-2 control-label requiredField">
-                        {{ invoiced_article_formset.empty_form.price.label }}
-                    </label>
-                    <label class="col-lg-1 control-label requiredField">
-                        {{ invoiced_article_formset.empty_form.amount.label }}
-                    </label>
-                    <label class="col-lg-offset-1 col-lg-2 control-label text-right">
-                        {% trans 'Item total' %}
-                    </label>
-                </div>
-                {% dynformset_body invoiced_article_formset %}
-
-                <div class="row">
-                    {# Custom version of dynformset_add_button to fit page layout. #}
-                    <div class="col-lg-offset-9 col-lg-1">
-                        <button type="button" class="btn btn-default" data-formset-add>
-                            <span class="glyphicon glyphicon-plus"></span>
-                        </button>
-                    </div>
-
-                    <div class="col-lg-2">
-                        <p id="invoice-total" class="form-control-static currency-total">
-                            0,00
-                        </p>
-                    </div>
-                </div>
-            {% enddynformset %}
-
-        </fieldset>
+        {% include 'invoices/invoiced_articles_fieldset.html' %}
 
         <div class="row form-group voffset3">
             <div class="col-lg-offset-10 col-lg-2 text-right">
@@ -82,93 +36,5 @@
     {% datetime_picker form.date_created %}
     {% datetime_picker form.date_paid %}
     {% datetime_picker form.date_taxes_filed %}
-    {% dynformset_apply '#invoiced_article_formset' %}
-
-    <script>
-        function formatCurrency(value) {
-            if (isNaN(value)) return '0,00';
-            return value.toFixed(2).replace(".", ",");
-        }
-
-        function parseCurrency(str) {
-            return parseFloat(str.replace(',', '.'));
-        }
-
-        function updateTotals() {
-            var invoiceTotal = 0.0;
-
-            $(".invoice-item-row").not("[data-formset-form-deleted]").each(function () {
-                var row = $(this);
-                var price = parseCurrency(row.find(".item-price").val());
-                var amount = parseInt(row.find(".item-amount").val());
-                var total = price * amount;
-                invoiceTotal += total;
-                row.find(".item-total").text(formatCurrency(total));
-            });
-
-            $("#invoice-total").text(formatCurrency(invoiceTotal));
-        }
-
-        function reformatCurrencyInputValue() {
-            var element = $(this);
-            var value = parseCurrency(element.val());
-            element.val(formatCurrency(value));
-        }
-
-        var selectableArticles = [{% for article in articles %}{
-            pk: {{ article.pk }},
-            name: "{{ article.name|escapejs }}",
-            price: {{ article.price|unlocalize }}
-        }{% if not forloop.last %}, {% endif %}{% endfor %}
-        ];
-
-        function selectedArticleChanged(value) {
-            var row = this.$control.closest(".invoice-item-row");
-
-            // get price of this article if in list:
-            var matchingArticles = $.grep(selectableArticles, function (article, index) {
-                return article.name == value;
-            });
-            if (matchingArticles.length > 0) {
-                var price = matchingArticles[0].price;
-                var priceField = row.find(".item-price");
-                priceField.val(formatCurrency(price));
-                priceField.trigger("input");
-            }
-        }
-
-        function hookUpItemFieldEvents() {
-            // changing item data results in totals recomputation:
-            $(".item-price")
-                .on("input", updateTotals)
-                .change(reformatCurrencyInputValue);
-            $(".item-amount")
-                .on("input", updateTotals);
-            $("input.item-name")  // refine selector via element type to not match selectize widget
-                .selectize({
-                    plugins: ["remove_button", "restore_on_backspace"],
-                    options: selectableArticles,
-                    maxItems: 1,
-                    delimiter: null,
-                    labelField: "name",
-                    valueField: "name",
-                    create: true,
-                    persist: false,
-                    onChange: selectedArticleChanged
-                });
-            updateTotals();
-        }
-
-        $(function () {
-            // activate bootstrap popover plugin:
-            $('[data-toggle="popover"]').popover();
-
-            $("#invoiced_article_formset")
-                .on('formAdded', hookUpItemFieldEvents)
-                .on('formDeleted', updateTotals);
-
-            hookUpItemFieldEvents();
-        });
-    </script>
 
 {% endblock content %}
