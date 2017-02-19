@@ -1,6 +1,8 @@
 <script>
-    $("#picker_id_{{ picked_field.name }}").datetimepicker({
-        format: 'DD.MM.YYYY',
-        useCurrent: false
+    $(function () {
+        $("#picker_id_{{ picked_field.name }}").datetimepicker({
+            format: 'DD.MM.YYYY',
+            useCurrent: false
+        });
     });
 </script>
