@@ -191,6 +191,7 @@ class EditMixin(views.SuccessMessageMixin):
 
 class Update(mixins.LoginRequiredMixin, EditMixin, generic.UpdateView):
     specific_success_message = _("Updated: Invoice %(number)s")
+    template_name_suffix = '_update'
 
     def post(self, request, *args, **kwargs):
         # extract object being edited in form:
