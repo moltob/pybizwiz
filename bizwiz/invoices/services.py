@@ -46,7 +46,7 @@ def get_next_invoice_number():
     return str(next_number)
 
 
-def create_invoice(*, project, customer, article_dicts):
+def create_invoice(*, customer, article_dicts, project=None):
     """
     Creates a new invoice from data typically coming in through a posted form.
 
@@ -54,14 +54,14 @@ def create_invoice(*, project, customer, article_dicts):
     without modification of the original master data.
 
     Args:
-        project:
+        project (Optional[Project])):
             Project this invoice belongs to or `None`.
-        customer:
+        customer (Customer):
             Customer the invoice is for (an existing, regular customer).
-        article_dicts:
+        article_dicts (List[dict]):
             List of dictionaries of invoiced articles.
 
-    Returns:
+    Returns (Invoice):
         Stored invoice.
     """
     with transaction.atomic():
