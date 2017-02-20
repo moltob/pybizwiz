@@ -112,8 +112,6 @@ class SelectableArticle:
     def __init__(self, article: ArticleBase):
         self.name = article.name
         self.price = article.price
-        # only store PK of original articles:
-        self.pk = article.pk if isinstance(article, Article) else 0
 
     def __eq__(self, other):
         # selection list only shows names:
