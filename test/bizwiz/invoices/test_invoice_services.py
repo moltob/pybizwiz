@@ -5,6 +5,7 @@ import datetime
 import decimal
 import pytest
 
+from bizwiz.articles.models import Article
 from bizwiz.customers.models import Customer, Salutation
 from bizwiz.invoices import services
 from bizwiz.invoices.models import Invoice
@@ -128,3 +129,15 @@ def test__create_invoice__number_unique(customer, article_dicts):
     invoice = create_invoice(customer=customer, article_dicts=article_dicts)
 
     assert invoice.number not in {'123', '45'}
+
+
+@pytest.mark.django_db
+def test__create_invoice__original_article(customer, article_dicts):
+    article = Article(name='A1', price=5)
+    article.save()
+
+    invoice = create_invoice(customer=customer, article_dicts=article_dicts)
+
+    invoiced_articles = invoice.invoiced_articles.all()
+    assert invoiced_articles[0].original_article == article
+    assert invoiced_articles[1].original_article is None

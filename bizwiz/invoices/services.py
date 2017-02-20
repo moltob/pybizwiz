@@ -6,6 +6,7 @@ from django.db import models, transaction
 from django.db import transaction
 from django.db.models import functions
 
+from bizwiz.articles.models import Article
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
 
 _logger = logging.getLogger(__name__)
@@ -73,12 +74,16 @@ def create_invoice(*, customer, article_dicts, project=None):
         customer.save()
         _logger.info('Creating new invoice {} for customer {}.'.format(invoice.number, customer))
 
+        # get articles from database by names:
+        names = {d['name'] for d in article_dicts}
+        articles = Article.objects.filter(name__in=names)
+        article_by_name = {a.name: a for a in articles}
+
         for article_dict in article_dicts:
             name = article_dict['name']
             price = article_dict['price']
             amount = article_dict['amount']
-            # TODO: identify possibly referenced original article
-            original_article = None
+            original_article = article_by_name.get(name)
             article = InvoicedArticle.create(invoice, original_article, amount)
             article.name = name
             article.price = price
