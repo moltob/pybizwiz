@@ -282,7 +282,7 @@ class Bw2Importer:
             group, customer = group_customer_assocs.get(customer_in_group_assoc_id, (None, None))
 
             invoice = Invoice(
-                number=number,
+                number=int(number),
                 date_created=invoice_date,
                 date_paid=payment_date,
                 date_taxes_filed=payment_date if taxes_filed else None,
