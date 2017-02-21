@@ -54,7 +54,7 @@ def test__invoiced_article__create():
 
 @pytest.mark.django_db
 def test__invoice__total():
-    invoice = Invoice()
+    invoice = Invoice(number=1)
     invoice.save()
 
     a = InvoicedArticle(invoice=invoice, price=1.2, amount=1)

@@ -39,12 +39,9 @@ def delete_invoices(invoices):
 
 def get_next_invoice_number():
     """Returns next available invoice number. Should be called from within transaction."""
-    converted_invoices = Invoice.objects.annotate(
-        int_number=functions.Cast('number', models.IntegerField())
-    )
-    max_number = converted_invoices.aggregate(models.Max('int_number'))['int_number__max']
+    max_number = Invoice.objects.aggregate(models.Max('number'))['number__max']
     next_number = max_number + 1 if max_number else 1
-    return str(next_number)
+    return next_number
 
 
 def create_invoice(*, customer, article_dicts, project=None):
