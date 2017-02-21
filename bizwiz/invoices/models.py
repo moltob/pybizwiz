@@ -14,9 +14,8 @@ from bizwiz.projects.models import Project
 
 
 class Invoice(models.Model):
-    number = models.CharField(
+    number = models.IntegerField(
         _("Invoice number"),
-        max_length=7,
         unique=True,
     )
     date_created = models.DateField(
