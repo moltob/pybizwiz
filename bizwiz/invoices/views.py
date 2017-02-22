@@ -238,12 +238,14 @@ class Create(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.FormV
     def forms_valid(self, invoice_form, invoiced_article_formset):
         project = get_session_filter(self.request.session).project
         original_customer = invoice_form.cleaned_data['customer']
-        article_dicts = invoiced_article_formset.cleaned_data
 
-        services.create_invoice(
-            project=project,
-            customer=original_customer,
-            article_dicts=article_dicts
-        )
+        with transaction.atomic():
+            invoice = services.create_invoice(
+                project=project,
+                customer=original_customer,
+            )
+
+            invoiced_article_formset.instance = invoice
+            invoiced_article_formset.save()
 
         return self.form_valid(invoice_form)

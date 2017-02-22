@@ -44,7 +44,7 @@ def get_next_invoice_number():
     return next_number
 
 
-def create_invoice(*, customer, article_dicts, project=None):
+def create_invoice(*, customer, invoiced_articles=None, project=None):
     """
     Creates a new invoice from data typically coming in through a posted form.
 
@@ -56,35 +56,31 @@ def create_invoice(*, customer, article_dicts, project=None):
             Project this invoice belongs to or `None`.
         customer (Customer):
             Customer the invoice is for (an existing, regular customer).
-        article_dicts (List[dict]):
-            List of dictionaries of invoiced articles.
+        invoiced_articles (Optional[List[InvoicedArticle]]):
+            List of invoiced articles to be added to new invoice.
 
     Returns (Invoice):
         Stored invoice.
     """
-    with transaction.atomic():
-        invoice = Invoice()
-        invoice.project = project
-        invoice.number = get_next_invoice_number()
-        invoice.save()
-        customer = InvoicedCustomer.create(invoice, customer)
-        customer.save()
-        _logger.info('Creating new invoice {} for customer {}.'.format(invoice.number, customer))
+    invoice = Invoice()
+    invoice.project = project
+    invoice.number = get_next_invoice_number()
+    invoice.save()
+    customer = InvoicedCustomer.create(invoice, customer)
+    customer.save()
+    _logger.info('Creating new invoice {} for customer {}.'.format(invoice.number, customer))
 
+    if invoiced_articles:
         # get articles from database by names:
-        names = {d['name'] for d in article_dicts}
+        names = {a.name for a in invoiced_articles}
         articles = Article.objects.filter(name__in=names)
         article_by_name = {a.name: a for a in articles}
 
-        for article_dict in article_dicts:
-            name = article_dict['name']
-            price = article_dict['price']
-            amount = article_dict['amount']
-            original_article = article_by_name.get(name)
-            article = InvoicedArticle.create(invoice, original_article, amount)
-            article.name = name
-            article.price = price
-            article.save()
-            _logger.debug('  {}, price: {}, amount: {}'.format(name, price, amount))
+        for invoiced_article in invoiced_articles:
+            original_article = article_by_name.get(invoiced_article.name)
+            invoiced_article.invoice = invoice
+            invoiced_article.original_article = original_article
+            invoiced_article.save()
+            _logger.debug('  {}'.format(invoiced_article))
 
     return invoice
