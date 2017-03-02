@@ -64,4 +64,4 @@ def test__invoice__total():
     a = InvoicedArticle(invoice=invoice, price=-0.5, amount=2)
     a.save()
 
-    assert invoice.total() == decimal.Decimal('0.20')
+    assert invoice.total == decimal.Decimal('0.20')

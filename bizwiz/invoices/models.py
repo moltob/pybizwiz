@@ -47,9 +47,10 @@ class Invoice(models.Model):
     def __str__(self):
         return '{} ({})'.format(self.number, self.invoiced_customer.full_name())
 
+    @property
     def total(self):
         """Total amount of invoice."""
-        return sum(item.price * item.amount for item in self.invoiced_articles.all())
+        return sum(item.total for item in self.invoiced_articles.all())
 
 
 class InvoicedArticle(ArticleBase):
@@ -79,6 +80,10 @@ class InvoicedArticle(ArticleBase):
         if article:
             copy_field_data(ArticleBase, article, invoiced_article)
         return invoiced_article
+
+    @property
+    def total(self):
+        return self.price * self.amount
 
 
 # invoiced articles copy the article name and may be duplicates:
