@@ -1,4 +1,5 @@
 import locale
+import os
 from unittest import mock
 
 import datetime
@@ -13,6 +14,19 @@ from bwsite import settings
 @pytest.fixture(scope='module', autouse=True)
 def set_locale_from_django_settings():
     locale.setlocale(locale.LC_ALL, settings.LANGUAGE_CODE)
+
+
+@pytest.fixture(scope='module')
+def output_folder():
+    curdir = os.path.dirname(__file__)
+    return os.path.join(curdir, 'output')
+
+
+@pytest.fixture(scope='module', autouse=True)
+def clean_output_folder(output_folder):
+    if os.path.exists(output_folder):
+        os.rmdir(output_folder)
+    os.mkdir(output_folder)
 
 
 @pytest.fixture
@@ -83,6 +97,6 @@ def test__text_blocks__address_lines(invoice):
 
 
 @pytest.mark.django_db
-def test__invoice_pdf_exporter__export(invoice):
-    bytesio = InvoicePdfExporter().export(invoice)
-    assert bytesio
+def test__invoice_pdf_exporter__export(invoice, output_folder):
+    with open(os.path.join(output_folder, 'test_invoice.pdf'), 'wb') as file:
+        InvoicePdfExporter().export(invoice, file)

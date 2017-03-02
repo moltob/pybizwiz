@@ -1,8 +1,7 @@
 import functools
-import io
 import locale
-
 import logging
+
 from django.utils.translation import ugettext as _
 
 from bizwiz.customers.models import Salutation
@@ -17,11 +16,9 @@ class InvoicePdfExporter(InvoiceExporter):
     content_type = 'x-application/pdf'
     action_name = _("Export/print PDF (BPF German)")
 
-    def export(self, invoice: Invoice) -> io.BytesIO:
-        stream = io.BytesIO()
-        doc = BpfInvoiceDocTemplate(stream, TextBlocks(invoice))
+    def export(self, invoice: Invoice, file):
+        doc = BpfInvoiceDocTemplate(file, TextBlocks(invoice))
         doc.build(doc.flowables)
-        return stream
 
 
 class TextBlocks:

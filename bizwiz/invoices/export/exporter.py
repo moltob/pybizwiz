@@ -1,5 +1,3 @@
-import io
-
 from bizwiz.invoices.models import Invoice
 
 
@@ -25,14 +23,12 @@ class InvoiceExporter:
     content_type = None
     action_name = None
 
-    def export(self, invoice: Invoice) -> io.BytesIO:
+    def export(self, invoice: Invoice, file):
         """
         Export invoice and return byte stream of exported data.
 
         Args:
             invoice: Invoice being exported.
-
-        Returns:
-            Export data.
+            file: File-like object where to write data.
         """
         raise NotImplementedError
