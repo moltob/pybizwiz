@@ -92,7 +92,7 @@ class BpfInvoiceDocTemplate(platypus.BaseDocTemplate):
 
         # turn long article names into paragraphs to allow linebreaks in cell:
         article_data = [[
-                            platypus.Paragraph(row[0], normalstyle),  # article name
+                            platypus.Paragraph(row[0], normalstyle) if row[0] else None,
                             row[1],
                             row[2],
                             row[3]
@@ -112,7 +112,7 @@ class BpfInvoiceDocTemplate(platypus.BaseDocTemplate):
                 repeatRows=1,
             ),
             platypus.Paragraph(self.text_blocks.clause_body_bottom, bodystyle),
-            platypus.Paragraph(self.text_blocks.clause_tax_info, bodystyle),
+            platypus.Paragraph(self.text_blocks.clause_taxinfo, bodystyle),
             platypus.Paragraph(self.text_blocks.clause_closing, bodystyle),
             platypus.Paragraph(self.text_blocks.clause_signature, bodystyle),
         ]
@@ -161,19 +161,6 @@ class BpfFirstPageTemplate(BpfPageTemplate):
 
         ypos = PAGE_HEIGHT - 5.9 * units.cm
 
-        if customer.company:
-            canv.drawString(BORDER_LEFT, ypos, customer.company)
+        for line in doc.text_blocks.iter_address_field_lines():
+            canv.drawString(BORDER_LEFT, ypos, line)
             ypos -= leading
-
-        canv.drawString(BORDER_LEFT, ypos, doc.text_blocks.postal_line_salutation)
-        ypos -= leading
-
-        canv.drawString(BORDER_LEFT, ypos, doc.text_blocks.postal_line_name)
-        ypos -= leading
-
-        if customer.street_address:
-            canv.drawString(BORDER_LEFT, ypos, customer.street_address)
-            ypos -= leading
-
-        if customer.city:
-            canv.drawString(BORDER_LEFT, ypos, doc.text_blocks.postal_line_city)

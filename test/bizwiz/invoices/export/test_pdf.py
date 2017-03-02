@@ -5,9 +5,14 @@ import datetime
 import pytest
 
 from bizwiz.customers.models import Salutation
-from bizwiz.invoices.export.pdf import TextBlocks
+from bizwiz.invoices.export.pdf import TextBlocks, InvoicePdfExporter
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
 from bwsite import settings
+
+
+@pytest.fixture(scope='module', autouse=True)
+def set_locale_from_django_settings():
+    locale.setlocale(locale.LC_ALL, settings.LANGUAGE_CODE)
 
 
 @pytest.fixture
@@ -58,7 +63,6 @@ def test__text_blocks__clauses_formatting(invoice):
 
 @pytest.mark.django_db
 def test__text_blocks__article_table(invoice):
-    locale.setlocale(locale.LC_ALL, settings.LANGUAGE_CODE)
     data = list(TextBlocks(invoice).iter_article_rows())
     assert len(data) == 4
     assert data[1] == ['NAME 1', '0,20 €', 3, '0,60 €']
@@ -76,3 +80,9 @@ def test__text_blocks__address_lines(invoice):
         "STREETADDRESS 7A",
         "12345 CITY"
     ]
+
+
+@pytest.mark.django_db
+def test__invoice_pdf_exporter__export(invoice):
+    bytesio = InvoicePdfExporter().export(invoice)
+    assert bytesio
