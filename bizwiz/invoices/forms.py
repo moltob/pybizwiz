@@ -10,6 +10,7 @@ from bizwiz.common.dynamic_formset import remove_form_button_factory
 from bizwiz.common.selectize import ChoiceCharField, ModelChoiceCharField
 from bizwiz.customers.models import Customer
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
+from bizwiz.invoices.services import INVOICE_EXPORTER_MAP
 
 _logger = logging.getLogger(__name__)
 
@@ -20,12 +21,16 @@ class InvoiceAction:
     DELETE = 'DELETE'
 
 
+INVOICE_ACTION_CHOICES = BLANK_CHOICE_DASH + [
+    (InvoiceAction.PAY, _("Mark as paid")),
+    (InvoiceAction.TAX, _("File taxes")),
+    (InvoiceAction.DELETE, _("Delete")),
+] + [(k, e.action_name) for k, e in INVOICE_EXPORTER_MAP.items()]
+
+
 class ListActionForm(forms.Form):
-    action = forms.ChoiceField(choices=BLANK_CHOICE_DASH + [
-        (InvoiceAction.PAY, _("Mark as paid")),
-        (InvoiceAction.TAX, _("File taxes")),
-        (InvoiceAction.DELETE, _("Delete")),
-    ])
+    action = forms.ChoiceField(choices=INVOICE_ACTION_CHOICES)
+
     # whitespace separated list of invoice IDs to be modified, filled by JS before form submission:
     invoice_ids = forms.CharField(strip=True)
 

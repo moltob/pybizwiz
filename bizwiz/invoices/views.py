@@ -1,3 +1,5 @@
+import logging
+
 import django_tables2 as tables
 from django import urls
 from django.contrib.auth import mixins
@@ -7,7 +9,7 @@ from django.db import transaction
 from django.utils.translation import ugettext as _
 from django.views import generic
 
-from bizwiz.articles.models import Article, ArticleBase
+from bizwiz.articles.models import ArticleBase
 from bizwiz.articles.services import get_articles_for_project, get_session_filtered_articles
 from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
@@ -16,6 +18,8 @@ from bizwiz.invoices import services
 from bizwiz.invoices.forms import InvoiceAction, ListActionForm, UpdateForm, InvoicedCustomerForm, \
     InvoicedArticleFormset, CreateForm
 from bizwiz.invoices.models import Invoice
+
+_logger = logging.getLogger(__name__)
 
 
 class InvoiceTable(tables.Table):
@@ -102,6 +106,8 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
             services.taxfile_invoices(invoices)
         elif action == InvoiceAction.DELETE:
             services.delete_invoices(invoices)
+        else:
+            services.export_invoices(invoices, action)
 
         return super().form_valid(form)
 

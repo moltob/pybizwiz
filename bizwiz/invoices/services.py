@@ -7,6 +7,7 @@ from django.db import transaction
 from django.db.models import functions
 
 from bizwiz.articles.models import Article
+from bizwiz.invoices.export.pdf import InvoicePdfExporter
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
 
 _logger = logging.getLogger(__name__)
@@ -84,3 +85,19 @@ def create_invoice(*, customer, invoiced_articles=None, project=None):
             _logger.debug('  {}'.format(invoiced_article))
 
     return invoice
+
+
+INVOICE_EXPORTER_MAP = {e.action_key: e for e in (
+    InvoicePdfExporter(),
+)}
+
+
+def export_invoices(invoices, exporter_key):
+    exporter = INVOICE_EXPORTER_MAP.get(exporter_key)
+    if not exporter:
+        _logger.error('Cannot execute unknown action {!r}.'.format(exporter_key))
+        return None
+
+    for inv in invoices:
+        _logger.info('Exporting invoice id={}, number={}.'.format(inv.pk, inv.number))
+        exporter.export(inv, str(inv.number) + '.pdf')

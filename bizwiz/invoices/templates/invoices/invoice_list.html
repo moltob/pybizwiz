@@ -31,7 +31,7 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span></button>
                     <h4 class="modal-title" id="previewModalLabel">
-                        {% trans 'Invoice modification' %}
+                        {% trans 'Invoice action' %}
                     </h4>
                 </div>
                 <div class="modal-body">
@@ -85,6 +85,11 @@
                             question += "{% trans 'delete the following' context 'confirm 2 del' %}";
                             question += " " + numSelected + " ";
                             question += "{% trans 'invoices?' context 'confirm 3 del' %}";
+                            break;
+                        default:
+                            question += "{% trans 'execute the chosen action for the following' context 'confirm 2 def' %}";
+                            question += " " + numSelected + " ";
+                            question += "{% trans 'invoices?' context 'confirm 3 def' %}";
                             break;
                     }
                     previewHeader.text(question);

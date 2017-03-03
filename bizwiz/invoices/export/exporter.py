@@ -16,11 +16,15 @@ class InvoiceExporter:
     mime_type (str):
         MIME type to use when sending export to client.
 
+    action_key (str):
+        Selection key for this action.
+
     action_name (str):
         Localized text to show to user in UI select box.
     """
 
     content_type = None
+    action_key = None
     action_name = None
 
     def export(self, invoice: Invoice, file):

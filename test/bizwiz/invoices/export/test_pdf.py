@@ -1,19 +1,12 @@
-import locale
-import os
-from unittest import mock
-
 import datetime
+import os
+import shutil
+
 import pytest
 
 from bizwiz.customers.models import Salutation
 from bizwiz.invoices.export.pdf import TextBlocks, InvoicePdfExporter
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
-from bwsite import settings
-
-
-@pytest.fixture(scope='module', autouse=True)
-def set_locale_from_django_settings():
-    locale.setlocale(locale.LC_ALL, settings.LANGUAGE_CODE)
 
 
 @pytest.fixture(scope='module')
@@ -25,7 +18,7 @@ def output_folder():
 @pytest.fixture(scope='module', autouse=True)
 def clean_output_folder(output_folder):
     if os.path.exists(output_folder):
-        os.rmdir(output_folder)
+        shutil.rmtree(output_folder)
     os.mkdir(output_folder)
 
 

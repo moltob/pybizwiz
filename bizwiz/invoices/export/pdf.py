@@ -8,12 +8,14 @@ from bizwiz.customers.models import Salutation
 from bizwiz.invoices.export.exporter import InvoiceExporter
 from bizwiz.invoices.export.template_pdf_bpf_2017 import BpfInvoiceDocTemplate
 from bizwiz.invoices.models import Invoice
+from bwsite import settings
 
 _logger = logging.getLogger(__name__)
 
 
 class InvoicePdfExporter(InvoiceExporter):
     content_type = 'x-application/pdf'
+    action_key = 'PRINT'
     action_name = _("Export/print PDF (BPF German)")
 
     def export(self, invoice: Invoice, file):
@@ -76,7 +78,6 @@ class TextBlocks:
         return "Ihre Britta Pagel"
 
     def iter_article_rows(self):
-
         currency = functools.partial(locale.currency, grouping=True)
 
         yield ['Artikel', 'Stückpreis', 'Anzahl', 'Gesamt']
