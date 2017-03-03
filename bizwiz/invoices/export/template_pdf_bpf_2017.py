@@ -32,7 +32,6 @@ STYLESHEET.add(styles.ParagraphStyle(
     name='BodyText',
     parent=STYLESHEET['Normal'],
     spaceBefore=FONT_SIZE,
-    alignment=enums.TA_JUSTIFY
 ))
 STYLESHEET.add(styles.ParagraphStyle(
     name='Date',
