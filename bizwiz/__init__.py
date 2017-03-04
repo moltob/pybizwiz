@@ -1,6 +1,8 @@
 import locale
 
-from bwsite import settings
+from django.utils import translation
 
-assert settings.LANGUAGE_CODE == 'de-de', 'Unexpected locale setting.'
-locale.setlocale(locale.LC_ALL, 'de')
+# make django language also effective for current locale
+_language = translation.get_language()
+_locale = translation.to_locale(_language)
+locale.setlocale(locale.LC_ALL, _locale[:2])  # meager attempt to get around

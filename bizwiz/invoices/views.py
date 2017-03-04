@@ -51,9 +51,9 @@ class InvoiceTable(tables.Table):
 
     def order_total(self, queryset, descending):
         queryset = queryset.annotate(
-            total=models.Sum(models.F('invoiced_articles__price') *
+            _total=models.Sum(models.F('invoiced_articles__price') *
                              models.F('invoiced_articles__amount'))
-        ).order_by(('-' if descending else '') + 'total')
+        ).order_by(('-' if descending else '') + '_total')
         return queryset, True
 
 
