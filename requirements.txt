@@ -1,8 +1,11 @@
 Django
 django-crispy-forms  # HTML rendering and layout of forms and formsets
-django-formset-js    # Client-side adding and deleting of formset rows
+-e git+git@bitbucket.org:mpagel/django-formset-js.git@985e2487581b492faccac820fecc6de432081235#egg=django_formset_js  # Client-side adding and deleting of formset rows
 django-tables2       # HTML rendering and layout of table views, sortable, pagination
 pytest
 pytest-django
 reportlab
 PyPDF2
+gunicorn
+whitenoise
+

@@ -4,5 +4,7 @@ __pycache__/
 node_modules/
 bower_components/
 *.mo
+*.pyc
 .cache/
 test/**/output/
+static-root/
