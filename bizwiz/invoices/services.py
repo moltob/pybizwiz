@@ -1,14 +1,16 @@
 """Business services for invoices."""
 import datetime
+import io
 import logging
 
-from django.db import models, transaction
+import PyPDF2
+from django import http
+from django.db import models
 from django.db import transaction
-from django.db.models import functions
 
 from bizwiz.articles.models import Article
 from bizwiz.invoices.export.pdf import InvoicePdfExporter
-from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
+from bizwiz.invoices.models import Invoice, InvoicedCustomer
 
 _logger = logging.getLogger(__name__)
 
@@ -98,6 +100,16 @@ def export_invoices(invoices, exporter_key):
         _logger.error('Cannot execute unknown action {!r}.'.format(exporter_key))
         return None
 
+    response = http.HttpResponse(content_type=exporter.content_type)
+    #response['Content-Disposition'] = 'filename="invoice.pdf"'
+
+    merger = PyPDF2.PdfFileMerger()
+
     for inv in invoices:
+        buffer = io.BytesIO()
         _logger.info('Exporting invoice id={}, number={}.'.format(inv.pk, inv.number))
-        exporter.export(inv, str(inv.number) + '.pdf')
+        exporter.export(inv, buffer)
+        merger.append(buffer)
+
+    merger.write(response)
+    return response

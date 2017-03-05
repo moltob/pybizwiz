@@ -107,7 +107,9 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
         elif action == InvoiceAction.DELETE:
             services.delete_invoices(invoices)
         else:
-            services.export_invoices(invoices, action)
+            response = services.export_invoices(invoices, action)
+            if response:
+                return response
 
         return super().form_valid(form)
 

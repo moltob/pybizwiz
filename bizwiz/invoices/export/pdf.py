@@ -8,18 +8,21 @@ from bizwiz.customers.models import Salutation
 from bizwiz.invoices.export.exporter import InvoiceExporter
 from bizwiz.invoices.export.template_pdf_bpf_2017 import BpfInvoiceDocTemplate
 from bizwiz.invoices.models import Invoice
-from bwsite import settings
 
 _logger = logging.getLogger(__name__)
 
 
 class InvoicePdfExporter(InvoiceExporter):
-    content_type = 'x-application/pdf'
+    content_type = 'application/pdf'
     action_key = 'PRINT'
     action_name = _("Export/print PDF (BPF German)")
 
     def export(self, invoice: Invoice, file):
-        doc = BpfInvoiceDocTemplate(file, TextBlocks(invoice))
+        doc = BpfInvoiceDocTemplate(
+            file,
+            TextBlocks(invoice),
+            title=_('BPF Invoice R{:06d}').format(invoice.number),
+        )
         doc.build(doc.flowables)
 
 
@@ -44,7 +47,7 @@ class TextBlocks:
         if customer.salutation == Salutation.MR:
             clause.append("Sehr geehrter Herr")
         elif customer.salutation == Salutation.MRS:
-            clause.append("Sehr geehrter Frau")
+            clause.append("Sehr geehrte Frau")
         elif customer.salutation == Salutation.FAMILY:
             clause.append("Sehr geehrte Familie")
         else:

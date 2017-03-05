@@ -5,3 +5,4 @@ django-tables2       # HTML rendering and layout of table views, sortable, pagin
 pytest
 pytest-django
 reportlab
+PyPDF2
