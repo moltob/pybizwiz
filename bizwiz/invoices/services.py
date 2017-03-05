@@ -92,7 +92,7 @@ INVOICE_EXPORTER_MAP = {e.action_key: e for e in (
 )}
 
 
-def export_invoices(invoices, exporter_key):
+def export_invoices(invoices, exporter_key, *, as_attachment=True):
     exporter = INVOICE_EXPORTER_MAP.get(exporter_key)
     if not exporter:
         _logger.error('Cannot execute unknown action {!r}.'.format(exporter_key))
@@ -104,7 +104,11 @@ def export_invoices(invoices, exporter_key):
         filename = 'invoices.{}'.format(exporter.extension)
 
     response = http.HttpResponse(content_type=exporter.content_type)
-    response['Content-Disposition'] = 'attachment;filename="{}"'.format(filename)
+
+    if as_attachment:
+        response['Content-Disposition'] = 'attachment;filename="{}"'.format(filename)
+    else:
+        response['Content-Disposition'] = 'filename="{}"'.format(filename)
 
     exporter.export(invoices, response)
     return response

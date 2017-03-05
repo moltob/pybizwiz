@@ -1,9 +1,10 @@
 import logging
 
 import django_tables2 as tables
-from django import urls
+from django import shortcuts
+from django import urls, views
 from django.contrib.auth import mixins
-from django.contrib.messages import views
+from django.contrib.messages import views as message_views
 from django.db import models
 from django.db import transaction
 from django.utils.translation import ugettext as _
@@ -24,6 +25,10 @@ _logger = logging.getLogger(__name__)
 
 class InvoiceTable(tables.Table):
     number = tables.LinkColumn('invoices:update', args=[tables.utils.A('pk')])
+    print = tables.LinkColumn('invoices:print', args=[tables.utils.A('number')], orderable=False,
+                              text='', verbose_name='', attrs={
+            'a': {'class': 'glyphicon glyphicon-print'},
+        })
     invoiced_customer = tables.Column(_("Customer"), order_by=(
         'invoiced_customer.last_name',
         'invoiced_customer.first_name'
@@ -43,7 +48,7 @@ class InvoiceTable(tables.Table):
         per_page = 15
         model = Invoice
         fields = ('selected', 'number', 'invoiced_customer', 'date_created', 'date_paid',
-                  'date_taxes_filed', 'project', 'total')
+                  'date_taxes_filed', 'project', 'total', 'print')
         order_by = ('-number',)
 
     def render_invoiced_customer(self, record: Invoice):
@@ -52,7 +57,7 @@ class InvoiceTable(tables.Table):
     def order_total(self, queryset, descending):
         queryset = queryset.annotate(
             _total=models.Sum(models.F('invoiced_articles__price') *
-                             models.F('invoiced_articles__amount'))
+                              models.F('invoiced_articles__amount'))
         ).order_by(('-' if descending else '') + '_total')
         return queryset, True
 
@@ -61,7 +66,7 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
            tables.SingleTableView):
     model = Invoice
     table_class = InvoiceTable
-    column_widths = ('5%', '15%', '20%', '10%', '10%', '10%', '30%', '10%')
+    column_widths = ('5%', '15%', '20%', '10%', '10%', '10%', '25%', '10%', '5%')
     form_class = ListActionForm
     success_url = urls.reverse_lazy('invoices:list')
 
@@ -129,7 +134,7 @@ class SelectableArticle:
         return hash(self.name)
 
 
-class Update(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.UpdateView):
+class Update(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, generic.UpdateView):
     model = Invoice
     form_class = UpdateForm
     specific_success_message = _("Updated: Invoice %(number)s")
@@ -206,7 +211,7 @@ class SelectableCustomer:
         self.pk = customer.pk
 
 
-class Create(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.FormView):
+class Create(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, generic.FormView):
     template_name = 'invoices/invoice_create.html'
     form_class = CreateForm
     success_message = _("Created: Invoice for %(customer)s")
@@ -257,3 +262,9 @@ class Create(mixins.LoginRequiredMixin, views.SuccessMessageMixin, generic.FormV
             invoiced_article_formset.save()
 
         return self.form_valid(invoice_form)
+
+
+class Print(views.View):
+    def get(self, request, number):
+        invoice = shortcuts.get_object_or_404(Invoice, number=number)
+        return services.export_invoices([invoice], 'PDF', as_attachment=False)
