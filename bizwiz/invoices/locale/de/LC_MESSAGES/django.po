@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-05 12:21+0100\n"
+"POT-Creation-Date: 2017-03-05 13:13+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,7 +91,7 @@ msgstr "Bezahlt"
 msgid "Taxes filed"
 msgstr "Versteuert"
 
-#: .\bizwiz\invoices\models.py:37 .\bizwiz\invoices\views.py:31
+#: .\bizwiz\invoices\models.py:37 .\bizwiz\invoices\views.py:36
 msgid "Project"
 msgstr "Projekt"
 
@@ -204,7 +204,7 @@ msgid "Edit invoice"
 msgstr "Rechnungen bearbeiten"
 
 #: .\bizwiz\invoices\templates\invoices\invoice_update.html:14
-#: .\bizwiz\invoices\views.py:27
+#: .\bizwiz\invoices\views.py:32
 msgid "Customer"
 msgstr "Kunde"
 
@@ -244,12 +244,12 @@ msgstr ""
 msgid "Item total"
 msgstr "Summe"
 
-#: .\bizwiz\invoices\views.py:135
+#: .\bizwiz\invoices\views.py:140
 #, python-format
 msgid "Updated: Invoice %(number)s"
 msgstr "Bearbeitet: Rechnung %(number)s"
 
-#: .\bizwiz\invoices\views.py:212
+#: .\bizwiz\invoices\views.py:217
 #, python-format
 msgid "Created: Invoice for %(customer)s"
 msgstr "Erstellt: Rechnung %(customer)s"

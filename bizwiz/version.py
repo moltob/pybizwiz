@@ -8,4 +8,4 @@ class Version:
         return '{s.major}.{s.minor}.{s.patch}'.format(s=self)
 
 
-BIZWIZ_VERSION = Version(0, 4, 9)
+BIZWIZ_VERSION = Version(4, 0, 0)
