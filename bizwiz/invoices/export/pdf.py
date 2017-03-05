@@ -9,7 +9,6 @@ from django.utils.translation import ugettext as _
 from bizwiz.customers.models import Salutation
 from bizwiz.invoices.export.exporter import InvoiceExporter
 from bizwiz.invoices.export.template_pdf_bpf_2017 import BpfInvoiceDocTemplate
-from bizwiz.invoices.models import Invoice
 
 _logger = logging.getLogger(__name__)
 

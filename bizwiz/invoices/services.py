@@ -1,9 +1,7 @@
 """Business services for invoices."""
 import datetime
-import io
 import logging
 
-import PyPDF2
 from django import http
 from django.db import models
 from django.db import transaction
