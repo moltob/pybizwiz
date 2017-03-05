@@ -1,3 +1,5 @@
+import typing
+
 from bizwiz.invoices.models import Invoice
 
 
@@ -13,8 +15,11 @@ class InvoiceExporter:
 
     This means that implementations must keep all data within the context of the `export` call.
 
-    mime_type (str):
+    content_type (str):
         MIME type to use when sending export to client.
+
+    extension (str):
+        File extension used for downloaded file.
 
     action_key (str):
         Selection key for this action.
@@ -24,15 +29,16 @@ class InvoiceExporter:
     """
 
     content_type = None
+    extension = None
     action_key = None
     action_name = None
 
-    def export(self, invoice: Invoice, file):
+    def export(self, invoices: typing.List[Invoice], fileobj):
         """
         Export invoice and return byte stream of exported data.
 
         Args:
-            invoice: Invoice being exported.
-            file: File-like object where to write data.
+            invoices: List of invoices being exported.
+            fileobj: File-like object to write data to.
         """
         raise NotImplementedError

@@ -1,7 +1,9 @@
 import functools
+import io
 import locale
 import logging
 
+import PyPDF2
 from django.utils.translation import ugettext as _
 
 from bizwiz.customers.models import Salutation
@@ -14,16 +16,26 @@ _logger = logging.getLogger(__name__)
 
 class InvoicePdfExporter(InvoiceExporter):
     content_type = 'application/pdf'
-    action_key = 'PRINT'
-    action_name = _("Export/print PDF (BPF German)")
+    extension = 'pdf'
+    action_key = 'PDF'
+    action_name = _("Export PDF (BPF German)")
 
-    def export(self, invoice: Invoice, file):
-        doc = BpfInvoiceDocTemplate(
-            file,
-            TextBlocks(invoice),
-            title=_('BPF Invoice R{:06d}').format(invoice.number),
-        )
-        doc.build(doc.flowables)
+    def export(self, invoices, fileobj):
+        merger = PyPDF2.PdfFileMerger()
+
+        for invoice in invoices:
+            _logger.info('Exporting invoice id={}, number={}.'.format(invoice.pk, invoice.number))
+
+            buffer = io.BytesIO()
+            doc = BpfInvoiceDocTemplate(
+                buffer,
+                TextBlocks(invoice),
+                title=_('BPF Invoice R{:06d}').format(invoice.number),
+            )
+            doc.build(doc.flowables)
+            merger.append(buffer)
+
+        merger.write(fileobj)
 
 
 class TextBlocks:

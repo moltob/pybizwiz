@@ -100,16 +100,13 @@ def export_invoices(invoices, exporter_key):
         _logger.error('Cannot execute unknown action {!r}.'.format(exporter_key))
         return None
 
+    if len(invoices) == 1:
+        filename = 'invoice-{}.{}'.format(invoices[0].number, exporter.extension)
+    else:
+        filename = 'invoices.{}'.format(exporter.extension)
+
     response = http.HttpResponse(content_type=exporter.content_type)
-    #response['Content-Disposition'] = 'filename="invoice.pdf"'
+    response['Content-Disposition'] = 'attachment;filename="{}"'.format(filename)
 
-    merger = PyPDF2.PdfFileMerger()
-
-    for inv in invoices:
-        buffer = io.BytesIO()
-        _logger.info('Exporting invoice id={}, number={}.'.format(inv.pk, inv.number))
-        exporter.export(inv, buffer)
-        merger.append(buffer)
-
-    merger.write(response)
+    exporter.export(invoices, response)
     return response
