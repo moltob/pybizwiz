@@ -17,7 +17,7 @@ class InvoicePdfExporter(InvoiceExporter):
     content_type = 'application/pdf'
     extension = 'pdf'
     action_key = 'PDF'
-    action_name = _("Export PDF (BPF German)")
+    action_name = _("Export PDF")
 
     def export(self, invoices, fileobj):
         merger = PyPDF2.PdfFileMerger()
@@ -25,6 +25,7 @@ class InvoicePdfExporter(InvoiceExporter):
         for invoice in invoices:
             _logger.info('Exporting invoice id={}, number={}.'.format(invoice.pk, invoice.number))
 
+            # cannot use context manager, as merger requires streams to be available during write:
             buffer = io.BytesIO()
             doc = BpfInvoiceDocTemplate(
                 buffer,
