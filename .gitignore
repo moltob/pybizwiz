@@ -1,10 +1,17 @@
-.idea/ 
-db.sqlite3 
-__pycache__/
-node_modules/
+# required artifacts created during setup/deployment
 bower_components/
+static-root/
+
+# temporary folders
+__pycache__/
+.cache/
+.idea/
+.vagrant/
+test/**/output/
+
+# temporary files
+*.bak
+*.log
 *.mo
 *.pyc
-.cache/
-test/**/output/
-static-root/
+*.sqlite3 
