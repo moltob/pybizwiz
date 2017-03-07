@@ -12,10 +12,3 @@ sudo apt-get update
 sudo apt-get -y install docker-ce
 sudo apt-get -y install nodejs-legacy npm tofrodos
 sudo npm install -g bower
-
-# ---- Utilities ----
-mkdir -p bin
-cat /vagrant/scripts/deploy.sh | fromdos > bin/deploy.sh
-
-echo export PATH=~/bin:$PATH >> ~/.bashrc
-chmod a+x bin/*
