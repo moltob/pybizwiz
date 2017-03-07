@@ -1,10 +1,25 @@
 Django
-django-crispy-forms  # HTML rendering and layout of forms and formsets
--e git+https://mpagel@bitbucket.org/mpagel/django-formset-js.git@985e2487581b492faccac820fecc6de432081235#egg=django_formset_js  # Client-side adding and deleting of formset rows
-django-tables2       # HTML rendering and layout of table views, sortable, pagination
+
+# HTML rendering and layout of forms and formsets
+django-crispy-forms
+
+# Client-side adding and deleting of formset rows
+-e git+https://mpagel@bitbucket.org/mpagel/django-formset-js.git@985e2487581b492faccac820fecc6de432081235#egg=django_formset_js
+
+# HTML rendering and layout of table views, sortable, pagination
+django-tables2
+
+# production WSGI server
+gunicorn
+
+# PDF document merge
+PyPDF2
+
 pytest
 pytest-django
+
+# PDF generation
 reportlab
-PyPDF2
-gunicorn
+
+# serve static files simply via gunicorn
 whitenoise
