@@ -2,12 +2,12 @@ FROM python:3.5
 
 # german locale installation
 ENV LANG de_DE.UTF-8
-ENV LANGUAGE $LANG
-ENV LC_ALL $LANG
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils locales
 RUN sed -i -e "s/# $LANG.*/$LANG.UTF-8 UTF-8/" /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=$LANG
+ENV LANGUAGE $LANG
+ENV LC_ALL $LANG
 
 # copy application
 ENV appdir=/app/pybizwiz
