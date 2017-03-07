@@ -19,6 +19,5 @@ rm bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-dateti
 
 [ -z $(sudo docker images -q bizwiz:latest) ] || sudo docker rmi -f bizwiz:latest
 sudo docker build -t bizwiz:latest .
-#sudo docker run -it bizwiz:latest pytest test
-#sudo docker login ...
-#sudo docker push bizwiz mpagel/bizwiz:latest
+sudo docker run -it bizwiz:latest pytest test
+sudo docker push mpagel/bizwiz:latest
