@@ -1,12 +1,14 @@
 #!/usr/bin/env bash
-#
+set -e
+set -x
+
 # Create and push docker image for Bizwiz.
 
-export build-folder=bizwiz-build
+export builddir=bizwiz-build
 
-rm -rf $(build-folder)
-mkdir $(build-folder)
-cd $(build-folder)
+rm -rf ${builddir}
+mkdir ${builddir}
+cd ${builddir}
 
 git clone --depth 1 https://github.com/moltob/pybizwiz.git
 cd pybizwiz
