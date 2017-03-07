@@ -1,12 +1,14 @@
-###################################################################
-#
-# - create container serving static data via apache
-# - create container serving a Python web application
-# - combine the two
-# - serve via https
-# - deploy Bizwiz
-#
-###################################################################
+FROM python:3.5
 
-FROM httpd:2.4
-COPY ./*.html /usr/local/apache2/htdocs/
+ENV appdir=/app/pybizwiz
+
+COPY bizwiz           ${appdir}/bizwiz
+COPY bower_components ${appdir}/bower_components
+COPY bwsite           ${appdir}/bwsite
+COPY test             ${appdir}/test
+COPY test *.*         ${appdir}/
+
+WORKDIR ${appdir}
+RUN pip install -r requirements.txt
+RUN python manage.py collectstatic --noinput
+
