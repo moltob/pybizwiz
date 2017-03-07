@@ -2,10 +2,12 @@ FROM python:3.5
 
 # german locale installation
 ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update -qq && apt-get install -y locales -qq && locale-gen de_DE.utf8 && dpkg-reconfigure locales && /usr/sbin/update-locale LANG=de_DE.utf8
-ENV LANG de_DE.utf8
-ENV LANGUAGE de_DE.utf8
-ENV LC_ALL de_DE.utf8
+RUN apt-get update
+RUN apt-get install -y apt-utils locales
+RUN locale-gen de_DE.UTF-8 && dpkg-reconfigure locales && /usr/sbin/update-locale LANG=de_DE.UTF-8
+ENV LANG de_DE.UTF-8
+ENV LANGUAGE de_DE.UTF-8
+ENV LC_ALL de_DE.UTF-8
 
 # copy application
 ENV appdir=/app/pybizwiz
