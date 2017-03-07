@@ -92,4 +92,4 @@ def test__text_blocks__address_lines(invoice):
 @pytest.mark.django_db
 def test__invoice_pdf_exporter__export(invoice, output_folder):
     with open(os.path.join(output_folder, 'test_invoice.pdf'), 'wb') as file:
-        InvoicePdfExporter().export(invoice, file)
+        InvoicePdfExporter().export([invoice], file)
