@@ -16,12 +16,15 @@ RUN DEBIAN_FRONTEND=noninteractive \
 #ENV LANGUAGE de_DE.UTF-8
 #ENV LC_ALL de_DE.UTF-8
 
-# copy application
-ENV appdir=/app/pybizwiz
-COPY . $appdir/
+# application configuration
+ENV bizwiz_appdir=/app/pybizwiz \
+    bizwiz_port=80
+EXPOSE $bizwiz_port
+WORKDIR $bizwiz_appdir
+ENTRYPOINT ["gunicorn", "bwsite.wsgi", "-b 0.0.0.0:$bizwiz_port"]
 
-# install packages and assets
-WORKDIR $appdir
+# install application
+COPY . .
 RUN pip install -r requirements.txt && \
     python manage.py collectstatic --noinput && \
     python manage.py migrate
