@@ -20,10 +20,12 @@ ENV bizwiz_appdir=/app/pybizwiz \
     bizwiz_port=80
 EXPOSE $bizwiz_port
 WORKDIR $bizwiz_appdir
-ENTRYPOINT ["gunicorn", "bwsite.wsgi", "-b 0.0.0.0:$bizwiz_port"]
+CMD ["gunicorn", "bwsite.wsgi", "-b 0.0.0.0:$bizwiz_port"]
 
 # install application
 COPY . .
 RUN pip install -r requirements.txt && \
+    pytest test && \
+    rm -rf test && \
     python manage.py collectstatic --noinput && \
     python manage.py migrate
