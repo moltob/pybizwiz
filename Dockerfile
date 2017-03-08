@@ -4,12 +4,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
     locales
 
-RUN DEBIAN_FRONTEND=noninteractive \
-    echo "Europe/Berlin" > /etc/timezone && \
-    dpkg-reconfigure tzdata && \
+RUN echo "Europe/Berlin" > /etc/timezone && \
+    DEBIAN_FRONTEND=noninteractive dpkg-reconfigure tzdata && \
     sed -i -e 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/' /etc/locale.gen && \
     echo 'LANG="de_DE.UTF-8"'>/etc/default/locale && \
-    dpkg-reconfigure locales && \
+    DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales && \
     update-locale LANG=de_DE.UTF-8
 
 #ENV LANG de_DE.UTF-8
