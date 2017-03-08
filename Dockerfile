@@ -19,7 +19,7 @@ ENV LANG=de_DE.UTF-8 \
     bizwiz_port=80
 EXPOSE $bizwiz_port
 WORKDIR $bizwiz_appdir
-CMD ["gunicorn", "bwsite.wsgi", "-b 0.0.0.0:$bizwiz_port"]
+ENTRYPOINT -b 0.0.0.0:$bizwiz_port gunicorn bwsite.wsgi
 
 # install application
 COPY . .

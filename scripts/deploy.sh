@@ -20,4 +20,4 @@ rm bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-dateti
 export image=mpagel/bizwiz:latest
 [ -z $(sudo docker images -q $image) ] || sudo docker rmi -f $image
 sudo docker build -t $image .
-sudo docker push $image
+#sudo docker push $image
