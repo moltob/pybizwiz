@@ -28,4 +28,4 @@ RUN pip install -r requirements.txt && \
     rm -rf test && \
     python manage.py collectstatic --noinput && \
     python manage.py migrate && \
-    echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', password='admin')" | python manage.py shell
+    echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', None, 'admin')" | python manage.py shell
