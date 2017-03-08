@@ -11,12 +11,11 @@ RUN echo "Europe/Berlin" > /etc/timezone && \
     DEBIAN_FRONTEND=noninteractive dpkg-reconfigure locales && \
     update-locale LANG=de_DE.UTF-8
 
-#ENV LANG de_DE.UTF-8
-#ENV LANGUAGE de_DE.UTF-8
-#ENV LC_ALL de_DE.UTF-8
-
 # application configuration
-ENV bizwiz_appdir=/app/pybizwiz \
+ENV LANG=de_DE.UTF-8 \
+    LANGUAGE=de_DE.UTF-8 \
+    LC_ALL=de_DE.UTF-8 \
+    bizwiz_appdir=/app/pybizwiz \
     bizwiz_port=80
 EXPOSE $bizwiz_port
 WORKDIR $bizwiz_appdir
