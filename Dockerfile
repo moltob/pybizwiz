@@ -28,7 +28,6 @@ ENTRYPOINT ["gunicorn", "-b 0.0.0.0:80", "bwsite.wsgi"]
 COPY . .
 RUN pip install -r requirements.txt && \
     pytest test && \
-    rm -rf test && \
     python manage.py compilemessages && \
     python manage.py collectstatic --noinput && \
     python manage.py migrate && \
