@@ -12,3 +12,5 @@ sudo apt-get update
 sudo apt-get -y install docker-ce
 sudo apt-get -y install nodejs-legacy npm tofrodos
 sudo npm install -g bower
+
+sudo usermod -aG docker `whoami`
