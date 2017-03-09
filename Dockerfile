@@ -32,6 +32,3 @@ RUN pip install -r requirements.txt && \
     python manage.py collectstatic --noinput && \
     python manage.py migrate && \
     echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', None, 'admin')" | python manage.py shell
-
-# expose data volume after migration to ensure default DB is contained in image
-VOLUME $bizwiz_appdir/data
