@@ -12,3 +12,12 @@ from django.core.wsgi import get_wsgi_application
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bwsite.settings")
 application = get_wsgi_application()
+
+# import _after_ django is initialized
+import logging
+from bizwiz.version import BIZWIZ_VERSION
+
+_logger = logging.getLogger(__name__)
+_logger.info('************************************************************************************')
+_logger.info('* Starting Bizwiz, version %s' % BIZWIZ_VERSION)
+_logger.info('************************************************************************************')
