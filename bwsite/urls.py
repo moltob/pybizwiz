@@ -13,8 +13,12 @@ Including another URLconf
     1. Import the include() function: from django.conf.urls import url, include
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
+import logging
+
 from django.conf.urls import url, include
 from django.contrib import admin
+
+from bizwiz.version import BIZWIZ_VERSION
 
 urlpatterns = [
     url(r'^', include('bizwiz.common.urls', namespace='common')),
@@ -25,3 +29,8 @@ urlpatterns = [
     url(r'^projects/', include('bizwiz.projects.urls', namespace='projects')),
     url(r'^admin/', admin.site.urls),
 ]
+
+_logger = logging.getLogger(__name__)
+_logger.info('************************************************************************************')
+_logger.info('* Starting Bizwiz, version %s' % BIZWIZ_VERSION)
+_logger.info('************************************************************************************')
