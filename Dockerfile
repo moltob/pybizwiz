@@ -25,8 +25,7 @@ WORKDIR $bizwiz_appdir
 
 # do not use shell form to have gunicorn start with PID 1 and handle TERM instead of shell
 # docker stop --> SIGTERM to PID _1_ --> gunicorn graceful shutdown
-ENTRYPOINT [
-    "gunicorn",
+ENTRYPOINT ["gunicorn",
     "--bind 0.0.0.0:80",
     "--access-logfile data/gunicorn-access.log",
     "--error-logfile data/gunicorn-error.log",
