@@ -4,7 +4,7 @@ set -x
 
 # Create and push docker image for Bizwiz.
 
-export builddir=bizwiz-build
+export builddir=~/bizwiz-build
 
 rm -rf ${builddir}
 mkdir ${builddir}
