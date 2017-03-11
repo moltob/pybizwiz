@@ -18,12 +18,11 @@ ENV LANG=de_DE.UTF-8 \
     LC_ALL=de_DE.UTF-8 \
     BIZWIZ_LOG_LEVEL=DEBUG \
     DJANGO_LOG_LEVEL=INFO \
-    WEB_CONCURRENCY=4 \
+    WEB_CONCURRENCY=6 \
     bizwiz_appdir=/app/pybizwiz
 EXPOSE 80
 WORKDIR $bizwiz_appdir
 
-# do not use shell form to have gunicorn start with PID 1 and handle TERM instead of shell
 # docker stop --> SIGTERM to PID _1_ --> gunicorn graceful shutdown
 ENTRYPOINT exec gunicorn --bind 0.0.0.0:80 --access-logfile data/gunicorn-access.log --error-logfile data/gunicorn-error.log bwsite.wsgi
 
