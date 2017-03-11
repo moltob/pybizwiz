@@ -28,7 +28,7 @@ ENTRYPOINT exec gunicorn --bind 0.0.0.0:80 --access-logfile data/gunicorn-access
 
 # install application
 COPY . .
-RUN pip install -r requirements.txt && \
+RUN pip install -r requirements-prod.txt && \
     pytest test && \
     rm -f data/*.log* && \
     python manage.py compilemessages && \
