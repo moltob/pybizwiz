@@ -31,6 +31,7 @@ ENTRYPOINT exec gunicorn --bind 0.0.0.0:80 --access-logfile data/gunicorn-access
 COPY . .
 RUN pip install -r requirements.txt && \
     pytest test && \
+    rm -f data/*.log* \
     python manage.py compilemessages && \
     python manage.py collectstatic --noinput && \
     python manage.py migrate && \
