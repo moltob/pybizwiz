@@ -147,10 +147,11 @@ MESSAGE_TAGS = {
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
-LOGGING_LEVEL = os.getenv('DJANGO_LOG_LEVEL', 'DEBUG' if DEBUG else 'INFO')
+BIZWIZ_LOG_LEVEL = os.getenv('BIZWIZ_LOG_LEVEL', 'DEBUG' if DEBUG else 'INFO')
+DJANGO_LOG_LEVEL = os.getenv('DJANGO_LOG_LEVEL', 'DEBUG' if DEBUG else 'INFO')
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'formatters': {
         'simple': {
             'format': '%(asctime)s %(levelname)s [%(name)s] %(message)s'
@@ -159,17 +160,30 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'simple'
+            'formatter': 'simple',
+            'level': 'INFO',
+        },
+        'file': {
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(DATA_DIR, 'bizwiz.log'),
+            'maxBytes': 1000000,
+            'backupCount': 3,
+            'formatter': 'simple',
+            'level': 'DEBUG',
         },
     },
-    # 'loggers': {
-    #     'django': {
-    #         'handlers': ['console'],
-    #         'level': LOGGING_LEVEL,
-    #     }
-    # },
+    'loggers': {
+        'bwsite': {
+            'level': BIZWIZ_LOG_LEVEL,
+        },
+        'bizwiz': {
+            'level': BIZWIZ_LOG_LEVEL,
+        },
+        'django': {
+            'level': DJANGO_LOG_LEVEL,
+        },
+    },
     'root': {
-        'handlers': ['console'],
-        'level': LOGGING_LEVEL,
+        'handlers': ['console', 'file'],
     },
 }

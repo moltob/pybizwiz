@@ -12,6 +12,7 @@ test/**/output/
 # temporary files
 *.bak
 *.log
+*.log.*
 *.mo
 *.pyc
 *.sqlite3 

@@ -16,6 +16,8 @@ RUN echo "Europe/Berlin" > /etc/timezone && \
 ENV LANG=de_DE.UTF-8 \
     LANGUAGE=de_DE.UTF-8 \
     LC_ALL=de_DE.UTF-8 \
+    BIZWIZ_LOG_LEVEL=DEBUG \
+    DJANGO_LOG_LEVEL=INFO \
     bizwiz_appdir=/app/pybizwiz
 EXPOSE 80
 WORKDIR $bizwiz_appdir
