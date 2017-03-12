@@ -179,6 +179,9 @@ LOGGING = {
         'bizwiz': {
             'level': BIZWIZ_LOG_LEVEL,
         },
+        'import-bw2': {
+            'level': 'DEBUG'
+        },
         'django': {
             'level': DJANGO_LOG_LEVEL,
         },

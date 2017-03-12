@@ -58,7 +58,7 @@ Bw2ArticleListItem = collections.namedtuple(
 
 
 class Bw2Importer:
-    def __init__(self, folderpath, prefix='BizWiz_replica_dbo_'):
+    def __init__(self, folderpath, prefix='BizWiz_Productive_1_dbo_'):
         self.folderpath = folderpath
         self.prefix = prefix
 
@@ -101,9 +101,9 @@ class Bw2Importer:
                               price=float(bw2_article.last_price.strip()),
                               inactive=bool(int(bw2_article.outdated)))
 
-            if "rabatt" in article.name.lower() and not article.inactive:
-                _logger.info('Deactivating old rebate article: {}.'.format(article.name))
-                article.inactive = True
+            # if "rabatt" in article.name.lower() and not article.inactive:
+            #     _logger.info('Deactivating old rebate article: {}.'.format(article.name))
+            #     article.inactive = True
 
             if article.name in unique_article_names:
                 _logger.warning('Article {} {} violates unique naming condition and'
