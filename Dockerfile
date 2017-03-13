@@ -24,7 +24,7 @@ EXPOSE 80
 WORKDIR $bizwiz_appdir
 
 # docker stop --> SIGTERM to PID _1_ --> gunicorn graceful shutdown
-ENTRYPOINT exec gunicorn --bind 0.0.0.0:80 --access-logfile data/gunicorn-access.log --error-logfile data/gunicorn-error.log bwsite.wsgi
+ENTRYPOINT exec gunicorn --bind 0.0.0.0:443 --access-logfile data/gunicorn-access.log --error-logfile data/gunicorn-error.log --keyfile data/bizwiz.key --certfile data/bizwiz.cert bwsite.wsgi
 
 # install application
 COPY . .
