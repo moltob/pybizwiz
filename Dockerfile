@@ -20,7 +20,7 @@ ENV LANG=de_DE.UTF-8 \
     DJANGO_LOG_LEVEL=INFO \
     WEB_CONCURRENCY=6 \
     bizwiz_appdir=/app/pybizwiz
-EXPOSE 80
+EXPOSE 443
 WORKDIR $bizwiz_appdir
 
 # docker stop --> SIGTERM to PID _1_ --> gunicorn graceful shutdown
