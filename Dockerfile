@@ -19,12 +19,19 @@ ENV LANG=de_DE.UTF-8 \
     BIZWIZ_LOG_LEVEL=DEBUG \
     DJANGO_LOG_LEVEL=INFO \
     WEB_CONCURRENCY=6 \
-    bizwiz_appdir=/app/pybizwiz
-EXPOSE 443
+    bizwiz_appdir=/app/pybizwiz \
+    bizwiz_port=443
+EXPOSE $bizwiz_port
 WORKDIR $bizwiz_appdir
 
-# docker stop --> SIGTERM to PID _1_ --> gunicorn graceful shutdown
-ENTRYPOINT exec gunicorn --bind 0.0.0.0:443 --access-logfile data/gunicorn-access.log --error-logfile data/gunicorn-error.log --keyfile data/bizwiz.key --certfile data/bizwiz.cert bwsite.wsgi
+# call exec to force signal propagation
+ENTRYPOINT exec gunicorn \
+           --bind 0.0.0.0:$bizwiz_port \
+           --access-logfile data/gunicorn-access.log \
+           --error-logfile data/gunicorn-error.log \
+           --keyfile data/bizwiz.key \
+           --certfile data/bizwiz.cert \
+           bwsite.wsgi
 
 # install application
 COPY . .
