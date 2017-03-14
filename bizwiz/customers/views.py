@@ -19,7 +19,7 @@ class CustomerTable(tables.Table):
     class Meta:
         template = 'common/table.html'
         attrs = {'class': 'table table-striped'}
-        per_page = 15
+        per_page = 50
         model = Customer
         fields = ('last_name', 'first_name', 'company_name', 'street_address', 'zip_code', 'city',)
         order_by = ('last_name', 'first_name')

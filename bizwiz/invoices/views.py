@@ -45,7 +45,7 @@ class InvoiceTable(tables.Table):
     class Meta:
         template = 'common/table.html'
         attrs = {'class': 'table table-striped'}
-        per_page = 15
+        per_page = 50
         model = Invoice
         fields = ('selected', 'number', 'invoiced_customer', 'date_created', 'date_paid',
                   'date_taxes_filed', 'project', 'total', 'print')
@@ -77,6 +77,13 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
             self.queryset = Invoice.objects.filter(project=filtered_project)
         else:
             self.queryset = Invoice.objects.all()
+
+        subset = self.kwargs['subset']
+        if subset == 'payable':
+            self.queryset = self.queryset.filter(date_paid__isnull=True)
+        elif subset == 'taxable':
+            self.queryset = self.queryset.filter(date_paid__isnull=False,
+                                                 date_taxes_filed__isnull=True)
 
         strfilter = self.request.GET.get('q')
         if strfilter:

@@ -20,7 +20,7 @@ class ProjectTable(tables.Table):
     class Meta:
         template = 'common/table.html'
         attrs = {'class': 'table table-striped'}
-        per_page = 15
+        per_page = 50
         model = Project
         fields = ('start_date', 'name', 'customergroups')
         order_by = ('-start_date',)

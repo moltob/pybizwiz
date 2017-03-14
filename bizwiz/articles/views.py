@@ -26,7 +26,7 @@ class ArticleTable(tables.Table):
     class Meta:
         template = 'common/table.html'
         attrs = {'class': 'table table-striped'}
-        per_page = 15
+        per_page = 50
         model = Article
         fields = ('name', 'price', 'inactive')
         order_by = ('name',)
