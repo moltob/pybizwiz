@@ -20,8 +20,18 @@
                         {% trans 'Invoices' %} <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a href="{% url 'invoices:create' %}">{% trans 'New' %}</a></li>
-                        <li><a href="{% url 'invoices:list' %}">{% trans 'Browse' %}</a></li>
+                        <li>
+                            <a href="{% url 'invoices:create' %}">{% trans 'New' %}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'invoices:list' %}">{% trans 'Browse' %}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'invoices:list_payable' %}">{% trans 'Payment pending' %}</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'invoices:list_taxable' %}">{% trans 'Taxes pending' %}</a>
+                        </li>
                     </ul>
                 </li>
                 <li class="dropdown">
