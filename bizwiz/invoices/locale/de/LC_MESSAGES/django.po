@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-05 13:13+0100\n"
+"POT-Creation-Date: 2017-03-15 18:56+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: .\bizwiz\invoices\export\js.py:16
+msgid "Export JSON"
+msgstr "JSON exportieren"
 
 #: .\bizwiz\invoices\export\pdf.py:20
 msgid "Export PDF"
@@ -244,12 +248,12 @@ msgstr ""
 msgid "Item total"
 msgstr "Summe"
 
-#: .\bizwiz\invoices\views.py:140
+#: .\bizwiz\invoices\views.py:147
 #, python-format
 msgid "Updated: Invoice %(number)s"
 msgstr "Bearbeitet: Rechnung %(number)s"
 
-#: .\bizwiz\invoices\views.py:217
+#: .\bizwiz\invoices\views.py:224
 #, python-format
 msgid "Created: Invoice for %(customer)s"
 msgstr "Erstellt: Rechnung %(customer)s"
