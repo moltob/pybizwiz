@@ -69,7 +69,7 @@ def test__text_blocks__clauses_formatting(invoice):
 
 
 @pytest.mark.django_db
-@pytest.mark.skipif(os.environ.get('TRAVIS'),
+@pytest.mark.skipif(os.environ.get('TRAVIS') == 'true',
                     reason='Travis CI does not support locale installation.')
 def test__text_blocks__article_table(invoice):
     data = list(TextBlocks(invoice).iter_article_rows())
