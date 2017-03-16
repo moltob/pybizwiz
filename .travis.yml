@@ -1,13 +1,10 @@
 language: python
 python:
   - "3.5"
-#install:
-#  - virtualenv ~/jepvenv
-#  - source ~/jepvenv/bin/activate
-#  - pip install pytest-cov coveralls
-#  - pip install .
-#  - pip list
+install:
+  - pip install -r requirements.txt
+  - pip install pytest-cov coveralls
 script:
-  - py.test test -v #--cov=jep_py
-#after_success:
-#  - coveralls
+  - py.test test -v --cov=pybizwiz
+after_success:
+  - coveralls
