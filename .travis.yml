@@ -14,10 +14,9 @@ script:
   - py.test test -v --cov=bizwiz
 after_success:
   - coveralls
-  - export version=`python -m bizwiz.version`
-  - export image=mpagel/bizwiz:$version-travis
+  - export image=mpagel/bizwiz:$TRAVIS_TAG-$TRAVIS_COMMIT
   - docker build -t $image .
-  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+  - if [ -n "$TRAVIS_TAG" ]; then
       docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
       docker push $image;
     fi
