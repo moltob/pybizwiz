@@ -17,7 +17,7 @@ cd pybizwiz
 bower install
 rm bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker-standalone.css
 
-export version=`python3 -c "from bizwiz.version import *; print(BIZWIZ_VERSION);"`
+export version=`python3 -m bizwiz.version`
 export image=mpagel/bizwiz:$version
 [ -z $(sudo docker images -q $image) ] || sudo docker rmi -f $image
 sudo docker build -t $image .

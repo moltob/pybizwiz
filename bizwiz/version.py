@@ -9,3 +9,6 @@ class Version:
 
 
 BIZWIZ_VERSION = Version(4, 1, 0)
+
+if __name__ == '__main__':
+    print(BIZWIZ_VERSION)
