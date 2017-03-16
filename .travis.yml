@@ -8,6 +8,6 @@ python:
 #  - pip install .
 #  - pip list
 script:
-  - py.test test #--cov=jep_py
+  - py.test test -v #--cov=jep_py
 #after_success:
 #  - coveralls
