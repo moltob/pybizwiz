@@ -10,12 +10,13 @@ install:
   - npm install -g bower
   - bower install
   - rm bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker-standalone.css
+before_script:
+  - export image=mpagel/bizwiz:$TRAVIS_TAG
 script:
   - py.test test -v --cov=bizwiz
+  - docker build -t $image .
 after_success:
   - coveralls
-  - export image=mpagel/bizwiz:$TRAVIS_TAG-$TRAVIS_COMMIT
-  - docker build -t $image .
   - if [ -n "$TRAVIS_TAG" ]; then
       docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
       docker push $image;
