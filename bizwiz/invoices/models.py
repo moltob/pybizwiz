@@ -12,6 +12,21 @@ from bizwiz.articles.models import ArticleBase, Article
 from bizwiz.customers.models import CustomerBase, Customer
 from bizwiz.projects.models import Project
 
+# TODO *** Rebate System
+#
+# User defines rebate rules. Available rules and their properties:
+# * PercentageRebate (percent of total, e.g. 8%)
+# * AmountRebate (number of free items per total number of items, e.g. 1 of 10)
+# * AbsoluteRebate (absolute discount, e.g. 5€)
+#
+# All rebates have a common properties:
+# * name, just like article
+# * default activation, flag whether a rebate is applied automatically for new invoices
+#
+# Rebates are applied to an invoice at the very end, simply by activating them. Text and parameter
+# of the rebate can be overwritten in the context of the invoice.
+#
+# TODO *** Rebate System
 
 class Invoice(models.Model):
     number = models.IntegerField(
