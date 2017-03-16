@@ -12,7 +12,7 @@ install:
   - rm bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker-standalone.css
 before_script:
   - if [ -n "$TRAVIS_TAG" ]; then
-      export image=mpagel/bizwiz:${TRAVIS_TAG}-${TRAVIS_BUILD_NUMBER};
+      export image=mpagel/bizwiz:${TRAVIS_TAG}.${TRAVIS_BUILD_NUMBER};
     else
       export image=mpagel/bizwiz:dev-${TRAVIS_BUILD_NUMBER};
     fi
