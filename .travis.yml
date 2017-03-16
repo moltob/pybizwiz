@@ -11,3 +11,6 @@ script:
   - py.test test -v --cov=bizwiz
 after_success:
   - coveralls
+  - export version=`python -m bizwiz.version`
+  - export image=mpagel/bizwiz:$version
+  - echo $image
