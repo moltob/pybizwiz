@@ -139,7 +139,7 @@ class RebateKind:
     ONE_FREE_PER = 'ONEFREE'
 
 
-class Rebate(models.Model):
+class RebateBase(models.Model):
     kind = models.CharField(
         _("Kind"),
         max_length=10,
@@ -159,9 +159,34 @@ class Rebate(models.Model):
         max_digits=6,
         decimal_places=2,
     )
+
+    class Meta:
+        abstract = True
+        verbose_name = _("Rebate")
+        verbose_name_plural = _("Rebates")
+
+
+class Rebate(RebateBase):
+    """Rebate as configured in system"""
     auto_apply = models.BooleanField(
         _("Apply automatically"),
     )
+
+
+class AppliedRebate(RebateBase):
+    """Rebate as it was applied to existing invoice, as a stable copy."""
+    invoice = models.OneToOneField(
+        Invoice,
+        verbose_name=_("Invoice"),
+        on_delete=models.CASCADE,
+        related_name='applied_rebate',
+    )
+
+    @classmethod
+    def create(cls, invoice, rebate):
+        applied_rebate = AppliedRebate(invoice=invoice)
+        copy_field_data(RebateBase, rebate, applied_rebate)
+        return applied_rebate
 
 
 def copy_field_data(model, src, dst):
