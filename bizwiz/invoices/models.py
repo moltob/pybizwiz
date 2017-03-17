@@ -12,6 +12,7 @@ from bizwiz.articles.models import ArticleBase, Article
 from bizwiz.customers.models import CustomerBase, Customer
 from bizwiz.projects.models import Project
 
+
 # TODO *** Rebate System
 #
 # User defines rebate rules. Available rules and their properties:
@@ -130,6 +131,37 @@ class InvoicedCustomer(CustomerBase):
         invoiced_customer = InvoicedCustomer(invoice=invoice, original_customer=customer)
         copy_field_data(CustomerBase, customer, invoiced_customer)
         return invoiced_customer
+
+
+class RebateKind:
+    ABSOLUTE = 'ABS'
+    PERCENTAGE = 'PERC'
+    ONE_FREE_PER = 'ONEFREE'
+
+
+class Rebate(models.Model):
+    kind = models.CharField(
+        _("Kind"),
+        max_length=10,
+        choices=(
+            (RebateKind.ABSOLUTE, _("Absolute")),
+            (RebateKind.PERCENTAGE, _("Percentage")),
+            (RebateKind.ONE_FREE_PER, _("One free per")),
+        )
+    )
+    name = models.CharField(
+        _("Invoice text"),
+        max_length=128,
+        unique=True,
+    )
+    value = models.DecimalField(
+        _("Value"),
+        max_digits=6,
+        decimal_places=2,
+    )
+    auto_apply = models.BooleanField(
+        _("Apply automatically"),
+    )
 
 
 def copy_field_data(model, src, dst):
