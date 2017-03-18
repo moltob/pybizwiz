@@ -34,4 +34,5 @@ RUN pip install -r requirements-prod.txt && \
     rm -f data/*.log* && \
     python manage.py compilemessages && \
     python manage.py collectstatic --noinput && \
+    python manage.py migrate && \
     echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', None, 'admin')" | python manage.py shell
