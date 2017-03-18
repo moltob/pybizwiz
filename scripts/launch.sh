@@ -1,7 +1,9 @@
-#@IgnoreInspection BashAddShebang
-# script is sourced into calling shell process, so no shebang is used
+#!/usr/bin/env bash
+set -e
+set -x
+
 python manage.py migrate
-gunicorn --bind 0.0.0.0:$bizwiz_port \
+gunicorn --bind 0.0.0.0:443 \
           --access-logfile data/gunicorn-access.log \
           --error-logfile data/gunicorn-error.log \
           --keyfile data/bizwiz.key \

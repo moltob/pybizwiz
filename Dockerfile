@@ -18,14 +18,12 @@ ENV LANG=de_DE.UTF-8 \
     LC_ALL=de_DE.UTF-8 \
     BIZWIZ_LOG_LEVEL=DEBUG \
     DJANGO_LOG_LEVEL=INFO \
-    WEB_CONCURRENCY=6 \
-    bizwiz_appdir=/app/pybizwiz \
-    bizwiz_port=443
-EXPOSE $bizwiz_port
-WORKDIR $bizwiz_appdir
+    WEB_CONCURRENCY=6
+EXPOSE 443
+WORKDIR /app/bizwiz
 
 # call application from current process to ensure proper signal propagation
-ENTRYPOINT source scripts/launch.sh
+ENTRYPOINT ["scripts/launch.sh"]
 
 # install application
 COPY . .
