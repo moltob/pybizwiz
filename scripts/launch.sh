@@ -3,7 +3,8 @@ set -e
 set -x
 
 # propagate SIGTERM to gunicorn
-trap "ps h --ppid $BASHPID -o pid | xargs kill -TERM" SIGTERM
+echo "ps h --ppid $$ -o pid | xargs kill -TERM"
+trap "ps h --ppid $$ -o pid | xargs kill -TERM" SIGTERM
 
 python manage.py migrate
 gunicorn --bind 0.0.0.0:443 \
