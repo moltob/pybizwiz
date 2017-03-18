@@ -24,14 +24,8 @@ ENV LANG=de_DE.UTF-8 \
 EXPOSE $bizwiz_port
 WORKDIR $bizwiz_appdir
 
-# call exec to force signal propagation
-ENTRYPOINT exec gunicorn \
-           --bind 0.0.0.0:$bizwiz_port \
-           --access-logfile data/gunicorn-access.log \
-           --error-logfile data/gunicorn-error.log \
-           --keyfile data/bizwiz.key \
-           --certfile data/bizwiz.cert \
-           bwsite.wsgi
+# call application from current process to ensure proper signal propagation
+ENTRYPOINT source scripts/launch.sh
 
 # install application
 COPY . .
@@ -40,5 +34,4 @@ RUN pip install -r requirements-prod.txt && \
     rm -f data/*.log* && \
     python manage.py compilemessages && \
     python manage.py collectstatic --noinput && \
-    python manage.py migrate && \
     echo "from django.contrib.auth.models import User; User.objects.create_superuser('admin', None, 'admin')" | python manage.py shell
