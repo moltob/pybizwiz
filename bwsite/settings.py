@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'bizwiz.customers',
     'bizwiz.invoices',
     'bizwiz.projects',
+    'bizwiz.rebates',
     'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',

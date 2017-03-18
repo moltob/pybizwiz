@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^customers/', include('bizwiz.customers.urls', namespace='customers')),
     url(r'^invoices/', include('bizwiz.invoices.urls', namespace='invoices')),
     url(r'^projects/', include('bizwiz.projects.urls', namespace='projects')),
+    #url(r'^rebates/', include('bizwiz.rebates.urls', namespace='rebates')),
     url(r'^admin/', admin.site.urls),
 ]

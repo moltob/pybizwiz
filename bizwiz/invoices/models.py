@@ -6,28 +6,15 @@ will still have the feeling of selecting customers and articles from the existin
 internally the incoice is decoupled from the entities after copying.
 """
 import datetime
+
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
+
 from bizwiz.articles.models import ArticleBase, Article
+from bizwiz.common.models import copy_field_data
 from bizwiz.customers.models import CustomerBase, Customer
 from bizwiz.projects.models import Project
 
-
-# TODO *** Rebate System
-#
-# User defines rebate rules. Available rules and their properties:
-# * PercentageRebate (percent of total, e.g. 8%)
-# * AmountRebate (number of free items per total number of items, e.g. 1 of 10)
-# * AbsoluteRebate (absolute discount, e.g. 5€)
-#
-# All rebates have a common properties:
-# * name, just like article
-# * default activation, flag whether a rebate is applied automatically for new invoices
-#
-# Rebates are applied to an invoice at the very end, simply by activating them. Text and parameter
-# of the rebate can be overwritten in the context of the invoice.
-#
-# TODO *** Rebate System
 
 class Invoice(models.Model):
     number = models.IntegerField(
@@ -131,75 +118,3 @@ class InvoicedCustomer(CustomerBase):
         invoiced_customer = InvoicedCustomer(invoice=invoice, original_customer=customer)
         copy_field_data(CustomerBase, customer, invoiced_customer)
         return invoiced_customer
-
-
-class RebateKind:
-    ABSOLUTE = 'ABS'
-    PERCENTAGE = 'PERC'
-    ONE_FREE_PER = 'ONEFREE'
-
-
-class RebateBase(models.Model):
-    kind = models.CharField(
-        _("Kind"),
-        max_length=10,
-        choices=(
-            (RebateKind.ABSOLUTE, _("Absolute")),
-            (RebateKind.PERCENTAGE, _("Percentage")),
-            (RebateKind.ONE_FREE_PER, _("One free per")),
-        )
-    )
-    name = models.CharField(
-        _("Invoice text"),
-        max_length=128,
-        unique=True,
-    )
-    value = models.DecimalField(
-        _("Value"),
-        max_digits=6,
-        decimal_places=2,
-    )
-
-    class Meta:
-        abstract = True
-        verbose_name = _("Rebate")
-        verbose_name_plural = _("Rebates")
-
-
-class Rebate(RebateBase):
-    """Rebate as configured in system"""
-    auto_apply = models.BooleanField(
-        _("Apply automatically"),
-    )
-
-
-class AppliedRebate(RebateBase):
-    """Rebate as it was applied to existing invoice, as a stable copy."""
-    invoice = models.OneToOneField(
-        Invoice,
-        verbose_name=_("Invoice"),
-        on_delete=models.CASCADE,
-        related_name='applied_rebate',
-    )
-
-    @classmethod
-    def create(cls, invoice, rebate):
-        applied_rebate = AppliedRebate(invoice=invoice)
-        copy_field_data(RebateBase, rebate, applied_rebate)
-        return applied_rebate
-
-
-def copy_field_data(model, src, dst):
-    """Copies all non-automatic fields.
-
-    Helper useful when copying common base class data.
-
-    :model: Model class for which fields are copied, a common ancestor of src and dst.
-    :src: Instance from which field data is copied.
-    :dst: Instance to which field data is copied.
-    """
-    for field in model._meta.get_fields():
-        if not (isinstance(field, models.AutoField) or isinstance(field, models.BigAutoField)):
-            name = field.name
-            value = getattr(src, name)
-            setattr(dst, name, value)
