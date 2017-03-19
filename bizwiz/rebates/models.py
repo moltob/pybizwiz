@@ -11,7 +11,13 @@ class RebateKind:
     ONE_FREE_PER = 'ONEFREE'
 
 
-class RebateBase(models.Model):
+class Rebate(models.Model):
+    """Rebate as configured in system."""
+
+    class Meta:
+        verbose_name = _("Rebate")
+        verbose_name_plural = _("Rebates")
+
     kind = models.CharField(
         _("Kind"),
         max_length=10,
@@ -32,30 +38,6 @@ class RebateBase(models.Model):
         decimal_places=2,
     )
 
-    class Meta:
-        abstract = True
-        verbose_name = _("Rebate")
-        verbose_name_plural = _("Rebates")
-
-
-class Rebate(RebateBase):
-    """Rebate as configured in system"""
     auto_apply = models.BooleanField(
-        _("Apply automatically"),
+        _("Auto"),
     )
-
-
-class AppliedRebate(RebateBase):
-    """Rebate as it was applied to existing invoice, as a stable copy."""
-    invoice = models.OneToOneField(
-        Invoice,
-        verbose_name=_("Invoice"),
-        on_delete=models.CASCADE,
-        related_name='applied_rebate',
-    )
-
-    @classmethod
-    def create(cls, invoice, rebate):
-        applied_rebate = AppliedRebate(invoice=invoice)
-        copy_field_data(RebateBase, rebate, applied_rebate)
-        return applied_rebate

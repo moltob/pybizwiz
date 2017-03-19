@@ -1,0 +1,34 @@
+{% extends "common/base.html" %}
+
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load common.dynamic_formset %}
+
+{% block content %}
+    <div class="page-header"><h1>{% trans 'Edit rebates' %}</h1></div>
+
+    <form method="post">
+        {% dynformset 'formset' formset %}
+            {# Headers for crispy forms rendered fields. #}
+            <div class="row">
+                <label class="col-lg-3 control-label requiredField">
+                    {{ formset.empty_form.kind.label }}
+                </label>
+                <label class="col-lg-6 control-label requiredField">
+                    {{ formset.empty_form.name.label }}
+                </label>
+                <label class="col-lg-1 control-label requiredField">
+                    {{ formset.empty_form.value.label }}
+                </label>
+                <label class="col-lg-1 control-label requiredField">
+                    {{ formset.empty_form.auto_apply.label }}
+                </label>
+            </div>
+            {% dynformset_body formset %}
+            {% dynformset_add_button %}
+            {% include 'common/submit-button.html' %}
+        {% enddynformset %}
+    </form>
+
+    {% dynformset_apply '#formset' %}
+{% endblock content %}
