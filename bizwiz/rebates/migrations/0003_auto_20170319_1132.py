@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='rebate',
             name='auto_apply',
-            field=models.BooleanField(verbose_name='Auto'),
+            field=models.BooleanField(verbose_name='Automatic'),
         ),
     ]
