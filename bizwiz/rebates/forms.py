@@ -23,11 +23,15 @@ class BaseRebateFormset(forms.BaseModelFormSet):
         layout.Row(
             # since a dynamic formset is used, there is no need to allow posting empty fields for
             # unused extra forms, so all fields can be explicitly required:
-            layout.Div(layout.Field('auto_apply'), css_class='col-lg-1'),
             layout.Div(layout.Field('kind', required=''), css_class='col-lg-3'),
             layout.Div(layout.Field('name', required=''), css_class='col-lg-6'),
             layout.Div(
-                layout.Field('value', required='', css_class='text-right'), css_class='col-lg-1'
+                layout.Field('value', required='', css_class='text-right'),
+                css_class='col-lg-1'
+            ),
+            layout.Div(
+                layout.Field('auto_apply', style='margin:0;'),
+                css_class='col-lg-1'
             ),
             layout.Div(remove_form_button_factory(), css_class='col-lg-1 text-right'),
             layout.Field('DELETE', style='display:none;'),

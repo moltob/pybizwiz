@@ -39,5 +39,5 @@ class Rebate(models.Model):
     )
 
     auto_apply = models.BooleanField(
-        _("Auto"),
+        _("Automatic"),
     )

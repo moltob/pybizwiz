@@ -1,0 +1,70 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-03-19 11:46+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+#: .\bizwiz\rebates\models.py:18
+msgid "Rebate"
+msgstr "Rabatt"
+
+#: .\bizwiz\rebates\models.py:19
+msgid "Rebates"
+msgstr "Rabatte"
+
+#: .\bizwiz\rebates\models.py:22
+msgid "Kind"
+msgstr "Art"
+
+#: .\bizwiz\rebates\models.py:25
+msgid "Absolute"
+msgstr "Absolut"
+
+#: .\bizwiz\rebates\models.py:26
+msgid "Percentage"
+msgstr "Prozentsatz"
+
+#: .\bizwiz\rebates\models.py:27
+msgid "One free per"
+msgstr "Mengenrabatt (ein Artikel)"
+
+#: .\bizwiz\rebates\models.py:31
+msgid "Invoice text"
+msgstr "Rechnungstext"
+
+#: .\bizwiz\rebates\models.py:36
+msgid "Value"
+msgstr "Wert"
+
+#: .\bizwiz\rebates\models.py:42
+msgid "Automatic"
+msgstr "Automatisch"
+
+#: .\bizwiz\rebates\templates\rebates\rebates_update.html:8
+msgid "Edit rebates"
+msgstr "Rabatte bearbeiten"
+
+#: .\bizwiz\rebates\views.py:43
+msgid "Added rebates: {}."
+msgstr "Rababatte hinzugefügt: {}."
+
+#: .\bizwiz\rebates\views.py:44
+msgid "Deleted rebates: {}."
+msgstr "Rababatte gelöscht: {}."
+
+#: .\bizwiz\rebates\views.py:48
+msgid "Modified rebates: {}."
+msgstr "Rababatte geändert: {}."
