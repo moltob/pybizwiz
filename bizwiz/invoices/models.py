@@ -14,9 +14,14 @@ from bizwiz.articles.models import ArticleBase, Article
 from bizwiz.common.models import copy_field_data
 from bizwiz.customers.models import CustomerBase, Customer
 from bizwiz.projects.models import Project
+from bizwiz.rebates.models import Rebate
 
 
 class Invoice(models.Model):
+    class Meta:
+        verbose_name = _("Invoice")
+        verbose_name_plural = _("Invoices")
+
     number = models.IntegerField(
         _("Invoice number"),
         unique=True,
@@ -42,10 +47,6 @@ class Invoice(models.Model):
         blank=True,
         null=True,
     )
-
-    class Meta:
-        verbose_name = _("Invoice")
-        verbose_name_plural = _("Invoices")
 
     def __str__(self):
         return '{} ({})'.format(self.number, self.invoiced_customer.full_name())

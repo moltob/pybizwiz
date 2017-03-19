@@ -37,7 +37,6 @@ class Rebate(models.Model):
         max_digits=6,
         decimal_places=2,
     )
-
     auto_apply = models.BooleanField(
         _("Automatic"),
     )
