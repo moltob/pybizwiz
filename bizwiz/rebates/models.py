@@ -8,12 +8,11 @@ class RebateKind:
     ONE_FREE_PER = 'ONEFREE'
 
 
-class Rebate(models.Model):
-    """Rebate as configured in system."""
+class RebateBase(models.Model):
+    """Base class for rebates."""
 
     class Meta:
-        verbose_name = _("Rebate")
-        verbose_name_plural = _("Rebates")
+        abstract = True
 
     kind = models.CharField(
         _("Kind"),
@@ -34,6 +33,15 @@ class Rebate(models.Model):
         max_digits=6,
         decimal_places=2,
     )
+
+
+class Rebate(RebateBase):
+    """Rebate as configured in system."""
+
+    class Meta:
+        verbose_name = _("Rebate")
+        verbose_name_plural = _("Rebates")
+
     auto_apply = models.BooleanField(
         _("Automatic"),
     )
