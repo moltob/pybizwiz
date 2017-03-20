@@ -14,7 +14,6 @@ from bizwiz.articles.models import ArticleBase, Article
 from bizwiz.common.models import copy_field_data
 from bizwiz.customers.models import CustomerBase, Customer
 from bizwiz.projects.models import Project
-from bizwiz.rebates.models import Rebate
 
 
 class Invoice(models.Model):

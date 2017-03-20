@@ -1,9 +1,6 @@
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
-from bizwiz.common.models import copy_field_data
-from bizwiz.invoices.models import Invoice
-
 
 class RebateKind:
     ABSOLUTE = 'ABS'
