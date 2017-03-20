@@ -4,7 +4,7 @@ import pytest
 
 from bizwiz.articles.models import ArticleBase, Article
 from bizwiz.customers.models import Customer, Salutation, CustomerBase
-from bizwiz.invoices.models import InvoicedCustomer, Invoice, InvoicedArticle
+from bizwiz.invoices.models import InvoicedCustomer, Invoice, InvoicedArticle, ItemKind
 
 
 def test__invoiced_customer__create():
@@ -49,6 +49,7 @@ def test__invoiced_article__create():
     assert a2.price == 1.2
     assert a2.amount == 1
     assert a2.original_article == a1
+    assert a2.kind == ItemKind.ARTICLE
 
 
 @pytest.mark.django_db

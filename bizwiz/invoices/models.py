@@ -56,7 +56,21 @@ class Invoice(models.Model):
         return sum(item.total for item in self.invoiced_articles.all())
 
 
+class ItemKind:
+    ARTICLE = 'ARTICLE'
+    REBATE = 'REBATE'
+
+
 class InvoicedArticle(ArticleBase):
+    kind = models.CharField(
+        _("Kind"),
+        max_length=10,
+        choices=(
+            (ItemKind.ARTICLE, ItemKind.ARTICLE),
+            (ItemKind.REBATE, ItemKind.REBATE),
+        ),
+        default=ItemKind.ARTICLE,
+    )
     original_article = models.ForeignKey(
         Article,
         on_delete=models.SET_NULL,
