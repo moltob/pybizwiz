@@ -14,6 +14,7 @@ from bizwiz.articles.models import ArticleBase, Article
 from bizwiz.common.models import copy_field_data
 from bizwiz.customers.models import CustomerBase, Customer
 from bizwiz.projects.models import Project
+from bizwiz.rebates.models import RebateBase
 
 
 class Invoice(models.Model):
@@ -132,3 +133,22 @@ class InvoicedCustomer(CustomerBase):
         invoiced_customer = InvoicedCustomer(invoice=invoice, original_customer=customer)
         copy_field_data(CustomerBase, customer, invoiced_customer)
         return invoiced_customer
+
+
+class AppliedRebate(RebateBase):
+    class Meta:
+        verbose_name = _("Applied rebate")
+        verbose_name_plural = _("Applied rebates")
+
+    invoice = models.OneToOneField(
+        Invoice,
+        verbose_name=_("Invoice"),
+        on_delete=models.CASCADE,
+        related_name='applied_rebates',
+    )
+
+    @classmethod
+    def create(cls, invoice, rebate):
+        applied_rebate = AppliedRebate(invoice=invoice)
+        copy_field_data(RebateBase, rebate, applied_rebate)
+        return applied_rebate
