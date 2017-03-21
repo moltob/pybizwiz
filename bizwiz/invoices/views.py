@@ -19,6 +19,7 @@ from bizwiz.invoices import services
 from bizwiz.invoices.forms import InvoiceAction, ListActionForm, UpdateForm, InvoicedCustomerForm, \
     InvoicedArticleFormset, CreateForm
 from bizwiz.invoices.models import Invoice
+from bizwiz.rebates.models import Rebate
 
 _logger = logging.getLogger(__name__)
 
@@ -235,6 +236,7 @@ class Create(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, gener
         )
         selectable_customers = [SelectableCustomer(c) for c in customers]
         selectable_articles = [SelectableArticle(a) for a in articles]
+        rebates = Rebate.objects.order_by('name')
 
         if self.request.method in ('POST', 'PUT'):
             invoiced_article_formset = InvoicedArticleFormset(self.request.POST)
@@ -244,6 +246,7 @@ class Create(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, gener
         return super().get_context_data(customers=selectable_customers,
                                         articles=selectable_articles,
                                         invoiced_article_formset=invoiced_article_formset,
+                                        rebates=rebates,
                                         **kwargs)
 
     def post(self, request, *args, **kwargs):

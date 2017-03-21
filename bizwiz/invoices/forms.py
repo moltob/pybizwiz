@@ -7,10 +7,12 @@ from django.utils.translation import ugettext as _
 
 from bizwiz.common.crispy_forms import PickableDateField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
-from bizwiz.common.selectize import ChoiceCharField, ModelChoiceCharField
+from bizwiz.common.selectize import ChoiceCharField, ModelChoiceCharField, \
+    ModelMultipleChoiceCharField
 from bizwiz.customers.models import Customer
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
 from bizwiz.invoices.services import INVOICE_EXPORTER_MAP
+from bizwiz.rebates.models import Rebate
 
 _logger = logging.getLogger(__name__)
 
@@ -247,13 +249,22 @@ InvoicedArticleFormset = forms.inlineformset_factory(
 
 
 class CreateForm(forms.Form):
-    customer = ModelChoiceCharField(queryset=Customer.objects.all(),
-                                    label=Customer._meta.verbose_name)
+    customer = ModelChoiceCharField(
+        queryset=Customer.objects.all(),
+        label=Customer._meta.verbose_name
+    )
+    rebates = ModelMultipleChoiceCharField(
+        queryset=Rebate.objects.all().order_by('name'),
+        label=_("Applied rebates")
+    )
 
     helper = helper.FormHelper()
     helper.form_tag = False
     helper.layout = layout.Layout(
         layout.Row(
             layout.Div(layout.Field('customer', css_class='customer-name'), css_class='col-lg-6'),
+        ),
+        layout.Row(
+            layout.Div(layout.Field('rebates', css_class='rebates'), css_class='col-lg-6'),
         ),
     )

@@ -4,9 +4,7 @@ import pytest
 
 from bizwiz.articles.models import ArticleBase, Article
 from bizwiz.customers.models import Customer, Salutation, CustomerBase
-from bizwiz.invoices.models import InvoicedCustomer, Invoice, InvoicedArticle, ItemKind, \
-    AppliedRebate
-from bizwiz.rebates.models import RebateBase, RebateKind, Rebate
+from bizwiz.invoices.models import InvoicedCustomer, Invoice, InvoicedArticle, ItemKind
 
 
 def test__invoiced_customer__create():
@@ -52,23 +50,6 @@ def test__invoiced_article__create():
     assert a2.amount == 1
     assert a2.original_article == a1
     assert a2.kind == ItemKind.ARTICLE
-
-
-def test__applied_rebate__create():
-    assert len(RebateBase._meta.get_fields()) == 3, 'RebateBase changed, adapt test case.'
-    r1 = Rebate(
-        name='NAME',
-        value=1.2,
-        kind=RebateKind.ABSOLUTE
-    )
-    invoice = Invoice()
-
-    r2 = AppliedRebate.create(invoice, r1)
-
-    assert r2.invoice == invoice
-    assert r2.name == 'NAME'
-    assert r2.value == 1.2
-    assert r2.kind == RebateKind.ABSOLUTE
 
 
 @pytest.mark.django_db

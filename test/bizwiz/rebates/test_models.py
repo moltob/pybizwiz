@@ -1,20 +1,20 @@
+import decimal
+
 from bizwiz.invoices.models import Invoice
 from bizwiz.rebates.models import Rebate, RebateKind
 
+VALUE = decimal.Decimal('8.00')
 
-# def test__applied_rebate__create():
-#     assert len(RebateBase._meta.get_fields()) == 3, 'RebateBase changed, adapt test case.'
-#     r1 = Rebate(
-#         name='NAME',
-#         kind=RebateKind.ABSOLUTE,
-#         value=2.05,
-#         auto_apply=True,
-#     )
-#     invoice = Invoice()
-#
-#     r2 = AppliedRebate.create(invoice, r1)
-#
-#     assert r2.name == 'NAME'
-#     assert r2.kind == RebateKind.ABSOLUTE
-#     assert r2.value == 2.05
-#     assert r2.invoice == invoice
+def test__rebate__str__percentage():
+    r = Rebate(name='NAME', kind=RebateKind.PERCENTAGE, value=VALUE)
+    assert str(r) == "NAME (8,00 %)"
+
+
+def test__rebate__str__absolute():
+    r = Rebate(name='NAME', kind=RebateKind.ABSOLUTE, value=VALUE)
+    assert str(r) == "NAME (8,00 €)"
+
+
+def test__rebate__str__amount():
+    r = Rebate(name='NAME', kind=RebateKind.ONE_FREE_PER, value=VALUE)
+    assert str(r) == "NAME (7/8)"

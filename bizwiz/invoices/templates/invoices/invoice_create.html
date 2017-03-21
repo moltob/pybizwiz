@@ -27,6 +27,12 @@
         }{% if not forloop.last %}, {% endif %}{% endfor %}
         ];
 
+        var selectableRebates = [{% for rebate in rebates %}{
+            pk: {{ rebate.pk }},
+            name: "{{ rebate|escapejs }}"
+        }{% if not forloop.last %}, {% endif %}{% endfor %}
+        ];
+
         $(function () {
             $("input.customer-name")  // refine selector via element type to not match selectize widget
                 .selectize({
@@ -36,7 +42,17 @@
                     labelField: "name",
                     searchField: ["name"],
                     valueField: "pk"
-                    //onChange: selectedArticleChanged
+                });
+        });
+
+        $(function () {
+            $("input.rebates")
+                .selectize({
+                    plugins: ["remove_button"],
+                    options: selectableRebates,
+                    labelField: "name",
+                    searchField: ["name"],
+                    valueField: "pk"
                 });
         });
     </script>
