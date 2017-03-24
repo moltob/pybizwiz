@@ -59,12 +59,12 @@ msgstr "Rabatte bearbeiten"
 
 #: .\bizwiz\rebates\views.py:43
 msgid "Added rebates: {}."
-msgstr "Rababatte hinzugefügt: {}."
+msgstr "Rabatte hinzugefügt: {}."
 
 #: .\bizwiz\rebates\views.py:44
 msgid "Deleted rebates: {}."
-msgstr "Rababatte gelöscht: {}."
+msgstr "Rabatte gelöscht: {}."
 
 #: .\bizwiz\rebates\views.py:48
 msgid "Modified rebates: {}."
-msgstr "Rababatte geändert: {}."
+msgstr "Rabatte geändert: {}."
