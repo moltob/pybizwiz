@@ -275,10 +275,9 @@ class Create(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, gener
                 customer=original_customer,
                 rebates=rebates,
             )
-            services.refresh_rebates(invoice)
-
             invoiced_article_formset.instance = invoice
             invoiced_article_formset.save()
+            services.refresh_rebates(invoice)
 
         return self.form_valid(invoice_form)
 

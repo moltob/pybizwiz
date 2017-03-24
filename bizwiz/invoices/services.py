@@ -1,5 +1,6 @@
 """Business services for invoices."""
 import datetime
+import decimal
 import logging
 
 from django import http
@@ -147,7 +148,21 @@ def apply_rebate_one_free_per(invoice: Invoice, rebate: Rebate):
 
 
 def apply_rebate_percentage(invoice: Invoice, rebate: Rebate):
-    pass
+    if rebate.value <= 0:
+        _logger.warning('Deducting a negative or null percentage is not feasible.')
+        return
+
+    factor_percent = decimal.Decimal('0.01')
+    rebate_price = -invoice.total * rebate.value * factor_percent
+
+    # two names for the same value needed below:
+    precision = factor_percent
+    rebate_price = rebate_price.quantize(precision)
+
+    rebate_text = "{}".format(rebate.name)
+    rebate_item = InvoicedArticle(invoice=invoice, name=rebate_text, price=rebate_price, amount=1)
+    rebate_item.save()
+    _logger.debug('Computed rebate item {}.'.format(rebate_item))
 
 
 def apply_rebate_absolute(invoice: Invoice, rebate: Rebate):
