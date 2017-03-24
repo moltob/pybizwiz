@@ -9,8 +9,9 @@ from bizwiz.articles.models import Article
 from bizwiz.customers.models import Customer, Salutation
 from bizwiz.invoices import services
 from bizwiz.invoices.models import Invoice, InvoicedArticle
-from bizwiz.invoices.services import get_next_invoice_number, create_invoice
+from bizwiz.invoices.services import get_next_invoice_number, create_invoice, refresh_rebates
 from bizwiz.projects.models import Project
+from bizwiz.rebates.models import Rebate, RebateKind
 
 
 @pytest.fixture
@@ -132,3 +133,61 @@ def test__create_invoice__original_article(customer, posted_articles):
     invoiced_articles = invoice.invoiced_articles.all()
     assert invoiced_articles[0].original_article == article
     assert invoiced_articles[1].original_article is None
+
+
+@pytest.fixture
+def invoice_with_rebates(customer, posted_articles):
+    rebate1 = Rebate(name='NAME1', kind=RebateKind.PERCENTAGE, value=10, auto_apply=False)
+    rebate2 = Rebate(name='NAME2', kind=RebateKind.ONE_FREE_PER, value=5, auto_apply=True)
+    rebate1.save()
+    rebate2.save()
+    rebates = [rebate1, rebate2]
+
+    invoice = create_invoice(customer=customer,
+                             invoiced_articles=posted_articles,
+                             rebates=rebates)
+    return invoice
+
+
+@pytest.mark.django_db
+def test__create_invoice__rebates(invoice_with_rebates):
+    # check if rebate list has been saved to DB by getting invoice freshly:
+    saved_invoice = Invoice.objects.get(pk=invoice_with_rebates.pk)
+    saved_rebates = list(saved_invoice.rebates.all())
+
+    assert len(saved_rebates) == 2
+    assert saved_rebates[0].name == 'NAME1'
+    assert saved_rebates[1].name == 'NAME2'
+
+
+@pytest.mark.django_db
+def test__refresh_rebates__new__none(invoice_with_rebates):
+    # no rebate-based additions
+    assert len(list(invoice_with_rebates.invoiced_articles.all())) == 2
+    refresh_rebates(invoice_with_rebates)
+    assert len(list(invoice_with_rebates.invoiced_articles.all())) == 2
+
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(('amount', 'price'), [
+    (20, decimal.Decimal('24.30')),  # rebate not applicable
+    (11, decimal.Decimal('24.30')),  # still not applicable
+    (10, decimal.Decimal('23.07')),  # one off
+    (9, decimal.Decimal('23.07')),   # one off
+    (6, decimal.Decimal('23.07')),   # one off
+    (5, decimal.Decimal('21.84')),   # two off
+    (4, decimal.Decimal('21.84')),   # two off
+    (1, decimal.Decimal('24.30')),   # not useful, original price
+    (0, decimal.Decimal('24.30')),   # not useful, original price
+])
+def test__refresh_rebates__new__one_free(customer, posted_articles, amount, price):
+    rebate1 = Rebate(name='NAME1', kind=RebateKind.ONE_FREE_PER, value=amount, auto_apply=False)
+    rebate1.save()
+    rebates = [rebate1]
+
+    posted_articles[0].amount = 10
+    invoice = create_invoice(customer=customer,
+                             invoiced_articles=posted_articles,
+                             rebates=rebates)
+
+    assert invoice.total == price

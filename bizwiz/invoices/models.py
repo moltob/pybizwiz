@@ -76,6 +76,7 @@ class InvoicedArticle(ArticleBase):
             (ItemKind.REBATE, ItemKind.REBATE),
         ),
         default=ItemKind.ARTICLE,
+        blank=True,
     )
     original_article = models.ForeignKey(
         Article,

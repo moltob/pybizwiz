@@ -255,7 +255,8 @@ class CreateForm(forms.Form):
     )
     rebates = ModelMultipleChoiceCharField(
         queryset=Rebate.objects.all().order_by('name'),
-        label=_("Applied rebates")
+        label=_("Applied rebates"),
+        required=False,
     )
 
     helper = helper.FormHelper()
@@ -263,8 +264,6 @@ class CreateForm(forms.Form):
     helper.layout = layout.Layout(
         layout.Row(
             layout.Div(layout.Field('customer', css_class='customer-name'), css_class='col-lg-6'),
-        ),
-        layout.Row(
             layout.Div(layout.Field('rebates', css_class='rebates'), css_class='col-lg-6'),
         ),
     )

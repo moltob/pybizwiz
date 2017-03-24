@@ -225,6 +225,12 @@ class Create(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, gener
     success_message = _("Created: Invoice for %(customer)s")
     success_url = urls.reverse_lazy('invoices:list')
 
+    def get_initial(self):
+        # for new invoices pre-set automatic rebates:
+        initial = super().get_initial()
+        initial.update(rebates=Rebate.objects.filter(auto_apply=True).order_by('name'))
+        return initial
+
     def get_context_data(self, **kwargs):
         customers = get_session_filtered_customers(self.request.session).order_by(
             'last_name',
@@ -261,12 +267,15 @@ class Create(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, gener
     def forms_valid(self, invoice_form, invoiced_article_formset):
         project = get_session_filter(self.request.session).project
         original_customer = invoice_form.cleaned_data['customer']
+        rebates = invoice_form.cleaned_data['rebates']
 
         with transaction.atomic():
             invoice = services.create_invoice(
                 project=project,
                 customer=original_customer,
+                rebates=rebates,
             )
+            services.refresh_rebates(invoice)
 
             invoiced_article_formset.instance = invoice
             invoiced_article_formset.save()

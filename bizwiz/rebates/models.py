@@ -10,6 +10,15 @@ class RebateKind:
     ONE_FREE_PER = 'ONEFREE'
 
 
+EVALUATION_ORDER = [
+    RebateKind.ONE_FREE_PER,
+    RebateKind.ABSOLUTE,
+    RebateKind.PERCENTAGE,
+]
+
+EVALUATION_INDEX = {r: i for i, r in enumerate(EVALUATION_ORDER)}
+
+
 class Rebate(models.Model):
     """Rebate rules applied to invoices."""
 
@@ -52,3 +61,7 @@ class Rebate(models.Model):
             raise NotImplementedError('Unexpected rebate kind {!r}.'.format(self.kind))
 
         return "{} ({})".format(self.name, value)
+
+    @property
+    def evaluation_index(self):
+        return EVALUATION_INDEX[self.kind]

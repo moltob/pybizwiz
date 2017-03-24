@@ -9,7 +9,8 @@ from django.db import transaction
 from bizwiz.articles.models import Article
 from bizwiz.invoices.export.js import InvoiceJsonExporter
 from bizwiz.invoices.export.pdf import InvoicePdfExporter
-from bizwiz.invoices.models import Invoice, InvoicedCustomer
+from bizwiz.invoices.models import Invoice, InvoicedCustomer, ItemKind, InvoicedArticle
+from bizwiz.rebates.models import RebateKind, Rebate
 
 _logger = logging.getLogger(__name__)
 
@@ -46,7 +47,7 @@ def get_next_invoice_number():
     return next_number
 
 
-def create_invoice(*, customer, invoiced_articles=None, project=None):
+def create_invoice(*, customer, invoiced_articles=None, project=None, rebates=None):
     """
     Creates a new invoice from data typically coming in through a posted form.
 
@@ -60,6 +61,8 @@ def create_invoice(*, customer, invoiced_articles=None, project=None):
             Customer the invoice is for (an existing, regular customer).
         invoiced_articles (Optional[List[InvoicedArticle]]):
             List of invoiced articles to be added to new invoice.
+        rebates (Optional[List[Rebate]]:
+            List of rebates applied to invoice.
 
     Returns (Invoice):
         Stored invoice.
@@ -68,6 +71,9 @@ def create_invoice(*, customer, invoiced_articles=None, project=None):
     invoice.project = project
     invoice.number = get_next_invoice_number()
     invoice.save()
+    if rebates:
+        invoice.rebates.set(rebates)
+        invoice.save()
     customer = InvoicedCustomer.create(invoice, customer)
     customer.save()
     _logger.info('Creating new invoice {} for customer {}.'.format(invoice.number, customer))
@@ -85,6 +91,7 @@ def create_invoice(*, customer, invoiced_articles=None, project=None):
             invoiced_article.save()
             _logger.debug('  {}'.format(invoiced_article))
 
+    refresh_rebates(invoice)
     return invoice
 
 
@@ -114,3 +121,62 @@ def export_invoices(invoices, exporter_key, *, as_attachment=True):
 
     exporter.export(invoices, response)
     return response
+
+
+def apply_rebate_one_free_per(invoice: Invoice, rebate: Rebate):
+    article_items = (i for i in invoice.invoiced_articles.all() if i.kind == ItemKind.ARTICLE)
+    for item in article_items:
+        rebate_amount = int(rebate.value)
+        if rebate_amount < 2:
+            _logger.warning('Application rebate amount {} not feasible.'.format(rebate_amount))
+            return
+
+        rebate_count = item.amount // rebate_amount
+        if rebate_count:
+            _logger.debug('Applying rebate {} times for article {} invoiced {} times.'.format(
+                rebate_count,
+                item.name,
+                item.amount
+            ))
+
+            rebate_text = "{} ({})".format(rebate.name, item.name)
+            rebate_item = InvoicedArticle(invoice=invoice, name=rebate_text, price=-item.price,
+                                          amount=rebate_count)
+            rebate_item.save()
+            _logger.debug('Computed rebate item {}.'.format(rebate_item))
+
+
+def apply_rebate_percentage(invoice: Invoice, rebate: Rebate):
+    pass
+
+
+def apply_rebate_absolute(invoice: Invoice, rebate: Rebate):
+    pass
+
+
+APPLY_REBATE = {
+    RebateKind.ONE_FREE_PER: apply_rebate_one_free_per,
+    RebateKind.PERCENTAGE: apply_rebate_percentage,
+    RebateKind.ABSOLUTE: apply_rebate_absolute,
+}
+
+
+def refresh_rebates(invoice: Invoice):
+    """
+    Recomputes invoice items based on rebate rules.
+
+    Args:
+        invoice: Invoice for which to recompute rebates.
+
+    """
+    _logger.debug('Recomputing rebates for invoice number {}.'.format(invoice.number))
+
+    # get rid of existing rebate items first:
+    _, num_deleted = invoice.invoiced_articles.filter(kind=ItemKind.REBATE).delete()
+    _logger.debug('Deleted {} old rebate items from invoice.'.format(num_deleted))
+
+    for rebate in sorted(invoice.rebates.all(), key=lambda r: r.evaluation_index):
+        _logger.debug('Applying rebate {}.'.format(rebate))
+        APPLY_REBATE[rebate.kind](invoice, rebate)
+
+    invoice.save()
