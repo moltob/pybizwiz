@@ -158,15 +158,20 @@ def apply_rebate_percentage(invoice: Invoice, rebate: Rebate):
     # two names for the same value needed below:
     precision = factor_percent
     rebate_price = rebate_price.quantize(precision)
-
-    rebate_text = "{}".format(rebate.name)
-    rebate_item = InvoicedArticle(invoice=invoice, name=rebate_text, price=rebate_price, amount=1)
+    rebate_item = InvoicedArticle(invoice=invoice, name=rebate.name, price=rebate_price, amount=1)
     rebate_item.save()
     _logger.debug('Computed rebate item {}.'.format(rebate_item))
 
 
 def apply_rebate_absolute(invoice: Invoice, rebate: Rebate):
-    pass
+    if rebate.value <= 0:
+        _logger.warning('Deducting a negative or null amount is not feasible.')
+        return
+
+    rebate_price = -rebate.value
+    rebate_item = InvoicedArticle(invoice=invoice, name=rebate.name, price=rebate_price, amount=1)
+    rebate_item.save()
+    _logger.debug('Computed rebate item {}.'.format(rebate_item))
 
 
 APPLY_REBATE = {

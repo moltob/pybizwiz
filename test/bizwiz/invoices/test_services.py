@@ -161,14 +161,6 @@ def test__create_invoice__rebates(invoice_with_rebates):
 
 
 @pytest.mark.django_db
-def test__refresh_rebates__new__none(invoice_with_rebates):
-    # no rebate-based additions
-    assert len(list(invoice_with_rebates.invoiced_articles.all())) == 2
-    refresh_rebates(invoice_with_rebates)
-    assert len(list(invoice_with_rebates.invoiced_articles.all())) == 2
-
-
-@pytest.mark.django_db
 @pytest.mark.parametrize(('amount', 'price'), [
     (20, decimal.Decimal('24.30')),  # rebate not applicable
     (11, decimal.Decimal('24.30')),  # still not applicable
@@ -180,7 +172,7 @@ def test__refresh_rebates__new__none(invoice_with_rebates):
     (1, decimal.Decimal('24.30')),  # not useful, original price
     (0, decimal.Decimal('24.30')),  # not useful, original price
 ])
-def test__create_invoice__one_free(customer, posted_articles, amount, price):
+def test__create_invoice__rebate_one_free(customer, posted_articles, amount, price):
     rebate1 = Rebate(name='Rebate', kind=RebateKind.ONE_FREE_PER, value=amount, auto_apply=False)
     rebate1.save()
     rebates = [rebate1]
@@ -194,7 +186,7 @@ def test__create_invoice__one_free(customer, posted_articles, amount, price):
 
 
 @pytest.mark.django_db
-def test__create_invoice__percentage(customer, posted_articles):
+def test__create_invoice__rebate_percentage(customer, posted_articles):
     rebate1 = Rebate(name='Rebate', kind=RebateKind.PERCENTAGE, value=decimal.Decimal('20'),
                      auto_apply=False)
     rebate1.save()
@@ -205,3 +197,17 @@ def test__create_invoice__percentage(customer, posted_articles):
                              rebates=rebates)
 
     assert invoice.total == decimal.Decimal('11.57')
+
+
+@pytest.mark.django_db
+def test__create_invoice__rebate_absolute(customer, posted_articles):
+    rebate1 = Rebate(name='Rebate', kind=RebateKind.ABSOLUTE, value=decimal.Decimal('5'),
+                     auto_apply=False)
+    rebate1.save()
+    rebates = [rebate1]
+
+    invoice = create_invoice(customer=customer,
+                             invoiced_articles=posted_articles,
+                             rebates=rebates)
+
+    assert invoice.total == decimal.Decimal('9.46')
