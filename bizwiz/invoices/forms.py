@@ -130,6 +130,12 @@ class UpdateForm(forms.ModelForm):
     # form requires assets from custom date picker field:
     Media = PickableDateField.Media
 
+    rebates = ModelMultipleChoiceCharField(
+        queryset=Rebate.objects.all().order_by('name'),
+        label=_("Applied rebates"),
+        required=False,
+    )
+
     helper = helper.FormHelper()
     helper.form_tag = False
     helper.layout = layout.Layout(
@@ -154,6 +160,9 @@ class UpdateForm(forms.ModelForm):
                 layout.Field('number', readonly=True),
                 css_class='col-lg-2'
             ),
+        ),
+        layout.Row(
+            layout.Div(layout.Field('rebates', css_class='rebates'), css_class='col-lg-6'),
         )
     )
 

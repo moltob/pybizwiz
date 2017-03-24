@@ -1,9 +1,10 @@
 from unittest import mock
 
 import pytest
+from django import http
 
 from bizwiz.invoices.forms import InvoiceAction
-from bizwiz.invoices.views import List
+from bizwiz.invoices.views import List, Update
 
 
 @pytest.mark.parametrize('action,called_function_name', [
@@ -38,3 +39,18 @@ def test__list__form_valid(action, called_function_name):
             else:
                 assert not service_mock.called
             service_mock.reset_mock()
+
+
+@pytest.mark.django_db
+@mock.patch('bizwiz.invoices.views.services')
+def test__update_view__forms_valid__refreshes_rebates(mock_invoice_services):
+    mock_invoice_form = mock.MagicMock()
+    mock_invoice_form.save = mock.MagicMock(return_value=mock.sentinel.INVOICE)
+    mock_customer_form = mock.MagicMock()
+    mock_invoiced_article_formset = mock.MagicMock()
+
+    view = Update()
+    view.form_valid = mock.MagicMock()
+    view.forms_valid(mock_invoice_form, mock_customer_form, mock_invoiced_article_formset)
+
+    mock_invoice_services.refresh_rebates.assert_called_once_with(mock.sentinel.INVOICE)

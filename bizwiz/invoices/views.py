@@ -172,9 +172,12 @@ class Update(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, gener
             invoiced_customer_form = InvoicedCustomerForm(instance=self.object.invoiced_customer)
             invoiced_article_formset = InvoicedArticleFormset(instance=self.object)
 
+        rebates = Rebate.objects.order_by('name')
+
         return super().get_context_data(invoiced_customer_form=invoiced_customer_form,
                                         invoiced_article_formset=invoiced_article_formset,
                                         articles=self.selectable_articles,
+                                        rebates=rebates,
                                         **kwargs)
 
     def post(self, request, *args, **kwargs):
@@ -204,12 +207,13 @@ class Update(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, gener
             invoiced_article_formset.instance = invoice
             invoiced_customer_form.save()
             invoiced_article_formset.save()
-        if invoice_form.has_changed() \
-                or invoiced_customer_form.has_changed() \
-                or invoiced_article_formset.has_changed():
-            self.success_message = self.specific_success_message
-        else:
-            self.success_message = ""
+            if invoice_form.has_changed() \
+                    or invoiced_customer_form.has_changed() \
+                    or invoiced_article_formset.has_changed():
+                services.refresh_rebates(invoice)
+                self.success_message = self.specific_success_message
+            else:
+                self.success_message = ""
         return self.form_valid(invoice_form)
 
 

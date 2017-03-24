@@ -37,4 +37,23 @@
     {% datetime_picker form.date_paid %}
     {% datetime_picker form.date_taxes_filed %}
 
+    <script>
+        var selectableRebates = [{% for rebate in rebates %}{
+            pk: {{ rebate.pk }},
+            name: "{{ rebate|escapejs }}"
+        }{% if not forloop.last %}, {% endif %}{% endfor %}
+        ];
+
+        $(function () {
+            $("input.rebates")
+                .selectize({
+                    plugins: ["remove_button"],
+                    options: selectableRebates,
+                    labelField: "name",
+                    searchField: ["name"],
+                    valueField: "pk"
+                });
+        });
+    </script>
+
 {% endblock content %}
