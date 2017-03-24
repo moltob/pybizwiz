@@ -8,7 +8,7 @@ class Version:
         return '{s.major}.{s.minor}.{s.patch}'.format(s=self)
 
 
-BIZWIZ_VERSION = Version(4, 1, 0)
+BIZWIZ_VERSION = Version(4, 2, 0)
 
 if __name__ == '__main__':
     print(BIZWIZ_VERSION)
