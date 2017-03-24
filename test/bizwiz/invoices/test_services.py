@@ -224,3 +224,18 @@ def test__create_invoice__rebate_absolute(customer, posted_articles):
 
     assert invoice.total == decimal.Decimal('9.46')
     assert_rebate_reapplication_does_not_change_invoice(invoice)
+
+
+@pytest.mark.django_db
+def test__create_invoice__rebate_absolute_greater_total(customer, posted_articles):
+    rebate1 = Rebate(name='Rebate', kind=RebateKind.ABSOLUTE, value=decimal.Decimal('20'),
+                     auto_apply=False)
+    rebate1.save()
+    rebates = [rebate1]
+
+    invoice = create_invoice(customer=customer,
+                             invoiced_articles=posted_articles,
+                             rebates=rebates)
+
+    # rebate is larger than total of invoice, prevent negative invoice:
+    assert invoice.total == decimal.Decimal('0.00')

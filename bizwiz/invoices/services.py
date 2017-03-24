@@ -169,7 +169,15 @@ def apply_rebate_absolute(invoice: Invoice, rebate: Rebate):
         _logger.warning('Deducting a negative or null amount is not feasible.')
         return
 
-    rebate_price = -rebate.value
+    if rebate.value < invoice.total:
+        rebate_price = -rebate.value
+    else:
+        _logger.debug('Rebate of {} is more than invoice total {}, limiting rebate.'.format(
+            rebate.value,
+            invoice.total,
+        ))
+        rebate_price = -invoice.total
+
     rebate_item = InvoicedArticle(invoice=invoice, name=rebate.name, price=rebate_price, amount=1,
                                   kind=ItemKind.REBATE)
     rebate_item.save()
