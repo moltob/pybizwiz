@@ -1,4 +1,7 @@
 import decimal
+import os
+
+import pytest
 
 from bizwiz.invoices.models import Invoice
 from bizwiz.rebates.models import Rebate, RebateKind
@@ -6,11 +9,15 @@ from bizwiz.rebates.models import Rebate, RebateKind
 VALUE = decimal.Decimal('8.00')
 
 
+@pytest.mark.skipif(os.environ.get('TRAVIS') == 'true',
+                    reason='Travis CI does not support locale installation.')
 def test__rebate__str__percentage():
     r = Rebate(name='NAME', kind=RebateKind.PERCENTAGE, value=VALUE)
     assert str(r) == "NAME (8,00 %)"
 
 
+@pytest.mark.skipif(os.environ.get('TRAVIS') == 'true',
+                    reason='Travis CI does not support locale installation.')
 def test__rebate__str__absolute():
     r = Rebate(name='NAME', kind=RebateKind.ABSOLUTE, value=VALUE)
     assert str(r) == "NAME (8,00 €)"
