@@ -142,7 +142,7 @@ def apply_rebate_one_free_per(invoice: Invoice, rebate: Rebate):
 
             rebate_text = "{} ({})".format(rebate.name, item.name)
             rebate_item = InvoicedArticle(invoice=invoice, name=rebate_text, price=-item.price,
-                                          amount=rebate_count)
+                                          amount=rebate_count, kind=ItemKind.REBATE)
             rebate_item.save()
             _logger.debug('Computed rebate item {}.'.format(rebate_item))
 
@@ -158,7 +158,8 @@ def apply_rebate_percentage(invoice: Invoice, rebate: Rebate):
     # two names for the same value needed below:
     precision = factor_percent
     rebate_price = rebate_price.quantize(precision)
-    rebate_item = InvoicedArticle(invoice=invoice, name=rebate.name, price=rebate_price, amount=1)
+    rebate_item = InvoicedArticle(invoice=invoice, name=rebate.name, price=rebate_price, amount=1,
+                                  kind=ItemKind.REBATE)
     rebate_item.save()
     _logger.debug('Computed rebate item {}.'.format(rebate_item))
 
@@ -169,7 +170,8 @@ def apply_rebate_absolute(invoice: Invoice, rebate: Rebate):
         return
 
     rebate_price = -rebate.value
-    rebate_item = InvoicedArticle(invoice=invoice, name=rebate.name, price=rebate_price, amount=1)
+    rebate_item = InvoicedArticle(invoice=invoice, name=rebate.name, price=rebate_price, amount=1,
+                                  kind=ItemKind.REBATE)
     rebate_item.save()
     _logger.debug('Computed rebate item {}.'.format(rebate_item))
 

@@ -160,6 +160,16 @@ def test__create_invoice__rebates(invoice_with_rebates):
     assert saved_rebates[1].name == 'NAME2'
 
 
+def assert_rebate_reapplication_does_not_change_invoice(invoice):
+    total = invoice.total
+    num_items = invoice.invoiced_articles.count()
+
+    services.refresh_rebates(invoice)
+
+    assert invoice.total == total
+    assert invoice.invoiced_articles.count() == num_items
+
+
 @pytest.mark.django_db
 @pytest.mark.parametrize(('amount', 'price'), [
     (20, decimal.Decimal('24.30')),  # rebate not applicable
@@ -183,6 +193,7 @@ def test__create_invoice__rebate_one_free(customer, posted_articles, amount, pri
                              rebates=rebates)
 
     assert invoice.total == price
+    assert_rebate_reapplication_does_not_change_invoice(invoice)
 
 
 @pytest.mark.django_db
@@ -197,6 +208,7 @@ def test__create_invoice__rebate_percentage(customer, posted_articles):
                              rebates=rebates)
 
     assert invoice.total == decimal.Decimal('11.57')
+    assert_rebate_reapplication_does_not_change_invoice(invoice)
 
 
 @pytest.mark.django_db
@@ -211,3 +223,4 @@ def test__create_invoice__rebate_absolute(customer, posted_articles):
                              rebates=rebates)
 
     assert invoice.total == decimal.Decimal('9.46')
+    assert_rebate_reapplication_does_not_change_invoice(invoice)
