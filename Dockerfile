@@ -1,5 +1,8 @@
 FROM python:3.5
 
+LABEL Vendor="Mike Pagel" \
+      Description="Internal photography project management web-application."
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     apt-utils \
     gettext \
