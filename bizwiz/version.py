@@ -1,14 +1,19 @@
-class Version:
-    def __init__(self, major, minor, patch):
-        self.major = major
-        self.minor = minor
-        self.patch = patch
+import os
 
-    def __str__(self):
-        return '{s.major}.{s.minor}.{s.patch}'.format(s=self)
+BIZWIZ_BUILD_TAG_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'build-info'))
+BIZWIZ_DEVELOPMENT_VERSION = 'DEV'
 
 
-BIZWIZ_VERSION = Version(4, 2, 0)
+def get_version():
+    try:
+        with open(BIZWIZ_BUILD_TAG_FILE, 'rt') as build_tag_file:
+            version = build_tag_file.read().strip()
+    except FileNotFoundError:
+        version = BIZWIZ_DEVELOPMENT_VERSION
+    return version
+
+
+BIZWIZ_VERSION = get_version()
 
 if __name__ == '__main__':
     print(BIZWIZ_VERSION)
