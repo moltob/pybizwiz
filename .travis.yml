@@ -27,4 +27,5 @@ after_success:
   - if [ -n "$TRAVIS_TAG" ]; then
       docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
       docker push $image;
+      docker push ${repo}:latest;
     fi
