@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-24 15:50+0100\n"
+"POT-Creation-Date: 2017-03-26 17:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -79,7 +79,7 @@ msgstr ""
 "Einige der gewählten Rechnungen wurden bereits versteuert. Bitte ändern Sie "
 "Ihre Auswahl."
 
-#: .\bizwiz\invoices\forms.py:258
+#: .\bizwiz\invoices\forms.py:135 .\bizwiz\invoices\forms.py:267
 msgid "Applied rebates"
 msgstr "Angewendete Rabatte"
 
@@ -265,7 +265,7 @@ msgstr "Summe"
 msgid "Updated: Invoice %(number)s"
 msgstr "Bearbeitet: Rechnung %(number)s"
 
-#: .\bizwiz\invoices\views.py:225
+#: .\bizwiz\invoices\views.py:229
 #, python-format
 msgid "Created: Invoice for %(customer)s"
 msgstr "Erstellt: Rechnung %(customer)s"

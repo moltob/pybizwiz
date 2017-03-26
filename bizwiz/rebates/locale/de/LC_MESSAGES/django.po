@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-19 11:46+0100\n"
+"POT-Creation-Date: 2017-03-26 17:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,39 +17,40 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: .\bizwiz\rebates\models.py:18
+
+#: .\bizwiz\rebates\models.py:26
 msgid "Rebate"
 msgstr "Rabatt"
 
-#: .\bizwiz\rebates\models.py:19
+#: .\bizwiz\rebates\models.py:27
 msgid "Rebates"
 msgstr "Rabatte"
 
-#: .\bizwiz\rebates\models.py:22
+#: .\bizwiz\rebates\models.py:30
 msgid "Kind"
 msgstr "Art"
 
-#: .\bizwiz\rebates\models.py:25
+#: .\bizwiz\rebates\models.py:33
 msgid "Absolute"
 msgstr "Absolut"
 
-#: .\bizwiz\rebates\models.py:26
+#: .\bizwiz\rebates\models.py:34
 msgid "Percentage"
 msgstr "Prozentsatz"
 
-#: .\bizwiz\rebates\models.py:27
+#: .\bizwiz\rebates\models.py:35
 msgid "One free per"
 msgstr "Mengenrabatt (ein Artikel)"
 
-#: .\bizwiz\rebates\models.py:31
+#: .\bizwiz\rebates\models.py:39
 msgid "Invoice text"
 msgstr "Rechnungstext"
 
-#: .\bizwiz\rebates\models.py:36
+#: .\bizwiz\rebates\models.py:44
 msgid "Value"
 msgstr "Wert"
 
-#: .\bizwiz\rebates\models.py:42
+#: .\bizwiz\rebates\models.py:49
 msgid "Automatic"
 msgstr "Automatisch"
 

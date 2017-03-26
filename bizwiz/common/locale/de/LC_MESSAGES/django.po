@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-19 11:46+0100\n"
+"POT-Creation-Date: 2017-03-26 17:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -106,22 +106,3 @@ msgstr ""
 "\n"
 "Aktuell nutzen Sie Version %(version)s."
 
-#: .\bizwiz\common\templates\common\welcome.html:20
-msgid "News and Updates"
-msgstr "News und Updates"
-
-#: .\bizwiz\common\templates\common\welcome.html:22
-msgid ""
-"\n"
-"                2017-03-05 First usable feature set completed. Initial roll-"
-"out.\n"
-"            "
-msgstr ""
-
-#: .\bizwiz\common\templates\common\welcome.html:27
-msgid ""
-"\n"
-"                2016-12-13 Development of Bizwiz 4 production implementation "
-"kicks off.\n"
-"            "
-msgstr ""
