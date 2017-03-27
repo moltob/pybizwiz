@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-26 17:55+0200\n"
+"POT-Creation-Date: 2017-03-27 11:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,57 +18,57 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\bizwiz\common\templates\common\navigation.html:20
+#: .\bizwiz\common\templates\common\navigation.html:22
 msgid "Invoices"
 msgstr "Rechnungen"
 
-#: .\bizwiz\common\templates\common\navigation.html:24
-#: .\bizwiz\common\templates\common\navigation.html:47
-#: .\bizwiz\common\templates\common\navigation.html:56
-#: .\bizwiz\common\templates\common\navigation.html:65
+#: .\bizwiz\common\templates\common\navigation.html:26
+#: .\bizwiz\common\templates\common\navigation.html:49
+#: .\bizwiz\common\templates\common\navigation.html:58
+#: .\bizwiz\common\templates\common\navigation.html:67
 msgid "New"
 msgstr "Neu"
 
-#: .\bizwiz\common\templates\common\navigation.html:27
-#: .\bizwiz\common\templates\common\navigation.html:48
-#: .\bizwiz\common\templates\common\navigation.html:57
-#: .\bizwiz\common\templates\common\navigation.html:66
+#: .\bizwiz\common\templates\common\navigation.html:29
+#: .\bizwiz\common\templates\common\navigation.html:50
+#: .\bizwiz\common\templates\common\navigation.html:59
+#: .\bizwiz\common\templates\common\navigation.html:68
 msgid "Browse"
 msgstr "Übersicht"
 
-#: .\bizwiz\common\templates\common\navigation.html:31
+#: .\bizwiz\common\templates\common\navigation.html:33
 msgid "Payment pending"
 msgstr "Ausstehende Zahlungen"
 
-#: .\bizwiz\common\templates\common\navigation.html:34
+#: .\bizwiz\common\templates\common\navigation.html:36
 msgid "Taxes pending"
 msgstr "Zu versteuern"
 
-#: .\bizwiz\common\templates\common\navigation.html:38
+#: .\bizwiz\common\templates\common\navigation.html:40
 msgid "Rebates"
 msgstr "Rabatte"
 
-#: .\bizwiz\common\templates\common\navigation.html:44
+#: .\bizwiz\common\templates\common\navigation.html:46
 msgid "Articles"
 msgstr "Artikel"
 
-#: .\bizwiz\common\templates\common\navigation.html:53
+#: .\bizwiz\common\templates\common\navigation.html:55
 msgid "Customers"
 msgstr "Kunden"
 
-#: .\bizwiz\common\templates\common\navigation.html:62
+#: .\bizwiz\common\templates\common\navigation.html:64
 msgid "Projects"
 msgstr "Projekte"
 
-#: .\bizwiz\common\templates\common\navigation.html:69
+#: .\bizwiz\common\templates\common\navigation.html:71
 msgid "Activate filter"
 msgstr "Filter aktivieren"
 
-#: .\bizwiz\common\templates\common\navigation.html:132
+#: .\bizwiz\common\templates\common\navigation.html:134
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: .\bizwiz\common\templates\common\navigation.html:143
+#: .\bizwiz\common\templates\common\navigation.html:145
 msgid "Login"
 msgstr "Einloggen"
 
@@ -96,13 +96,74 @@ msgstr ""
 "Bizwiz ist eine einfache Anwendung zur Rechnungserstellung für die "
 "aufstrebende Fotografin."
 
-#: .\bizwiz\common\templates\common\welcome.html:16
-#, python-format
+#: .\bizwiz\common\templates\common\welcome.html:15
+msgid "Background"
+msgstr "Hintergrund"
+
+#: .\bizwiz\common\templates\common\welcome.html:17
 msgid ""
 "\n"
-"                Your are currently using version %(version)s.\n"
+"                With the official start of the photography business at\n"
+"                http://www.bpfotografie.de/, Bizwiz started in early 2007 as "
+"a Windows\n"
+"                forms application based on the .NET framework. The first "
+"version used in production\n"
+"                was Bizwiz 2 and was written in C# and used MSSQL as a "
+"server backend.\n"
 "            "
 msgstr ""
 "\n"
-"Aktuell nutzen Sie Version %(version)s."
+"Mit dem offiziellen Start der Fotografiearbeiten auf http://www.bpfotografie."
+"de/ begann die Entwicklung von Bizwiz Anfang 2007 als eine Windows Forms "
+"Anwendung basierend auf den .NET Framework. Die erste produktiv verwendete "
+"Version war Bizwiz 2 und wurde in C# geschrieben. Als Backend Store diente "
+"ein MSSQL Server."
 
+#: .\bizwiz\common\templates\common\welcome.html:25
+msgid ""
+"\n"
+"                After production use until end of 2016, Bizwiz was fully "
+"rewritten as a Django web\n"
+"                application, utilizing Python as well as the typical web "
+"languages. Bizwiz is still\n"
+"                a server-rendered (classic) web application, as it is truly "
+"data-driven and the\n"
+"                classic render-edit-post cycle applies very well. In "
+"addition, learning the classic\n"
+"                Django framework was also an objective of the project. "
+"Today, Bizwiz is running\n"
+"                within a Docker container on virtually any platform.\n"
+"            "
+msgstr ""
+"Nach produktiver Nutzung bis Ende 2016 wurde Bizwiz vollständig neu "
+"entwickelt, diesmal in Form einer Django Webanwendung, geschrieben in Python "
+"und den typischen Websprachen. Bizwiz ist eine serverseitig gerenderte "
+"(klassische) Webapplikation, da die umgesetzten Workflows größtenteils die "
+"Darstellung und das Editieren von Daten durch den Nutzer darstellen. "
+"Zusätzlich wurde dadurch das Ziel der Einarbeitung in das Django Framework "
+"erreicht. Heute läuft Bizwiz innerhalb eines Docker containers und kann "
+"damit praktisch auf alle Plattformen ausgerollt werden."
+
+#: .\bizwiz\common\templates\common\welcome.html:34
+msgid "Resources"
+msgstr "Ressourcen"
+
+#: .\bizwiz\common\templates\common\welcome.html:36
+msgid ""
+"\n"
+"                Find the source code at\n"
+"                <a href=\"https://github.com/moltob/pybizwiz\">https://"
+"github.com/moltob/pybizwiz</a>\n"
+"                or install the docker container from\n"
+"                <a href=\"https://hub.docker.com/r/mpagel/bizwiz\">https://"
+"hub.docker.com/r/mpagel/bizwiz</a>.\n"
+"            "
+msgstr ""
+"\n"
+"                Den Sourcecode gibt es auf\n"
+"                <a href=\"https://github.com/moltob/pybizwiz\">https://"
+"github.com/moltob/pybizwiz</a>.\n"
+"                Der Docker Container kann unter\n"
+"                <a href=\"https://hub.docker.com/r/mpagel/bizwiz\">https://"
+"hub.docker.com/r/mpagel/bizwiz</a> herunter geladen werden.\n"
+"            "
