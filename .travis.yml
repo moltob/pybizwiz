@@ -6,7 +6,7 @@ python:
   - "3.5"
 install:
   - pip install -r requirements.txt
-  - pip install pytest-cov coveralls
+  - pip install pytest-cov coveralls codecov
   - npm install -g bower
   - bower install
   - rm bower_components/eonasdan-bootstrap-datetimepicker/build/css/bootstrap-datetimepicker-standalone.css
@@ -24,6 +24,7 @@ script:
   - docker build -t ${repo}:latest -t $image .
 after_success:
   - coveralls
+  - codecov
   - if [ -n "$TRAVIS_TAG" ]; then
       docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
       docker push $image;
