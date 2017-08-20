@@ -2,6 +2,8 @@ from django.conf.urls import url
 
 from bizwiz.projects import views
 
+app_name = 'projects'
+
 urlpatterns = [
     url(r'^$', views.List.as_view(), name='list'),
     url(r'^create/$', views.Create.as_view(), name='create'),

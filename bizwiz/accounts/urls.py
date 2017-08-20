@@ -4,6 +4,8 @@ from django.urls import reverse_lazy
 
 from bizwiz.accounts.forms import login_helper
 
+app_name = 'accounts'
+
 urlpatterns = [
     url(r'^login/$', auth_views.login, {
         'template_name': 'accounts/login.html',

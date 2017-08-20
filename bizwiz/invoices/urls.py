@@ -2,6 +2,8 @@ from django.conf.urls import url
 
 from bizwiz.invoices import views
 
+app_name = 'invoices'
+
 urlpatterns = [
     url(r'^$', views.List.as_view(), {'subset': None}, name='list'),
     url(r'^payable/$', views.List.as_view(), {'subset': 'payable'}, name='list_payable'),

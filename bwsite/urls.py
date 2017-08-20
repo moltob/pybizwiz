@@ -18,12 +18,12 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^', include('bizwiz.common.urls', namespace='common')),
-    url(r'^accounts/', include('bizwiz.accounts.urls', namespace='accounts')),
-    url(r'^articles/', include('bizwiz.articles.urls', namespace='articles')),
-    url(r'^customers/', include('bizwiz.customers.urls', namespace='customers')),
-    url(r'^invoices/', include('bizwiz.invoices.urls', namespace='invoices')),
-    url(r'^projects/', include('bizwiz.projects.urls', namespace='projects')),
-    url(r'^rebates/', include('bizwiz.rebates.urls', namespace='rebates')),
+    url(r'^', include('bizwiz.common.urls')),
+    url(r'^accounts/', include('bizwiz.accounts.urls')),
+    url(r'^articles/', include('bizwiz.articles.urls')),
+    url(r'^customers/', include('bizwiz.customers.urls')),
+    url(r'^invoices/', include('bizwiz.invoices.urls')),
+    url(r'^projects/', include('bizwiz.projects.urls')),
+    url(r'^rebates/', include('bizwiz.rebates.urls')),
     url(r'^admin/', admin.site.urls),
 ]

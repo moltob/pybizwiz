@@ -2,6 +2,8 @@ from django.conf.urls import url
 
 from bizwiz.articles import views
 
+app_name = 'articles'
+
 urlpatterns = [
     url(r'^$', views.List.as_view(), {'show_inactive': True}, name='list'),
     url(r'^active/$', views.List.as_view(), {'show_inactive': False}, name='list_active'),
