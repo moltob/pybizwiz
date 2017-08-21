@@ -1,0 +1,13 @@
+# temporary folders
+__pycache__/
+.cache/
+.idea/
+.vagrant/
+test/**/output/
+
+# temporary files
+*.bak
+*.log
+*.log.*
+*.mo
+*.pyc
