@@ -1,13 +1,11 @@
 # temporary folders
-__pycache__/
-.cache/
-.idea/
-.vagrant/
+**/__pycache__/
+**/.cache/
 test/**/output/
 
 # temporary files
-*.bak
-*.log
-*.log.*
-*.mo
-*.pyc
+**/*.bak
+**/*.log
+**/*.log.*
+**/*.mo
+**/*.pyc
