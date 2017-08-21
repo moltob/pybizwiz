@@ -1,19 +1,16 @@
-appdirs==1.4.3
-colorama==0.3.7
-Django==1.10.6
+colorama==0.3.9
+Django==1.11.4
 django-crispy-forms==1.6.1
 -e git+https://mpagel@bitbucket.org/mpagel/django-formset-js.git@985e2487581b492faccac820fecc6de432081235#egg=django_formset_js
 django-jquery-js==3.1.1
-django-tables2==1.4.2
+django-tables2==1.10.0
 gunicorn==19.7.1
 olefile==0.44
-packaging==16.8
-Pillow==4.0.0
-py==1.4.33
-pyparsing==2.2.0
+Pillow==4.2.1
+py==1.4.34
 PyPDF2==1.26.0
-pytest==3.0.7
+pytest==3.2.1
 pytest-django==3.1.2
+pytz==2017.2
 reportlab==3.4.0
-six==1.10.0
 whitenoise==3.3.0
