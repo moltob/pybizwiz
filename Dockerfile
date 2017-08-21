@@ -31,6 +31,7 @@ ENTRYPOINT ["scripts/launch.sh"]
 # install application
 COPY . .
 RUN pip install -r requirements-prod.txt && \
+    pwd && ls -la && \
     pytest test && \
     rm -f data/*.log* && \
     python manage.py compilemessages && \
