@@ -302,7 +302,7 @@ class SummingColumn(tables.Column):
 
 
 class SalesTable(tables.Table):
-    year_paid = tables.Column(_('Year'), footer=_('Total:'))
+    year_paid = tables.Column(_('Year'))
     num_invoices = SummingColumn(_('Invoices'), attrs=COLUMN_RIGHT_ALIGNED)
     num_articles = SummingColumn(_('Articles'), attrs=COLUMN_RIGHT_ALIGNED)
     total = SummingColumn(_('Yearly income'), attrs=COLUMN_RIGHT_ALIGNED)
