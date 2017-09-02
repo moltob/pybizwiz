@@ -296,11 +296,16 @@ class Print(views.View):
         return services.export_invoices([invoice], 'PDF', as_attachment=False)
 
 
+class SummingColumn(tables.Column):
+    def render_footer(self, bound_column, table):
+        return sum(bound_column.accessor.resolve(row) for row in table.data)
+
+
 class SalesTable(tables.Table):
-    year_paid = tables.Column(_('Year'), )
-    num_invoices = tables.Column(_('Invoices'), attrs=COLUMN_RIGHT_ALIGNED)
-    num_articles = tables.Column(_('Articles'), attrs=COLUMN_RIGHT_ALIGNED)
-    total = tables.Column(_('Yearly income'), attrs=COLUMN_RIGHT_ALIGNED)
+    year_paid = tables.Column(_('Year'), footer=_('Total:'))
+    num_invoices = SummingColumn(_('Invoices'), attrs=COLUMN_RIGHT_ALIGNED)
+    num_articles = SummingColumn(_('Articles'), attrs=COLUMN_RIGHT_ALIGNED)
+    total = SummingColumn(_('Yearly income'), attrs=COLUMN_RIGHT_ALIGNED)
 
     class Meta:
         template = 'common/table.html'

@@ -3,6 +3,11 @@ body {
     padding-bottom: 30px;
 }
 
+tfoot tr td {
+    font-weight: bold;
+    text-align: right;
+}
+
 .asteriskField {
     display: none;
 }
