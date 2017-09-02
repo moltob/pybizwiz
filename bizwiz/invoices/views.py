@@ -7,6 +7,7 @@ from django.contrib.auth import mixins
 from django.contrib.messages import views as message_views
 from django.db import models
 from django.db import transaction
+from django.db.models import functions
 from django.utils.translation import ugettext as _
 from django.views import generic
 
@@ -292,5 +293,31 @@ class Print(views.View):
         return services.export_invoices([invoice], 'PDF', as_attachment=False)
 
 
-class Sales(views.View):
-    pass
+class SalesTable(tables.Table):
+    year_paid = tables.Column(_('Year'), accessor='year_paid')
+    num_invoices = tables.Column(_('Invoice count'), accessor='num_invoices')
+    num_articles = tables.Column(_('Article count'), accessor='num_articles')
+    total = tables.Column(_('Yearly income'), accessor='total')
+
+    class Meta:
+        template = 'common/table.html'
+        attrs = {'class': 'table table-striped'}
+        per_page = 50
+        fields = ('year_paid', 'num_invoices', 'num_articles', 'total',)
+        order_by = ('-year_paid',)
+
+
+class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
+    """Sales per year."""
+    table_class = SalesTable
+    column_widths = ('20%', '30%', '20%', '30%',)
+    queryset = Invoice.objects \
+        .exclude(date_paid=None) \
+        .annotate(year_paid=functions.ExtractYear('date_paid')) \
+        .values('year_paid') \
+        .annotate(num_invoices=models.Count('id', distinct=True),
+                  num_articles=models.Sum('invoiced_articles__amount'),
+                  total=models.Sum(
+                      models.F('invoiced_articles__price') * models.F('invoiced_articles__amount')
+                  ))
+    template_name = 'invoices/sales_list.html'
