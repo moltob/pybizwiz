@@ -24,6 +24,12 @@ from bizwiz.rebates.models import Rebate
 
 _logger = logging.getLogger(__name__)
 
+# Tables2 attrs preset for a right-aligned column:
+COLUMN_RIGHT_ALIGNED = {
+    'th': {'class': 'text-right'},
+    'td': {'class': 'text-right'}
+}
+
 
 class InvoiceTable(tables.Table):
     number = tables.LinkColumn('invoices:update', args=[tables.utils.A('pk')])
@@ -36,10 +42,7 @@ class InvoiceTable(tables.Table):
         'invoiced_customer.first_name'
     ))
     project = tables.Column(_("Project"), order_by='project.name')
-    total = tables.Column(order_by=tables.utils.A('total'), attrs={
-        'th': {'class': 'text-right'},
-        'td': {'class': 'text-right'}
-    })
+    total = tables.Column(order_by=tables.utils.A('total'), attrs=COLUMN_RIGHT_ALIGNED)
     selected = tables.CheckBoxColumn(accessor='pk', attrs={
         'th__input': {'id': 'id-select-all'},
     })
@@ -294,23 +297,22 @@ class Print(views.View):
 
 
 class SalesTable(tables.Table):
-    year_paid = tables.Column(_('Year'), accessor='year_paid')
-    num_invoices = tables.Column(_('Invoice count'), accessor='num_invoices')
-    num_articles = tables.Column(_('Article count'), accessor='num_articles')
-    total = tables.Column(_('Yearly income'), accessor='total')
+    year_paid = tables.Column(_('Year'), )
+    num_invoices = tables.Column(_('Invoice count'), attrs=COLUMN_RIGHT_ALIGNED)
+    num_articles = tables.Column(_('Article count'), attrs=COLUMN_RIGHT_ALIGNED)
+    total = tables.Column(_('Yearly income'), attrs=COLUMN_RIGHT_ALIGNED)
 
     class Meta:
         template = 'common/table.html'
         attrs = {'class': 'table table-striped'}
         per_page = 50
-        fields = ('year_paid', 'num_invoices', 'num_articles', 'total',)
         order_by = ('-year_paid',)
 
 
 class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
     """Sales per year."""
     table_class = SalesTable
-    column_widths = ('20%', '30%', '20%', '30%',)
+    column_widths = ('10%', '20%', '30%', '40%',)
     queryset = Invoice.objects \
         .exclude(date_paid=None) \
         .annotate(year_paid=functions.ExtractYear('date_paid')) \
