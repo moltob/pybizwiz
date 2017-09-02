@@ -298,8 +298,8 @@ class Print(views.View):
 
 class SalesTable(tables.Table):
     year_paid = tables.Column(_('Year'), )
-    num_invoices = tables.Column(_('Invoice count'), attrs=COLUMN_RIGHT_ALIGNED)
-    num_articles = tables.Column(_('Article count'), attrs=COLUMN_RIGHT_ALIGNED)
+    num_invoices = tables.Column(_('Invoices'), attrs=COLUMN_RIGHT_ALIGNED)
+    num_articles = tables.Column(_('Articles'), attrs=COLUMN_RIGHT_ALIGNED)
     total = tables.Column(_('Yearly income'), attrs=COLUMN_RIGHT_ALIGNED)
 
     class Meta:
