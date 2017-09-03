@@ -84,7 +84,7 @@ class InvoicedArticle(ArticleBase):
         verbose_name=_("Original article"),
         blank=True,
         null=True,
-        related_name='invoiced_article',
+        related_name='invoiced_articles',
     )
     amount = models.PositiveSmallIntegerField(_("Amount"))
     invoice = models.ForeignKey(

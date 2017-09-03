@@ -11,7 +11,7 @@ from django.db.models import functions
 from django.utils.translation import ugettext as _
 from django.views import generic
 
-from bizwiz.articles.models import ArticleBase
+from bizwiz.articles.models import ArticleBase, Article
 from bizwiz.articles.services import get_articles_for_project, get_session_filtered_articles
 from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
@@ -19,7 +19,7 @@ from bizwiz.customers.services import get_session_filtered_customers
 from bizwiz.invoices import services
 from bizwiz.invoices.forms import InvoiceAction, ListActionForm, UpdateForm, InvoicedCustomerForm, \
     InvoicedArticleFormset, CreateForm
-from bizwiz.invoices.models import Invoice
+from bizwiz.invoices.models import Invoice, InvoicedArticle, ItemKind
 from bizwiz.rebates.models import Rebate
 
 _logger = logging.getLogger(__name__)
@@ -336,12 +336,12 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
         .exclude(date_paid=None) \
         .annotate(year_paid=functions.ExtractYear('date_paid')) \
         .values('year_paid') \
+        .filter(invoiced_articles__kind=ItemKind.ARTICLE) \
         .annotate(num_invoices=models.Count('id', distinct=True),
                   num_articles=models.Sum('invoiced_articles__amount'),
                   total=models.Sum(
                       models.F('invoiced_articles__price') * models.F('invoiced_articles__amount')
-                  )) \
-        .order_by('-year_paid')
+                  ))
     template_name = 'invoices/sales_list.html'
 
     def get_context_data(self, **kwargs):
@@ -355,4 +355,10 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
 
 
 class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
-    pass
+    def get_queryset(self):
+        return InvoicedArticle.objects \
+            .filter(kind=ItemKind.ARTICLE, original_article__isnull=False) \
+            .filter(invoice__date_paid__year=self.kwargs['year']) \
+            .values('original_article__pk', 'original_article__name') \
+            .annotate(year_amount=models.Sum('amount'),
+                      total=models.Sum(models.F('amount') * models.F('price')))

@@ -6,9 +6,10 @@ import itertools
 import pytest
 from django import http
 
+from bizwiz.articles.models import Article
 from bizwiz.invoices.forms import InvoiceAction
-from bizwiz.invoices.models import Invoice, InvoicedArticle
-from bizwiz.invoices.views import List, Update, Sales
+from bizwiz.invoices.models import Invoice, InvoicedArticle, ItemKind
+from bizwiz.invoices.views import List, Update, Sales, ArticleSales
 
 
 @pytest.mark.parametrize('action,called_function_name', [
@@ -67,8 +68,15 @@ def test__sales__queryset__empty():
     assert not data
 
 
-@pytest.mark.django_db
-def test__sales__queryset__computation():
+@pytest.fixture
+def invoices_for_aggregation():
+    articles = [
+        Article(name='A', price=1),
+        Article(name='B', price=2),
+    ]
+    for a in articles:
+        a.save()
+
     invoices = [
         Invoice(number=1),
         Invoice(number=2, date_paid=datetime.date(2016, 1, 2)),
@@ -78,37 +86,117 @@ def test__sales__queryset__computation():
     for i in invoices:
         i.save()
 
-    articles1 = [
-        InvoicedArticle(invoice=invoices[0], name='A1', price=1, amount=1),
+    invoice_articles1 = [
+        InvoicedArticle(
+            invoice=invoices[0],
+            name='A1',
+            price=1,
+            amount=1,
+            original_article=articles[0],
+            kind=ItemKind.ARTICLE,
+        ),
     ]
-    articles2 = [
-        InvoicedArticle(invoice=invoices[1], name='B1', price=10, amount=5),
-        InvoicedArticle(invoice=invoices[1], name='B2', price=11, amount=6),
+    invoiced_articles2 = [
+        InvoicedArticle(
+            invoice=invoices[1],
+            name='B1',
+            price=10,
+            amount=5,
+            original_article=articles[0],
+            kind=ItemKind.ARTICLE,
+        ),
+        InvoicedArticle(
+            invoice=invoices[1],
+            name='B2',
+            price=11,
+            amount=6,
+            original_article=articles[1],
+            kind=ItemKind.ARTICLE,
+        ),
     ]
-    articles3 = [
-        InvoicedArticle(invoice=invoices[2], name='C1', price=100, amount=10),
-        InvoicedArticle(invoice=invoices[2], name='C2', price=101, amount=11),
+    invoiced_articles3 = [
+        InvoicedArticle(
+            invoice=invoices[2],
+            name='C1',
+            price=100,
+            amount=10,
+            original_article=articles[0],
+            kind=ItemKind.ARTICLE,
+        ),
+        InvoicedArticle(
+            invoice=invoices[2],
+            name='C2',
+            price=101,
+            amount=11,
+            original_article=articles[1],
+            kind=ItemKind.ARTICLE,
+        ),
+        InvoicedArticle(
+            invoice=invoices[2],
+            name='C3 Rebate',
+            price=-10,
+            amount=1,
+            kind=ItemKind.REBATE,
+        ),
     ]
-    articles4 = [
-        InvoicedArticle(invoice=invoices[3], name='D1', price=1000, amount=20),
-        InvoicedArticle(invoice=invoices[3], name='D2', price=1001, amount=21),
+    invoiced_articles4 = [
+        InvoicedArticle(
+            invoice=invoices[3],
+            name='D1',
+            price=1000,
+            amount=20,
+            original_article=articles[0],
+            kind=ItemKind.ARTICLE,
+        ),
+        InvoicedArticle(
+            invoice=invoices[3],
+            name='D2',
+            price=1001,
+            amount=21,
+            original_article=articles[1],
+            kind=ItemKind.ARTICLE,
+        ),
     ]
-    for a in itertools.chain(articles1, articles2, articles3, articles4):
+    for a in itertools.chain(invoice_articles1, invoiced_articles2, invoiced_articles3,
+                             invoiced_articles4):
         a.save()
 
+    return invoices
+
+
+@pytest.mark.django_db
+def test__sales__queryset__computation(invoices_for_aggregation):
     qs = Sales.queryset
-    data = qs.all()
+    assert len(qs) == 2
 
-    assert len(data) == 2
+    sales_by_year = {s['year_paid']: s for s in qs}
 
-    sales_2017 = data[0]
-    assert sales_2017['year_paid'] == 2017
+    sales_2017 = sales_by_year[2017]
     assert sales_2017['num_invoices'] == 1
     assert sales_2017['num_articles'] == 20 + 21
     assert sales_2017['total'] == 21 * 1001 + 20 * 1000
 
-    sales_2016 = data[1]
+    sales_2016 = sales_by_year[2016]
     assert sales_2016['year_paid'] == 2016
     assert sales_2016['num_invoices'] == 2
     assert sales_2016['num_articles'] == 11 + 10 + 6 + 5
     assert sales_2016['total'] == 11 * 101 + 10 * 100 + 6 * 11 + 5 * 10
+
+
+@pytest.mark.django_db
+def test__article_sales__queryset__computation(invoices_for_aggregation):
+    sales = ArticleSales()
+    sales.kwargs = dict(year=2016)
+    qs = sales.get_queryset()
+
+    sales_by_article_name = {s['original_article__name']: s for s in qs}
+
+    assert len(sales_by_article_name) == 2
+
+    sales_a = sales_by_article_name['A']
+    assert sales_a['year_amount'] == 5 + 10
+    assert sales_a['total'] == 5 * 10 + 10 * 100
+
+    sales_b = sales_by_article_name['B']
+    assert sales_b['year_amount'] == 6 + 11
+    assert sales_b['total'] == 6 * 11 + 11 * 101
