@@ -361,6 +361,7 @@ class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTa
     def get_queryset(self):
         return InvoicedArticle.objects \
             .filter(kind=ItemKind.ARTICLE, original_article__isnull=False) \
+            .filter(price__gt=0) \
             .filter(invoice__date_paid__year=self.kwargs['year']) \
             .values('original_article__pk', 'original_article__name') \
             .annotate(year_amount=models.Sum('amount'),
