@@ -328,3 +328,12 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
                       models.F('invoiced_articles__price') * models.F('invoiced_articles__amount')
                   ))
     template_name = 'invoices/sales_list.html'
+
+    def get_context_data(self, **kwargs):
+        # prepare chart data by separating x and y axis:
+        sales_years = [p['year_paid'] for p in self.queryset]
+        sales_totals = [p['total'] for p in self.queryset]
+
+        return super().get_context_data(sales_years=sales_years,
+                                        sales_totals=sales_totals,
+                                        **kwargs)

@@ -24,16 +24,14 @@
 
     <script>
         var data = {
-            // A labels array that can contain any sort of values
-            labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
-            // Our series array that contains series objects or in this case series data arrays
+            labels: [{{ sales_years | join:', '  }}],
             series: [
-                [5, 2, 4, 2, 0]
+                [{{ sales_totals | join:', '   }}]
             ]
         };
 
         $(function () {
-            new Chartist.Line('.ct-chart', data);
+            new Chartist.Bar('.ct-chart', data);
         });
     </script>
 {% endblock content %}

@@ -79,3 +79,12 @@ tfoot tr td {
     border-bottom: double;
     text-align: right;
 }
+
+.ct-chart .ct-bar {
+    stroke: #71928A;
+}
+
+.ct-chart .ct-bar:last-of-type {
+    stroke: #71727A;
+    stroke-dasharray: 1px;
+}
