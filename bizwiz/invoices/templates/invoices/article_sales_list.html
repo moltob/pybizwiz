@@ -9,7 +9,9 @@
 {% endblock %}
 
 {% block content %}
-    <div class="page-header"><h1>{% trans 'Annual articles sales report for' %} {{ "YEAR" }}</h1></div>
+    <div class="page-header">
+        <h1>{% trans 'Annual articles sales report for' %} {{ "YEAR" }}</h1>
+    </div>
 
     <div class="row voffset3">
         <div class="col-lg-7">
@@ -23,5 +25,17 @@
     <script src="{% static 'chartist/dist/chartist.min.js' %}"></script>
 
     <script>
+        var data = {
+            labels: [{% for name in article_names %}"{{ name | truncatechars:20 | escapejs }}"{% if not forloop.last %}, {% endif %}{% endfor %}],
+            series: [{{ article_amounts | join:', '   }}]
+        };
+
+        $(function () {
+            new Chartist.Pie('.ct-chart', data, {
+                //labelPosition: 'outside',
+                labelDirection: 'explode',
+                labelOffset: 20
+            });
+        });
     </script>
 {% endblock content %}

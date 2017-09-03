@@ -88,3 +88,7 @@ tfoot tr td {
     stroke: #71727A;
     stroke-dasharray: 1px;
 }
+
+.ct-label {
+        font-size: 80%;
+}

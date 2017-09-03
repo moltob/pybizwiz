@@ -350,7 +350,7 @@ class ArticleSalesTable(tables.Table):
         template = 'common/table.html'
         attrs = {'class': 'table table-striped'}
         per_page = 50
-        order_by = ('-total',)
+        order_by = ('-amount',)
 
 
 class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
@@ -365,4 +365,22 @@ class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTa
             .filter(invoice__date_paid__year=self.kwargs['year']) \
             .values('original_article__pk', 'original_article__name') \
             .annotate(year_amount=models.Sum('amount'),
-                      total=models.Sum(models.F('price') * models.F('amount')))
+                      total=models.Sum(models.F('price') * models.F('amount'))) \
+            .order_by('-year_amount')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        # prepare chart data by separating x and y axis:
+        queryset = context['object_list']
+        article_amounts = [a['year_amount'] for a in queryset]
+        article_names = [a['original_article__name'] for a in queryset]
+
+        # clear names of articles with minor contribution:
+        total_amount = sum(article_amounts)
+        percentage_amounts = [a / total_amount for a in article_amounts]
+        article_names = [n if percentage_amounts[i] > 0.03 else " "
+                         for i, n in enumerate(article_names)]
+
+        context.update(article_names=article_names, article_amounts=article_amounts)
+        return context
