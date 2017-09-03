@@ -11,7 +11,7 @@ from django.db.models import functions
 from django.utils.translation import ugettext as _
 from django.views import generic
 
-from bizwiz.articles.models import ArticleBase, Article
+from bizwiz.articles.models import ArticleBase
 from bizwiz.articles.services import get_articles_for_project, get_session_filtered_articles
 from bizwiz.common.session_filter import get_session_filter
 from bizwiz.common.views import SizedColumnsMixin
@@ -20,15 +20,12 @@ from bizwiz.invoices import services
 from bizwiz.invoices.forms import InvoiceAction, ListActionForm, UpdateForm, InvoicedCustomerForm, \
     InvoicedArticleFormset, CreateForm
 from bizwiz.invoices.models import Invoice, InvoicedArticle, ItemKind
+from bizwiz.invoices.tables import COLUMN_RIGHT_ALIGNED, SummingColumn, SummingLinkColumn
 from bizwiz.rebates.models import Rebate
 
 _logger = logging.getLogger(__name__)
 
 # Tables2 attrs preset for a right-aligned column:
-COLUMN_RIGHT_ALIGNED = {
-    'th': {'class': 'text-right'},
-    'td': {'class': 'text-right'}
-}
 
 
 class InvoiceTable(tables.Table):
@@ -294,22 +291,6 @@ class Print(views.View):
     def get(self, request, number):
         invoice = shortcuts.get_object_or_404(Invoice, number=number)
         return services.export_invoices([invoice], 'PDF', as_attachment=False)
-
-
-class SummingMixin:
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-    def render_footer(self, bound_column, table):
-        return sum(bound_column.accessor.resolve(row) for row in table.data)
-
-
-class SummingColumn(SummingMixin, tables.Column):
-    """A column with a summed up footer."""
-
-
-class SummingLinkColumn(SummingMixin, tables.LinkColumn):
-    """A linked column with a summed up footer."""
 
 
 class SalesTable(tables.Table):
