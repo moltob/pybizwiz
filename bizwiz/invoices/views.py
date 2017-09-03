@@ -25,6 +25,7 @@ from bizwiz.rebates.models import Rebate
 
 _logger = logging.getLogger(__name__)
 
+
 # Tables2 attrs preset for a right-aligned column:
 
 
@@ -335,11 +336,32 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
                                         **kwargs)
 
 
+class ArticleSalesTable(tables.Table):
+    name = tables.LinkColumn(
+        'articles:update',
+        args=[tables.utils.A('original_article__pk')],
+        verbose_name=_("Invoice text"),
+        accessor='original_article__name'
+    )
+    amount = tables.Column(_("Ordered"), accessor='year_amount', attrs=COLUMN_RIGHT_ALIGNED)
+    total = tables.Column(_('Total value'), attrs=COLUMN_RIGHT_ALIGNED)
+
+    class Meta:
+        template = 'common/table.html'
+        attrs = {'class': 'table table-striped'}
+        per_page = 50
+        order_by = ('-total',)
+
+
 class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
+    table_class = ArticleSalesTable
+    column_widths = ('50%', '20%', '30%',)
+    template_name = 'invoices/article_sales_list.html'
+
     def get_queryset(self):
         return InvoicedArticle.objects \
             .filter(kind=ItemKind.ARTICLE, original_article__isnull=False) \
             .filter(invoice__date_paid__year=self.kwargs['year']) \
             .values('original_article__pk', 'original_article__name') \
             .annotate(year_amount=models.Sum('amount'),
-                      total=models.Sum(models.F('amount') * models.F('price')))
+                      total=models.Sum(models.F('price') * models.F('amount')))

@@ -3,6 +3,8 @@ from unittest import mock
 import datetime
 
 import itertools
+
+import decimal
 import pytest
 from django import http
 
@@ -100,7 +102,7 @@ def invoices_for_aggregation():
         InvoicedArticle(
             invoice=invoices[1],
             name='B1',
-            price=10,
+            price=10.03,
             amount=5,
             original_article=articles[0],
             kind=ItemKind.ARTICLE,
@@ -180,7 +182,7 @@ def test__sales__queryset__computation(invoices_for_aggregation):
     assert sales_2016['year_paid'] == 2016
     assert sales_2016['num_invoices'] == 2
     assert sales_2016['num_articles'] == 11 + 10 + 6 + 5
-    assert sales_2016['total'] == 11 * 101 + 10 * 100 + 6 * 11 + 5 * 10
+    assert sales_2016['total'] == decimal.Decimal('2227.15')
 
 
 @pytest.mark.django_db
@@ -195,7 +197,7 @@ def test__article_sales__queryset__computation(invoices_for_aggregation):
 
     sales_a = sales_by_article_name['A']
     assert sales_a['year_amount'] == 5 + 10
-    assert sales_a['total'] == 5 * 10 + 10 * 100
+    assert sales_a['total'] == decimal.Decimal('1050.15')  # 5 * 10.03 + 10 * 100
 
     sales_b = sales_by_article_name['B']
     assert sales_b['year_amount'] == 6 + 11
