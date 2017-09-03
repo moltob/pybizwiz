@@ -7,6 +7,7 @@ from django.contrib.auth import mixins
 from django.contrib.messages import views as message_views
 from django.db import models
 from django.db import transaction
+from django.db.models import functions
 from django.utils.translation import ugettext as _
 from django.views import generic
 
@@ -18,10 +19,14 @@ from bizwiz.customers.services import get_session_filtered_customers
 from bizwiz.invoices import services
 from bizwiz.invoices.forms import InvoiceAction, ListActionForm, UpdateForm, InvoicedCustomerForm, \
     InvoicedArticleFormset, CreateForm
-from bizwiz.invoices.models import Invoice
+from bizwiz.invoices.models import Invoice, InvoicedArticle, ItemKind
+from bizwiz.invoices.tables import COLUMN_RIGHT_ALIGNED, SummingColumn, SummingLinkColumn
 from bizwiz.rebates.models import Rebate
 
 _logger = logging.getLogger(__name__)
+
+
+# Tables2 attrs preset for a right-aligned column:
 
 
 class InvoiceTable(tables.Table):
@@ -35,10 +40,7 @@ class InvoiceTable(tables.Table):
         'invoiced_customer.first_name'
     ))
     project = tables.Column(_("Project"), order_by='project.name')
-    total = tables.Column(order_by=tables.utils.A('total'), attrs={
-        'th': {'class': 'text-right'},
-        'td': {'class': 'text-right'}
-    })
+    total = tables.Column(order_by=tables.utils.A('total'), attrs=COLUMN_RIGHT_ALIGNED)
     selected = tables.CheckBoxColumn(accessor='pk', attrs={
         'th__input': {'id': 'id-select-all'},
     })
@@ -290,3 +292,95 @@ class Print(views.View):
     def get(self, request, number):
         invoice = shortcuts.get_object_or_404(Invoice, number=number)
         return services.export_invoices([invoice], 'PDF', as_attachment=False)
+
+
+class SalesTable(tables.Table):
+    year_paid = tables.Column(_('Year'))
+    num_invoices = SummingColumn(_('Invoices'), attrs=COLUMN_RIGHT_ALIGNED)
+    num_articles = SummingLinkColumn(verbose_name=_('Articles'),
+                                     viewname='invoices:sales_articles',
+                                     args=[tables.utils.A('year_paid')],
+                                     attrs=COLUMN_RIGHT_ALIGNED)
+    total = SummingColumn(_('Yearly income'), attrs=COLUMN_RIGHT_ALIGNED)
+
+    class Meta:
+        template = 'common/table.html'
+        attrs = {'class': 'table table-striped'}
+        per_page = 50
+        order_by = ('-year_paid',)
+
+
+class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
+    """Sales per year."""
+    table_class = SalesTable
+    column_widths = ('10%', '20%', '30%', '40%',)
+    queryset = Invoice.objects \
+        .exclude(date_paid=None) \
+        .annotate(year_paid=functions.ExtractYear('date_paid')) \
+        .values('year_paid') \
+        .filter(invoiced_articles__kind=ItemKind.ARTICLE) \
+        .annotate(num_invoices=models.Count('id', distinct=True),
+                  num_articles=models.Sum('invoiced_articles__amount'),
+                  total=models.Sum(
+                      models.F('invoiced_articles__price') * models.F('invoiced_articles__amount')
+                  ))
+    template_name = 'invoices/sales_list.html'
+
+    def get_context_data(self, **kwargs):
+        # prepare chart data by separating x and y axis:
+        sales_years = [p['year_paid'] for p in self.queryset]
+        sales_totals = [p['total'] for p in self.queryset]
+
+        return super().get_context_data(sales_years=sales_years,
+                                        sales_totals=sales_totals,
+                                        **kwargs)
+
+
+class ArticleSalesTable(tables.Table):
+    name = tables.LinkColumn(
+        'articles:update',
+        args=[tables.utils.A('original_article__pk')],
+        verbose_name=_("Invoice text"),
+        accessor='original_article__name'
+    )
+    amount = tables.Column(_("Ordered"), accessor='year_amount', attrs=COLUMN_RIGHT_ALIGNED)
+    total = tables.Column(_('Total value'), attrs=COLUMN_RIGHT_ALIGNED)
+
+    class Meta:
+        template = 'common/table.html'
+        attrs = {'class': 'table table-striped'}
+        per_page = 50
+        order_by = ('-amount',)
+
+
+class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
+    table_class = ArticleSalesTable
+    column_widths = ('50%', '20%', '30%',)
+    template_name = 'invoices/article_sales_list.html'
+
+    def get_queryset(self):
+        return InvoicedArticle.objects \
+            .filter(kind=ItemKind.ARTICLE, original_article__isnull=False) \
+            .filter(price__gt=0) \
+            .filter(invoice__date_paid__year=self.kwargs['year']) \
+            .values('original_article__pk', 'original_article__name') \
+            .annotate(year_amount=models.Sum('amount'),
+                      total=models.Sum(models.F('price') * models.F('amount'))) \
+            .order_by('-year_amount')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(year=self.kwargs['year'], **kwargs)
+
+        # prepare chart data by separating x and y axis:
+        queryset = context['object_list']
+        article_amounts = [a['year_amount'] for a in queryset]
+        article_names = [a['original_article__name'] for a in queryset]
+
+        # clear names of articles with minor contribution:
+        total_amount = sum(article_amounts)
+        percentage_amounts = [a / total_amount for a in article_amounts]
+        article_names = [n if percentage_amounts[i] > 0.03 else " "
+                         for i, n in enumerate(article_names)]
+
+        context.update(article_names=article_names, article_amounts=article_amounts)
+        return context

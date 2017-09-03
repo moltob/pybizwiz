@@ -10,12 +10,15 @@
     <title>Bizwiz 4</title>
     <link rel="stylesheet"
           href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}"/>
-    <link rel="stylesheet" href="{% static 'common/site.css' %}"/>
     <link rel="stylesheet"
           href="{% static 'smartmenus/dist/addons/bootstrap/jquery.smartmenus.bootstrap.css' %}"/>
     <link rel="icon" type="image/png" href="{% static 'common/favicon-cam.png' %}" sizes="32x32" />
+
     {% block head-content %}
     {% endblock %}
+
+    {# Load site CSS last to override styles from libraries loaded in derived templates. #}
+    <link rel="stylesheet" href="{% static 'common/site.css' %}"/>
 </head>
 <body>
 

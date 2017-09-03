@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-27 11:36+0200\n"
+"POT-Creation-Date: 2017-09-02 16:52+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -23,16 +23,16 @@ msgid "Invoices"
 msgstr "Rechnungen"
 
 #: .\bizwiz\common\templates\common\navigation.html:26
-#: .\bizwiz\common\templates\common\navigation.html:49
-#: .\bizwiz\common\templates\common\navigation.html:58
-#: .\bizwiz\common\templates\common\navigation.html:67
+#: .\bizwiz\common\templates\common\navigation.html:53
+#: .\bizwiz\common\templates\common\navigation.html:62
+#: .\bizwiz\common\templates\common\navigation.html:71
 msgid "New"
 msgstr "Neu"
 
 #: .\bizwiz\common\templates\common\navigation.html:29
-#: .\bizwiz\common\templates\common\navigation.html:50
-#: .\bizwiz\common\templates\common\navigation.html:59
-#: .\bizwiz\common\templates\common\navigation.html:68
+#: .\bizwiz\common\templates\common\navigation.html:54
+#: .\bizwiz\common\templates\common\navigation.html:63
+#: .\bizwiz\common\templates\common\navigation.html:72
 msgid "Browse"
 msgstr "Übersicht"
 
@@ -45,30 +45,34 @@ msgid "Taxes pending"
 msgstr "Zu versteuern"
 
 #: .\bizwiz\common\templates\common\navigation.html:40
+msgid "Sales report"
+msgstr "Verkaufsbericht"
+
+#: .\bizwiz\common\templates\common\navigation.html:44
 msgid "Rebates"
 msgstr "Rabatte"
 
-#: .\bizwiz\common\templates\common\navigation.html:46
+#: .\bizwiz\common\templates\common\navigation.html:50
 msgid "Articles"
 msgstr "Artikel"
 
-#: .\bizwiz\common\templates\common\navigation.html:55
+#: .\bizwiz\common\templates\common\navigation.html:59
 msgid "Customers"
 msgstr "Kunden"
 
-#: .\bizwiz\common\templates\common\navigation.html:64
+#: .\bizwiz\common\templates\common\navigation.html:68
 msgid "Projects"
 msgstr "Projekte"
 
-#: .\bizwiz\common\templates\common\navigation.html:71
+#: .\bizwiz\common\templates\common\navigation.html:75
 msgid "Activate filter"
 msgstr "Filter aktivieren"
 
-#: .\bizwiz\common\templates\common\navigation.html:134
+#: .\bizwiz\common\templates\common\navigation.html:138
 msgid "Logout"
 msgstr "Ausloggen"
 
-#: .\bizwiz\common\templates\common\navigation.html:145
+#: .\bizwiz\common\templates\common\navigation.html:149
 msgid "Login"
 msgstr "Einloggen"
 
