@@ -340,7 +340,8 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
                   num_articles=models.Sum('invoiced_articles__amount'),
                   total=models.Sum(
                       models.F('invoiced_articles__price') * models.F('invoiced_articles__amount')
-                  ))
+                  )) \
+        .order_by('-year_paid')
     template_name = 'invoices/sales_list.html'
 
     def get_context_data(self, **kwargs):
