@@ -296,15 +296,29 @@ class Print(views.View):
         return services.export_invoices([invoice], 'PDF', as_attachment=False)
 
 
-class SummingColumn(tables.Column):
+class SummingMixin:
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     def render_footer(self, bound_column, table):
         return sum(bound_column.accessor.resolve(row) for row in table.data)
+
+
+class SummingColumn(SummingMixin, tables.Column):
+    """A column with a summed up footer."""
+
+
+class SummingLinkColumn(SummingMixin, tables.LinkColumn):
+    """A linked column with a summed up footer."""
 
 
 class SalesTable(tables.Table):
     year_paid = tables.Column(_('Year'))
     num_invoices = SummingColumn(_('Invoices'), attrs=COLUMN_RIGHT_ALIGNED)
-    num_articles = SummingColumn(_('Articles'), attrs=COLUMN_RIGHT_ALIGNED)
+    num_articles = SummingLinkColumn(verbose_name=_('Articles'),
+                                     viewname='invoices:sales_articles',
+                                     args=[tables.utils.A('year_paid')],
+                                     attrs=COLUMN_RIGHT_ALIGNED)
     total = SummingColumn(_('Yearly income'), attrs=COLUMN_RIGHT_ALIGNED)
 
     class Meta:
@@ -337,3 +351,7 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
         return super().get_context_data(sales_years=sales_years,
                                         sales_totals=sales_totals,
                                         **kwargs)
+
+
+class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
+    pass

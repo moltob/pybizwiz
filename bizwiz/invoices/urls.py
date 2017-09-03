@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^edit/(?P<pk>[0-9]+)/$', views.Update.as_view(), name='update'),
     url(r'^print/invoice-(?P<number>[0-9]+).pdf$', views.Print.as_view(), name='print'),
     url(r'^sales/$', views.Sales.as_view(), name='sales'),
+    url(r'^sales/(?P<year>\d{4})/articles/$', views.ArticleSales.as_view(), name='sales_articles'),
 ]
