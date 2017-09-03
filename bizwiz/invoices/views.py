@@ -369,7 +369,7 @@ class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTa
             .order_by('-year_amount')
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+        context = super().get_context_data(year=self.kwargs['year'], **kwargs)
 
         # prepare chart data by separating x and y axis:
         queryset = context['object_list']
