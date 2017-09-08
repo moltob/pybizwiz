@@ -26,9 +26,6 @@ from bizwiz.rebates.models import Rebate
 _logger = logging.getLogger(__name__)
 
 
-# Tables2 attrs preset for a right-aligned column:
-
-
 class InvoiceTable(tables.Table):
     number = tables.LinkColumn('invoices:update', args=[tables.utils.A('pk')])
     print = tables.LinkColumn('invoices:print', args=[tables.utils.A('number')], orderable=False,
