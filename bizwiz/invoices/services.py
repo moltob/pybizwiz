@@ -10,6 +10,7 @@ from django.db import transaction
 from bizwiz.articles.models import Article
 from bizwiz.invoices.export.js import InvoiceJsonExporter
 from bizwiz.invoices.export.pdf import InvoicePdfExporter
+from bizwiz.invoices.export.xlsx import InvoiceXlsxExporter
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, ItemKind, InvoicedArticle
 from bizwiz.rebates.models import RebateKind, Rebate
 
@@ -99,6 +100,7 @@ def create_invoice(*, customer, invoiced_articles=None, project=None, rebates=No
 INVOICE_EXPORTER_MAP = {e.action_key: e for e in (
     InvoicePdfExporter(),
     InvoiceJsonExporter(),
+    InvoiceXlsxExporter(),
 )}
 
 
