@@ -81,12 +81,16 @@ class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
         else:
             self.queryset = Invoice.objects.all()
 
-        subset = self.kwargs['subset']
+        subset = self.kwargs.get('subset')
         if subset == 'payable':
             self.queryset = self.queryset.filter(date_paid__isnull=True)
         elif subset == 'taxable':
             self.queryset = self.queryset.filter(date_paid__isnull=False,
                                                  date_taxes_filed__isnull=True)
+        elif subset == 'year_paid':
+            self.queryset = self.queryset.filter(date_paid__year=self.kwargs['year'])
+        elif subset:
+            _logger.warning(f'Unexpected subset {subset!r}.')
 
         strfilter = self.request.GET.get('q')
         if strfilter:
@@ -296,11 +300,18 @@ class Print(views.View):
 
 class SalesTable(tables.Table):
     year_paid = tables.Column(_('Year'))
-    num_invoices = SummingColumn(_('Invoices'), attrs=COLUMN_RIGHT_ALIGNED)
-    num_articles = SummingLinkColumn(verbose_name=_('Articles'),
-                                     viewname='invoices:sales_articles',
-                                     args=[tables.utils.A('year_paid')],
-                                     attrs=COLUMN_RIGHT_ALIGNED)
+    num_invoices = SummingLinkColumn(
+        verbose_name=_('Invoices'),
+        viewname='invoices:sales',
+        args=[tables.utils.A('year_paid')],
+        attrs=COLUMN_RIGHT_ALIGNED
+    )
+    num_articles = SummingLinkColumn(
+        verbose_name=_('Articles'),
+        viewname='invoices:sales_articles',
+        args=[tables.utils.A('year_paid')],
+        attrs=COLUMN_RIGHT_ALIGNED
+    )
     total = SummingColumn(_('Yearly income'), attrs=COLUMN_RIGHT_ALIGNED)
 
     class Meta:
