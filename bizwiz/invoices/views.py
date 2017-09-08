@@ -28,19 +28,27 @@ _logger = logging.getLogger(__name__)
 
 class InvoiceTable(tables.Table):
     number = tables.LinkColumn('invoices:update', args=[tables.utils.A('pk')])
-    print = tables.LinkColumn('invoices:print', args=[tables.utils.A('number')], orderable=False,
-                              text='', verbose_name='', attrs={
-            'a': {'class': 'glyphicon glyphicon-print'},
-        })
-    invoiced_customer = tables.Column(_("Customer"), order_by=(
-        'invoiced_customer.last_name',
-        'invoiced_customer.first_name'
-    ))
+    print = tables.LinkColumn(
+        'invoices:print',
+        args=[tables.utils.A('number')],
+        orderable=False,
+        text='',
+        verbose_name='', attrs={'a': {'class': 'glyphicon glyphicon-print'}},
+    )
+    invoiced_customer = tables.Column(
+        _("Customer"),
+        order_by=('invoiced_customer.last_name', 'invoiced_customer.first_name')
+    )
     project = tables.Column(_("Project"), order_by='project.name')
-    total = tables.Column(order_by=tables.utils.A('total'), attrs=COLUMN_RIGHT_ALIGNED)
-    selected = tables.CheckBoxColumn(accessor='pk', attrs={
-        'th__input': {'id': 'id-select-all'},
-    })
+    total = tables.Column(
+        _("Total"),
+        order_by=tables.utils.A('total'),
+        attrs=COLUMN_RIGHT_ALIGNED
+    )
+    selected = tables.CheckBoxColumn(
+        accessor='pk',
+        attrs={'th__input': {'id': 'id-select-all'}}
+    )
 
     class Meta:
         template = 'common/table.html'
