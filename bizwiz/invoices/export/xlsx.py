@@ -1,6 +1,6 @@
 """Excel export of invoice data."""
+import datetime
 import logging
-import operator
 
 import xlsxwriter
 from django.utils.translation import ugettext as _
@@ -36,13 +36,13 @@ class InvoiceXlsxExporter(InvoiceExporter):
         worksheet.set_column(5, 5, 15)
 
         data = [[
-            invoice.number,
+            f'R{invoice.number:06d}',
             invoice.date_created,
             invoice.date_paid,
             invoice.invoiced_customer.last_name,
             invoice.invoiced_customer.first_name,
             invoice.total,
-        ] for invoice in sorted(invoices, key=operator.attrgetter('date_paid'))]
+        ] for invoice in sorted(invoices, key=self.date_paid_or_today)]
 
         worksheet.add_table(0, 0, len(data) + 1, 5, {
             'style': 'Table Style Light 18',
@@ -51,10 +51,10 @@ class InvoiceXlsxExporter(InvoiceExporter):
             'columns': [{
                 'header': _("Invoice number"),
             }, {
-                'header': _("Date created"),
+                'header': _("Created"),
                 'format': date_format,
             }, {
-                'header': _("Date paid"),
+                'header': _("Paid"),
                 'format': date_format,
             }, {
                 'header': _("Last name"),
@@ -66,3 +66,7 @@ class InvoiceXlsxExporter(InvoiceExporter):
                 'total_function': 'sum',
             }]
         })
+
+    @staticmethod
+    def date_paid_or_today(invoice):
+        return invoice.date_paid if invoice.date_paid else datetime.date.today()

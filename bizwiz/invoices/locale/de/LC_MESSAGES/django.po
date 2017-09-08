@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-03 18:49+0200\n"
+"POT-Creation-Date: 2017-09-08 08:44+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -29,6 +29,38 @@ msgstr "PDF exportieren"
 #: .\bizwiz\invoices\export\pdf.py:33
 msgid "BPF Invoice R{:06d}"
 msgstr "BPF Rechnung R{:06d}"
+
+#: .\bizwiz\invoices\export\xlsx.py:17
+msgid "Export to Excel"
+msgstr "Excel exportieren"
+
+#: .\bizwiz\invoices\export\xlsx.py:27
+msgid "Income"
+msgstr "Einkommen"
+
+#: .\bizwiz\invoices\export\xlsx.py:52 .\bizwiz\invoices\models.py:26
+msgid "Invoice number"
+msgstr "Rechnungsnummer"
+
+#: .\bizwiz\invoices\export\xlsx.py:54 .\bizwiz\invoices\models.py:30
+msgid "Created"
+msgstr "Erstellt"
+
+#: .\bizwiz\invoices\export\xlsx.py:57 .\bizwiz\invoices\models.py:34
+msgid "Paid"
+msgstr "Bezahlt"
+
+#: .\bizwiz\invoices\export\xlsx.py:60
+msgid "Last name"
+msgstr "Nachname"
+
+#: .\bizwiz\invoices\export\xlsx.py:62
+msgid "First name"
+msgstr "Vorname"
+
+#: .\bizwiz\invoices\export\xlsx.py:64
+msgid "Total"
+msgstr "Gesamtwert"
 
 #: .\bizwiz\invoices\forms.py:27
 msgid "Mark as paid"
@@ -90,27 +122,15 @@ msgstr "Rechnung"
 
 #: .\bizwiz\invoices\models.py:23
 #: .\bizwiz\invoices\templates\invoices\invoice_list.html:9
-#: .\bizwiz\invoices\views.py:299
+#: .\bizwiz\invoices\views.py:301
 msgid "Invoices"
 msgstr "Rechnungen"
-
-#: .\bizwiz\invoices\models.py:26
-msgid "Invoice number"
-msgstr "Rechnungsnummer"
-
-#: .\bizwiz\invoices\models.py:30
-msgid "Created"
-msgstr "Erstellt"
-
-#: .\bizwiz\invoices\models.py:34
-msgid "Paid"
-msgstr "Bezahlt"
 
 #: .\bizwiz\invoices\models.py:39
 msgid "Taxes filed"
 msgstr "Versteuert"
 
-#: .\bizwiz\invoices\models.py:45 .\bizwiz\invoices\views.py:42
+#: .\bizwiz\invoices\models.py:45 .\bizwiz\invoices\views.py:39
 msgid "Project"
 msgstr "Projekt"
 
@@ -225,7 +245,7 @@ msgid "Edit invoice"
 msgstr "Rechnungen bearbeiten"
 
 #: .\bizwiz\invoices\templates\invoices\invoice_update.html:14
-#: .\bizwiz\invoices\views.py:38
+#: .\bizwiz\invoices\views.py:35
 msgid "Customer"
 msgstr "Kunde"
 
@@ -269,36 +289,36 @@ msgstr "Summe"
 msgid "Sales report"
 msgstr "Verkaufsbericht"
 
-#: .\bizwiz\invoices\views.py:150
+#: .\bizwiz\invoices\views.py:151
 #, python-format
 msgid "Updated: Invoice %(number)s"
 msgstr "Bearbeitet: Rechnung %(number)s"
 
-#: .\bizwiz\invoices\views.py:231
+#: .\bizwiz\invoices\views.py:232
 #, python-format
 msgid "Created: Invoice for %(customer)s"
 msgstr "Erstellt: Rechnung %(customer)s"
 
-#: .\bizwiz\invoices\views.py:298
+#: .\bizwiz\invoices\views.py:299
 msgid "Year"
 msgstr "Jahr"
 
-#: .\bizwiz\invoices\views.py:300
+#: .\bizwiz\invoices\views.py:307
 msgid "Articles"
 msgstr "Artikel"
 
-#: .\bizwiz\invoices\views.py:304
+#: .\bizwiz\invoices\views.py:312
 msgid "Yearly income"
 msgstr "Jahreseinkommen"
 
-#: .\bizwiz\invoices\views.py:343
+#: .\bizwiz\invoices\views.py:351
 msgid "Invoice text"
 msgstr "Rechnungstext"
 
-#: .\bizwiz\invoices\views.py:346
+#: .\bizwiz\invoices\views.py:354
 msgid "Ordered"
 msgstr "Bestellt"
 
-#: .\bizwiz\invoices\views.py:347
+#: .\bizwiz\invoices\views.py:355
 msgid "Total value"
 msgstr "Gesamtwert"
