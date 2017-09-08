@@ -14,3 +14,4 @@ pytest-django==3.1.2
 pytz==2017.2
 reportlab==3.4.0
 whitenoise==3.3.0
+XlsxWriter==0.9.9
