@@ -17,4 +17,4 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Removed
 
 [Unreleased]: https://github.com/moltob/pybizwiz/compare/4.3.0...HEAD
-[4.3.0]: https://github.com/olivierlacan/keep-a-changelog/compare/4.3.0...v4.2.0
+[4.3.0]: https://github.com/moltob/pybizwiz/compare/4.3.0...v4.2.0
