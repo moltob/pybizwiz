@@ -285,14 +285,22 @@ class Create(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, gener
         rebates = invoice_form.cleaned_data['rebates']
 
         with transaction.atomic():
+            invoiced_articles = invoiced_article_formset.save(commit=False)
             invoice = services.create_invoice(
                 project=project,
+                invoiced_articles=invoiced_articles,
                 customer=original_customer,
                 rebates=rebates,
             )
-            invoiced_article_formset.instance = invoice
-            invoiced_article_formset.save()
-            services.refresh_rebates(invoice)
+
+            # DEFECT:
+            # original article is not set this way
+            #   --> incomplete data
+            #   --> incorrect article sales report
+            # TODO: try to make use of full create_invoice API, do not take shortcut of formset
+            # TODO: clean up data by reading article references via name comparison
+            # TODO: implement report based on invoiced article names, not from original one
+            # TODO: remove "original" references (article and customer) if possible
 
         return self.form_valid(invoice_form)
 
