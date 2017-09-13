@@ -31,7 +31,6 @@ def test__invoiced_customer__create():
     assert c2.company_name == 'COMPANY_NAME'
     assert c2.zip_code == 'ZIP'
     assert c2.city == 'CITY'
-    assert c2.original_customer == c1
 
 
 def test__invoiced_article__create():
@@ -48,7 +47,6 @@ def test__invoiced_article__create():
     assert a2.name == 'NAME'
     assert a2.price == 1.2
     assert a2.amount == 1
-    assert a2.original_article == a1
     assert a2.kind == ItemKind.ARTICLE
 
 

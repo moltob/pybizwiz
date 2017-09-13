@@ -170,7 +170,7 @@ class UpdateForm(forms.ModelForm):
 class InvoicedCustomerForm(forms.ModelForm):
     class Meta:
         model = InvoicedCustomer
-        exclude = ('original_customer', 'invoice')
+        exclude = ('invoice', )
 
     helper = helper.FormHelper()
     helper.form_tag = False
@@ -253,7 +253,7 @@ InvoicedArticleFormset = forms.inlineformset_factory(
     min_num=1,
     validate_min=True,
     extra=0,
-    exclude=('original_article', 'invoice')
+    exclude=('invoice', )
 )
 
 

@@ -92,7 +92,6 @@ def test__create_invoice__global(customer, posted_articles):
     invoice = create_invoice(customer=customer, invoiced_articles=posted_articles)
 
     assert not invoice.project
-    assert invoice.invoiced_customer.original_customer == customer
     invoiced_articles = list(invoice.invoiced_articles.all())
     assert len(invoiced_articles) == 2
     assert invoiced_articles[0].name == 'A1'
@@ -121,18 +120,6 @@ def test__create_invoice__number_unique(customer, posted_articles):
     invoice = create_invoice(customer=customer, invoiced_articles=posted_articles)
 
     assert invoice.number not in {'123', '45'}
-
-
-@pytest.mark.django_db
-def test__create_invoice__original_article(customer, posted_articles):
-    article = Article(name='A1', price=5)
-    article.save()
-
-    invoice = create_invoice(customer=customer, invoiced_articles=posted_articles)
-
-    invoiced_articles = invoice.invoiced_articles.all()
-    assert invoiced_articles[0].original_article == article
-    assert invoiced_articles[1].original_article is None
 
 
 @pytest.fixture

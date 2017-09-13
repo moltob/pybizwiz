@@ -293,15 +293,6 @@ class Create(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, gener
                 rebates=rebates,
             )
 
-            # DEFECT:
-            # original article is not set this way
-            #   --> incomplete data
-            #   --> incorrect article sales report
-            # TODO: try to make use of full create_invoice API, do not take shortcut of formset
-            # TODO: clean up data by reading article references via name comparison
-            # TODO: implement report based on invoiced article names, not from original one
-            # TODO: remove "original" references (article and customer) if possible
-
         return self.form_valid(invoice_form)
 
 
@@ -338,6 +329,8 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
     """Sales per year."""
     table_class = SalesTable
     column_widths = ('10%', '20%', '30%', '40%',)
+
+    # TODO correct query to show yearly sum including rebates
     queryset = Invoice.objects \
         .exclude(date_paid=None) \
         .annotate(year_paid=functions.ExtractYear('date_paid')) \
