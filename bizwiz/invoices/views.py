@@ -361,12 +361,7 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
 
 
 class ArticleSalesTable(tables.Table):
-    name = tables.LinkColumn(
-        'articles:update',
-        args=[tables.utils.A('original_article__pk')],
-        verbose_name=_("Invoice text"),
-        accessor='original_article__name'
-    )
+    name = tables.Column(_("Invoice text"))
     amount = tables.Column(_("Ordered"), accessor='year_amount', attrs=COLUMN_RIGHT_ALIGNED)
     total = tables.Column(_('Total value'), attrs=COLUMN_RIGHT_ALIGNED)
 
@@ -384,10 +379,10 @@ class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTa
 
     def get_queryset(self):
         return InvoicedArticle.objects \
-            .filter(kind=ItemKind.ARTICLE, original_article__isnull=False) \
+            .filter(kind=ItemKind.ARTICLE) \
             .filter(price__gt=0) \
             .filter(invoice__date_paid__year=self.kwargs['year']) \
-            .values('original_article__pk', 'original_article__name') \
+            .values('name') \
             .annotate(year_amount=models.Sum('amount'),
                       total=models.Sum(models.F('price') * models.F('amount'))) \
             .order_by('-year_amount')
@@ -398,7 +393,7 @@ class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTa
         # prepare chart data by separating x and y axis:
         queryset = context['object_list']
         article_amounts = [a['year_amount'] for a in queryset]
-        article_names = [a['original_article__name'] for a in queryset]
+        article_names = [a['name'] for a in queryset]
 
         # clear names of articles with minor contribution:
         total_amount = sum(article_amounts)
