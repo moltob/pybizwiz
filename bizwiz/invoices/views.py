@@ -330,16 +330,21 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
     table_class = SalesTable
     column_widths = ('10%', '20%', '30%', '40%',)
 
-    # TODO correct query to show yearly sum including rebates
     queryset = Invoice.objects \
         .exclude(date_paid=None) \
         .annotate(year_paid=functions.ExtractYear('date_paid')) \
         .values('year_paid') \
-        .filter(invoiced_articles__kind=ItemKind.ARTICLE) \
-        .annotate(num_invoices=models.Count('id', distinct=True),
-                  num_articles=models.Sum('invoiced_articles__amount'),
-                  total=models.Sum(
+        .annotate(total=models.Sum(
                       models.F('invoiced_articles__price') * models.F('invoiced_articles__amount')
+                  )) \
+        .annotate(num_invoices=models.Count('id', distinct=True),
+                  num_articles=models.Sum(
+                      models.Case(
+                          models.When(invoiced_articles__kind=ItemKind.ARTICLE,
+                                      invoiced_articles__price__gt=0,
+                                      then='invoiced_articles__amount'),
+                          default=0
+                      )
                   ))
     template_name = 'invoices/sales_list.html'
 
