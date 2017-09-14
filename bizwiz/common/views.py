@@ -1,14 +1,33 @@
+import logging
+import os
+
+from django import conf
 from django.views import generic
 
 from bizwiz.common.session_filter import set_session_filter
 from bizwiz.version import BIZWIZ_VERSION
+
+_logger = logging.getLogger(__name__)
 
 
 class Welcome(generic.TemplateView):
     template_name = 'common/welcome.html'
 
     def get_context_data(self, **kwargs):
-        return super().get_context_data(version=BIZWIZ_VERSION, **kwargs)
+
+        # read an render changelog markdown:
+        try:
+            with open(os.path.join(conf.settings.BASE_DIR, 'CHANGELOG.md')) as changelogfile:
+                changelog = changelogfile.read()
+        except FileNotFoundError:
+            _logger.warning('Changelog not found.')
+            changelog = ''
+
+        return super().get_context_data(
+            version=BIZWIZ_VERSION,
+            changelog=changelog,
+            **kwargs
+        )
 
 
 class SizedColumnsMixin:
