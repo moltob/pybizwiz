@@ -12,8 +12,6 @@
                 aspiring photographer.
             {% endblocktrans %}
         </p>
-        <h2>{% trans 'Changelog' %}</h2>
-        <p>{{ changelog | safe }}</p>
         <h2>{% trans 'Resources' %}</h2>
         <p>
             {% blocktrans %}
@@ -23,8 +21,6 @@
                 <a href="https://hub.docker.com/r/mpagel/bizwiz">https://hub.docker.com/r/mpagel/bizwiz</a>.
             {% endblocktrans %}
         </p>
-
     </div>
-    <p class="small text-right">Version: {{ version }}</p>
-
+    <p class="small text-right">Version: <a href="{% url 'common:changelog' %}">{{ version }}</a></p>
 {% endblock content %}
