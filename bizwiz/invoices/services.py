@@ -81,15 +81,8 @@ def create_invoice(*, customer, invoiced_articles=None, project=None, rebates=No
     _logger.info('Creating new invoice {} for customer {}.'.format(invoice.number, customer))
 
     if invoiced_articles:
-        # get articles from database by names:
-        names = {a.name for a in invoiced_articles}
-        articles = Article.objects.filter(name__in=names)
-        article_by_name = {a.name: a for a in articles}
-
         for invoiced_article in invoiced_articles:
-            original_article = article_by_name.get(invoiced_article.name)
             invoiced_article.invoice = invoice
-            invoiced_article.original_article = original_article
             invoiced_article.save()
             _logger.debug('  {}'.format(invoiced_article))
 

@@ -21,6 +21,9 @@ pytest-django
 # PDF generation
 reportlab
 
+# markdown to html (e.g. for changelog display)
+markdown
+
 # serve static files simply via gunicorn
 whitenoise
 

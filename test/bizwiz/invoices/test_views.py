@@ -72,13 +72,6 @@ def test__sales__queryset__empty():
 
 @pytest.fixture
 def invoices_for_aggregation():
-    articles = [
-        Article(name='A', price=1),
-        Article(name='B', price=2),
-    ]
-    for a in articles:
-        a.save()
-
     invoices = [
         Invoice(number=1),
         Invoice(number=2, date_paid=datetime.date(2016, 1, 2)),
@@ -91,46 +84,41 @@ def invoices_for_aggregation():
     invoice_articles1 = [
         InvoicedArticle(
             invoice=invoices[0],
-            name='A1',
+            name='A',
             price=1,
             amount=1,
-            original_article=articles[0],
             kind=ItemKind.ARTICLE,
         ),
     ]
     invoiced_articles2 = [
         InvoicedArticle(
             invoice=invoices[1],
-            name='B1',
+            name='A',
             price=10.03,
             amount=5,
-            original_article=articles[0],
             kind=ItemKind.ARTICLE,
         ),
         InvoicedArticle(
             invoice=invoices[1],
-            name='B2',
+            name='B',
             price=11,
             amount=6,
-            original_article=articles[1],
             kind=ItemKind.ARTICLE,
         ),
     ]
     invoiced_articles3 = [
         InvoicedArticle(
             invoice=invoices[2],
-            name='C1',
+            name='A',
             price=100,
             amount=10,
-            original_article=articles[0],
             kind=ItemKind.ARTICLE,
         ),
         InvoicedArticle(
             invoice=invoices[2],
-            name='C2',
+            name='B',
             price=101,
             amount=11,
-            original_article=articles[1],
             kind=ItemKind.ARTICLE,
         ),
         InvoicedArticle(
@@ -144,18 +132,16 @@ def invoices_for_aggregation():
     invoiced_articles4 = [
         InvoicedArticle(
             invoice=invoices[3],
-            name='D1',
+            name='A',
             price=1000,
             amount=20,
-            original_article=articles[0],
             kind=ItemKind.ARTICLE,
         ),
         InvoicedArticle(
             invoice=invoices[3],
-            name='D2',
+            name='B',
             price=1001,
             amount=21,
-            original_article=articles[1],
             kind=ItemKind.ARTICLE,
         ),
     ]
@@ -182,7 +168,7 @@ def test__sales__queryset__computation(invoices_for_aggregation):
     assert sales_2016['year_paid'] == 2016
     assert sales_2016['num_invoices'] == 2
     assert sales_2016['num_articles'] == 11 + 10 + 6 + 5
-    assert sales_2016['total'] == decimal.Decimal('2227.15')
+    assert sales_2016['total'] == decimal.Decimal('2217.15')
 
 
 @pytest.mark.django_db
@@ -191,7 +177,7 @@ def test__article_sales__queryset__computation(invoices_for_aggregation):
     sales.kwargs = dict(year=2016)
     qs = sales.get_queryset()
 
-    sales_by_article_name = {s['original_article__name']: s for s in qs}
+    sales_by_article_name = {s['name']: s for s in qs}
 
     assert len(sales_by_article_name) == 2
 

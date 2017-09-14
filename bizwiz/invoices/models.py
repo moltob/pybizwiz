@@ -78,14 +78,6 @@ class InvoicedArticle(ArticleBase):
         default=ItemKind.ARTICLE,
         blank=True,
     )
-    original_article = models.ForeignKey(
-        Article,
-        on_delete=models.SET_NULL,
-        verbose_name=_("Original article"),
-        blank=True,
-        null=True,
-        related_name='invoiced_articles',
-    )
     amount = models.PositiveSmallIntegerField(_("Amount"))
     invoice = models.ForeignKey(
         Invoice,
@@ -100,7 +92,7 @@ class InvoicedArticle(ArticleBase):
 
     @classmethod
     def create(cls, invoice, article, amount):
-        invoiced_article = InvoicedArticle(invoice=invoice, original_article=article, amount=amount)
+        invoiced_article = InvoicedArticle(invoice=invoice, amount=amount)
         if article:
             copy_field_data(ArticleBase, article, invoiced_article)
         return invoiced_article
@@ -115,14 +107,6 @@ InvoicedArticle._meta.get_field('name')._unique = False
 
 
 class InvoicedCustomer(CustomerBase):
-    original_customer = models.ForeignKey(
-        Customer,
-        on_delete=models.SET_NULL,
-        verbose_name=_("Original customer"),
-        blank=True,
-        null=True,
-        related_name='invoiced_customer',
-    )
     invoice = models.OneToOneField(
         Invoice,
         verbose_name=_("Invoice"),
@@ -136,6 +120,6 @@ class InvoicedCustomer(CustomerBase):
 
     @classmethod
     def create(cls, invoice, customer):
-        invoiced_customer = InvoicedCustomer(invoice=invoice, original_customer=customer)
+        invoiced_customer = InvoicedCustomer(invoice=invoice)
         copy_field_data(CustomerBase, customer, invoiced_customer)
         return invoiced_customer

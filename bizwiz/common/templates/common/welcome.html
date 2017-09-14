@@ -12,25 +12,6 @@
                 aspiring photographer.
             {% endblocktrans %}
         </p>
-        <h2>{% trans 'Background' %}</h2>
-        <p>
-            {% blocktrans %}
-                With the official start of the photography business at
-                http://www.bpfotografie.de/, Bizwiz started in early 2007 as a Windows
-                forms application based on the .NET framework. The first version used in production
-                was Bizwiz 2 and was written in C# and used MSSQL as a server backend.
-            {% endblocktrans %}
-        </p>
-        <p>
-            {% blocktrans %}
-                After production use until end of 2016, Bizwiz was fully rewritten as a Django web
-                application, utilizing Python as well as the typical web languages. Bizwiz is still
-                a server-rendered (classic) web application, as it is truly data-driven and the
-                classic render-edit-post cycle applies very well. In addition, learning the classic
-                Django framework was also an objective of the project. Today, Bizwiz is running
-                within a Docker container on virtually any platform.
-            {% endblocktrans %}
-        </p>
         <h2>{% trans 'Resources' %}</h2>
         <p>
             {% blocktrans %}
@@ -40,8 +21,6 @@
                 <a href="https://hub.docker.com/r/mpagel/bizwiz">https://hub.docker.com/r/mpagel/bizwiz</a>.
             {% endblocktrans %}
         </p>
-
     </div>
-    <p class="small text-right">Version: {{ version }}</p>
-
+    <p class="small text-right">Version: <a href="{% url 'common:changelog' %}">{{ version }}</a></p>
 {% endblock content %}
