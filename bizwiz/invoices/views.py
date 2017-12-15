@@ -335,8 +335,9 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
         .annotate(year_paid=functions.ExtractYear('date_paid')) \
         .values('year_paid') \
         .annotate(total=models.Sum(
-                      models.F('invoiced_articles__price') * models.F('invoiced_articles__amount')
-                  )) \
+            models.F('invoiced_articles__price') * models.F('invoiced_articles__amount'),
+            output_field=models.DecimalField(),
+        )) \
         .annotate(num_invoices=models.Count('id', distinct=True),
                   num_articles=models.Sum(
                       models.Case(
@@ -382,7 +383,10 @@ class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTa
             .filter(invoice__date_paid__year=self.kwargs['year']) \
             .values('name') \
             .annotate(year_amount=models.Sum('amount'),
-                      total=models.Sum(models.F('price') * models.F('amount'))) \
+                      total=models.Sum(
+                          models.F('price') * models.F('amount'),
+                          output_field=models.DecimalField()
+                      )) \
             .order_by('-year_amount')
 
     def get_context_data(self, **kwargs):
