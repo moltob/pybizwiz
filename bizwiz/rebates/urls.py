@@ -1,9 +1,9 @@
-from django.conf.urls import url
+from django.urls import path
 
 from bizwiz.rebates import views
 
 app_name = 'rebates'
 
 urlpatterns = [
-    url(r'^$', views.Update.as_view(), {'subset': None}, name='update'),
+    path('', views.Update.as_view(), {'subset': None}, name='update'),
 ]

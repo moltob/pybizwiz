@@ -14,16 +14,17 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 
-from django.conf.urls import url, include
+from django.conf.urls import include
 from django.contrib import admin
+from django.urls import path
 
 urlpatterns = [
-    url(r'^', include('bizwiz.common.urls')),
-    url(r'^accounts/', include('bizwiz.accounts.urls')),
-    url(r'^articles/', include('bizwiz.articles.urls')),
-    url(r'^customers/', include('bizwiz.customers.urls')),
-    url(r'^invoices/', include('bizwiz.invoices.urls')),
-    url(r'^projects/', include('bizwiz.projects.urls')),
-    url(r'^rebates/', include('bizwiz.rebates.urls')),
-    url(r'^admin/', admin.site.urls),
+    path('', include('bizwiz.common.urls')),
+    path('accounts/', include('bizwiz.accounts.urls')),
+    path('articles/', include('bizwiz.articles.urls')),
+    path('customers/', include('bizwiz.customers.urls')),
+    path('invoices/', include('bizwiz.invoices.urls')),
+    path('projects/', include('bizwiz.projects.urls')),
+    path('rebates/', include('bizwiz.rebates.urls')),
+    path('admin/', admin.site.urls),
 ]

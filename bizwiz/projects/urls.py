@@ -1,11 +1,11 @@
-from django.conf.urls import url
+from django.urls import path
 
 from bizwiz.projects import views
 
 app_name = 'projects'
 
 urlpatterns = [
-    url(r'^$', views.List.as_view(), name='list'),
-    url(r'^create/$', views.Create.as_view(), name='create'),
-    url(r'^edit/(?P<pk>[0-9]+)/$', views.Update.as_view(), name='update'),
+    path('', views.List.as_view(), name='list'),
+    path('create/', views.Create.as_view(), name='create'),
+    path('edit/<int:pk>/', views.Update.as_view(), name='update'),
 ]
