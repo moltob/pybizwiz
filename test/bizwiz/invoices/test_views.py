@@ -168,7 +168,7 @@ def test__sales__queryset__computation(invoices_for_aggregation):
     assert sales_2016['year_paid'] == 2016
     assert sales_2016['num_invoices'] == 2
     assert sales_2016['num_articles'] == 11 + 10 + 6 + 5
-    assert sales_2016['total'] == decimal.Decimal('2217.15')
+    assert str(sales_2016['total']) == str(decimal.Decimal('2217.15'))
 
 
 @pytest.mark.django_db
@@ -183,7 +183,7 @@ def test__article_sales__queryset__computation(invoices_for_aggregation):
 
     sales_a = sales_by_article_name['A']
     assert sales_a['year_amount'] == 5 + 10
-    assert sales_a['total'] == decimal.Decimal('1050.15')  # 5 * 10.03 + 10 * 100
+    assert str(sales_a['total']) == str(decimal.Decimal('1050.15'))  # 5 * 10.03 + 10 * 100
 
     sales_b = sales_by_article_name['B']
     assert sales_b['year_amount'] == 6 + 11

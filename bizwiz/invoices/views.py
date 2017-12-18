@@ -336,7 +336,7 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
         .values('year_paid') \
         .annotate(total=models.Sum(
             models.F('invoiced_articles__price') * models.F('invoiced_articles__amount'),
-            output_field=models.DecimalField(),
+            output_field=models.DecimalField(decimal_places=2),
         )) \
         .annotate(num_invoices=models.Count('id', distinct=True),
                   num_articles=models.Sum(
@@ -385,7 +385,7 @@ class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTa
             .annotate(year_amount=models.Sum('amount'),
                       total=models.Sum(
                           models.F('price') * models.F('amount'),
-                          output_field=models.DecimalField()
+                          output_field=models.DecimalField(decimal_places=2)
                       )) \
             .order_by('-year_amount')
 
