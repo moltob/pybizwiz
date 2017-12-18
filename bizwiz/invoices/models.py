@@ -6,6 +6,7 @@ will still have the feeling of selecting customers and articles from the existin
 internally the incoice is decoupled from the entities after copying.
 """
 import datetime
+import decimal
 
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
@@ -59,7 +60,8 @@ class Invoice(models.Model):
     @property
     def total(self):
         """Total amount of invoice."""
-        return sum(item.total for item in self.invoiced_articles.all())
+        value = sum(item.total for item in self.invoiced_articles.all())
+        return value.quantize(decimal.Decimal('1.00'))
 
 
 class ItemKind:
