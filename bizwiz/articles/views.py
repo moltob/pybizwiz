@@ -1,3 +1,5 @@
+import decimal
+
 import django_tables2 as tables
 from django import urls
 from django.contrib.auth import mixins
@@ -30,6 +32,9 @@ class ArticleTable(tables.Table):
         model = Article
         fields = ('name', 'price', 'inactive')
         order_by = ('name',)
+
+    def render_price(self, value):
+        return value.quantize(decimal.Decimal('1.00'))
 
 
 class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
