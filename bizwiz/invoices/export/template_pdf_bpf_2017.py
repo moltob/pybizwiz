@@ -68,55 +68,6 @@ ITEMS_TABLE_COL_WIDTHS = (
 _logger = logging.getLogger(__name__)
 
 
-class BpfInvoiceDocTemplate(platypus.BaseDocTemplate):
-    def __init__(self, filename, text_blocks, **kwargs):
-        self.text_blocks = text_blocks
-
-        pagetemplates = [
-            BpfFirstPageTemplate(id='bpf.first', autoNextPageTemplate='bpf.next'),
-            BpfPageTemplate(id='bpf.next')
-        ]
-
-        super().__init__(
-            filename,
-            pagesize=PAGESIZE,
-            pageTemplates=pagetemplates,
-            **kwargs
-        )
-
-    @property
-    def flowables(self):
-        normalstyle = STYLESHEET['Normal']
-        bodystyle = STYLESHEET['BodyText']
-
-        # turn long article names into paragraphs to allow linebreaks in cell:
-        article_data = [[
-                            platypus.Paragraph(row[0], normalstyle) if row[0] else None,
-                            row[1],
-                            row[2],
-                            row[3]
-                        ] for row in self.text_blocks.iter_article_rows()]
-
-        return [
-            platypus.Paragraph(self.text_blocks.clause_date, STYLESHEET['Date']),
-            platypus.Paragraph(self.text_blocks.clause_subject, STYLESHEET['Subject']),
-            platypus.Paragraph(self.text_blocks.clause_salutation, bodystyle),
-            platypus.Paragraph(self.text_blocks.clause_body_top, bodystyle),
-            platypus.Table(
-                article_data,
-                style=ITEMS_TABLE_STYLE,
-                colWidths=ITEMS_TABLE_COL_WIDTHS,
-                spaceBefore=FONT_SIZE,
-                spaceAfter=FONT_SIZE,
-                repeatRows=1,
-            ),
-            platypus.Paragraph(self.text_blocks.clause_body_bottom, bodystyle),
-            platypus.Paragraph(self.text_blocks.clause_taxinfo, bodystyle),
-            platypus.Paragraph(self.text_blocks.clause_closing, bodystyle),
-            platypus.Paragraph(self.text_blocks.clause_signature, bodystyle),
-        ]
-
-
 class BpfPageTemplate(platypus.PageTemplate):
     BORDER_TOP = 5.5 * units.cm
     BORDER_BOTTOM = 3.7 * units.cm
@@ -140,9 +91,10 @@ class BpfPageTemplate(platypus.PageTemplate):
         )
 
     def beforeDrawPage(self, canv: canvas.Canvas, doc):
-        canv.drawImage(self.PAGE_BG_IMAGE_PATH,
-                       0, 0, width=PAGE_WIDTH, height=PAGE_HEIGHT,
-                       preserveAspectRatio=True, anchor='s')
+        if self.PAGE_BG_IMAGE_PATH:
+            canv.drawImage(self.PAGE_BG_IMAGE_PATH,
+                           0, 0, width=PAGE_WIDTH, height=PAGE_HEIGHT,
+                           preserveAspectRatio=True, anchor='s')
 
 
 class BpfFirstPageTemplate(BpfPageTemplate):
@@ -163,3 +115,51 @@ class BpfFirstPageTemplate(BpfPageTemplate):
         for line in doc.text_blocks.iter_address_field_lines():
             canv.drawString(BORDER_LEFT, ypos, line)
             ypos -= leading
+
+
+class BpfInvoiceDocTemplate(platypus.BaseDocTemplate):
+    PAGE_TEMPLATES = [
+        BpfFirstPageTemplate(id='bpf.first', autoNextPageTemplate='bpf.next'),
+        BpfPageTemplate(id='bpf.next')
+    ]
+
+    def __init__(self, filename, text_blocks, **kwargs):
+        self.text_blocks = text_blocks
+        super().__init__(
+            filename,
+            pagesize=PAGESIZE,
+            pageTemplates=self.PAGE_TEMPLATES,
+            **kwargs
+        )
+
+    @property
+    def flowables(self):
+        normalstyle = STYLESHEET['Normal']
+        bodystyle = STYLESHEET['BodyText']
+
+        # turn long article names into paragraphs to allow linebreaks in cell:
+        article_data = [[
+            platypus.Paragraph(row[0], normalstyle) if row[0] else None,
+            row[1],
+            row[2],
+            row[3]
+        ] for row in self.text_blocks.iter_article_rows()]
+
+        return [
+            platypus.Paragraph(self.text_blocks.clause_date, STYLESHEET['Date']),
+            platypus.Paragraph(self.text_blocks.clause_subject, STYLESHEET['Subject']),
+            platypus.Paragraph(self.text_blocks.clause_salutation, bodystyle),
+            platypus.Paragraph(self.text_blocks.clause_body_top, bodystyle),
+            platypus.Table(
+                article_data,
+                style=ITEMS_TABLE_STYLE,
+                colWidths=ITEMS_TABLE_COL_WIDTHS,
+                spaceBefore=FONT_SIZE,
+                spaceAfter=FONT_SIZE,
+                repeatRows=1,
+            ),
+            platypus.Paragraph(self.text_blocks.clause_body_bottom, bodystyle),
+            platypus.Paragraph(self.text_blocks.clause_taxinfo, bodystyle),
+            platypus.Paragraph(self.text_blocks.clause_closing, bodystyle),
+            platypus.Paragraph(self.text_blocks.clause_signature, bodystyle),
+        ]

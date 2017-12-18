@@ -9,6 +9,8 @@ from django.utils.translation import ugettext as _
 from bizwiz.customers.models import Salutation
 from bizwiz.invoices.export.exporter import InvoiceExporter
 from bizwiz.invoices.export.template_pdf_bpf_2017 import BpfInvoiceDocTemplate
+from bizwiz.invoices.export.template_pdf_bpf_2017_full_letterhead import \
+    BpfFullLetterheadDocTemplate
 
 _logger = logging.getLogger(__name__)
 
@@ -18,6 +20,7 @@ class InvoicePdfExporter(InvoiceExporter):
     extension = 'pdf'
     action_key = 'PDF'
     action_name = _("Export PDF")
+    document_template = BpfInvoiceDocTemplate
 
     def export(self, invoices, fileobj):
         merger = PyPDF2.PdfFileMerger()
@@ -27,7 +30,7 @@ class InvoicePdfExporter(InvoiceExporter):
 
             # cannot use context manager, as merger requires streams to be available during write:
             buffer = io.BytesIO()
-            doc = BpfInvoiceDocTemplate(
+            doc = self.document_template(
                 buffer,
                 TextBlocks(invoice),
                 title=_('BPF Invoice R{:06d}').format(invoice.number),
@@ -36,6 +39,12 @@ class InvoicePdfExporter(InvoiceExporter):
             merger.append(buffer)
 
         merger.write(fileobj)
+
+
+class InvoicePdfFullLetterheadExporter(InvoicePdfExporter):
+    action_key = 'PDF2'
+    action_name = _("Export PDF (full letterhead)")
+    document_template = BpfFullLetterheadDocTemplate
 
 
 class TextBlocks:
