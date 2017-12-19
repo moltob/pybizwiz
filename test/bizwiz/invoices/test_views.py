@@ -1,14 +1,11 @@
+import datetime
+import decimal
+import itertools
 from unittest import mock
 
-import datetime
-
-import itertools
-
-import decimal
 import pytest
-from django import http
+from djmoney import money
 
-from bizwiz.articles.models import Article
 from bizwiz.invoices.forms import InvoiceAction
 from bizwiz.invoices.models import Invoice, InvoicedArticle, ItemKind
 from bizwiz.invoices.views import List, Update, Sales, ArticleSales
@@ -65,7 +62,7 @@ def test__update_view__forms_valid__refreshes_rebates(mock_invoice_services):
 
 @pytest.mark.django_db
 def test__sales__queryset__empty():
-    qs = Sales.queryset
+    qs = Sales().get_queryset()
     data = qs.all()
     assert not data
 
@@ -85,7 +82,7 @@ def invoices_for_aggregation():
         InvoicedArticle(
             invoice=invoices[0],
             name='A',
-            price=1,
+            price=money.Money(1, 'EUR'),
             amount=1,
             kind=ItemKind.ARTICLE,
         ),
@@ -94,14 +91,14 @@ def invoices_for_aggregation():
         InvoicedArticle(
             invoice=invoices[1],
             name='A',
-            price=10.03,
+            price=money.Money(10.03, 'EUR'),
             amount=5,
             kind=ItemKind.ARTICLE,
         ),
         InvoicedArticle(
             invoice=invoices[1],
             name='B',
-            price=11,
+            price=money.Money(11, 'EUR'),
             amount=6,
             kind=ItemKind.ARTICLE,
         ),
@@ -110,21 +107,21 @@ def invoices_for_aggregation():
         InvoicedArticle(
             invoice=invoices[2],
             name='A',
-            price=100,
+            price=money.Money(100, 'EUR'),
             amount=10,
             kind=ItemKind.ARTICLE,
         ),
         InvoicedArticle(
             invoice=invoices[2],
             name='B',
-            price=101,
+            price=money.Money(101, 'EUR'),
             amount=11,
             kind=ItemKind.ARTICLE,
         ),
         InvoicedArticle(
             invoice=invoices[2],
             name='C3 Rebate',
-            price=-10,
+            price=money.Money(-10, 'EUR'),
             amount=1,
             kind=ItemKind.REBATE,
         ),
@@ -133,14 +130,14 @@ def invoices_for_aggregation():
         InvoicedArticle(
             invoice=invoices[3],
             name='A',
-            price=1000,
+            price=money.Money(1000, 'EUR'),
             amount=20,
             kind=ItemKind.ARTICLE,
         ),
         InvoicedArticle(
             invoice=invoices[3],
             name='B',
-            price=1001,
+            price=money.Money(1001, 'EUR'),
             amount=21,
             kind=ItemKind.ARTICLE,
         ),
@@ -154,7 +151,7 @@ def invoices_for_aggregation():
 
 @pytest.mark.django_db
 def test__sales__queryset__computation(invoices_for_aggregation):
-    qs = Sales.queryset
+    qs = Sales().get_queryset()
     assert len(qs) == 2
 
     sales_by_year = {s['year_paid']: s for s in qs}
@@ -162,13 +159,15 @@ def test__sales__queryset__computation(invoices_for_aggregation):
     sales_2017 = sales_by_year[2017]
     assert sales_2017['num_invoices'] == 1
     assert sales_2017['num_articles'] == 20 + 21
-    assert sales_2017['total'] == 21 * 1001 + 20 * 1000
+    assert sales_2017['total'] == decimal.Decimal(21 * 1001 + 20 * 1000)
+    assert sales_2017['total_currency'] == 'EUR'
 
     sales_2016 = sales_by_year[2016]
     assert sales_2016['year_paid'] == 2016
     assert sales_2016['num_invoices'] == 2
     assert sales_2016['num_articles'] == 11 + 10 + 6 + 5
-    assert str(sales_2016['total']) == str(decimal.Decimal('2217.15'))
+    assert sales_2016['total'] == decimal.Decimal('2217.15')
+    assert sales_2016['total_currency'] == 'EUR'
 
 
 @pytest.mark.django_db
@@ -183,8 +182,10 @@ def test__article_sales__queryset__computation(invoices_for_aggregation):
 
     sales_a = sales_by_article_name['A']
     assert sales_a['year_amount'] == 5 + 10
-    assert str(sales_a['total']) == str(decimal.Decimal('1050.15'))  # 5 * 10.03 + 10 * 100
+    assert sales_a['total'] == decimal.Decimal('1050.15')  # 5 * 10.03 + 10 * 100
+    assert sales_a['total_currency'] == 'EUR'
 
     sales_b = sales_by_article_name['B']
     assert sales_b['year_amount'] == 6 + 11
-    assert sales_b['total'] == 6 * 11 + 11 * 101
+    assert sales_b['total'] == decimal.Decimal(6 * 11 + 11 * 101)
+    assert sales_b['total_currency'] == 'EUR'
