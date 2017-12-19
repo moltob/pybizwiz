@@ -4,6 +4,7 @@ import datetime
 
 import decimal
 import pytest
+from djmoney import money
 
 from bizwiz.articles.models import Article
 from bizwiz.customers.models import Customer, Salutation
@@ -75,8 +76,8 @@ def test__get_next_invoice_number__many():
 
 @pytest.fixture
 def posted_articles():
-    a1 = InvoicedArticle(name='A1', price=decimal.Decimal.from_float(1.23), amount=2)
-    a2 = InvoicedArticle(name='A2', price=decimal.Decimal.from_float(4), amount=3)
+    a1 = InvoicedArticle(name='A1', price=1.23, amount=2)
+    a2 = InvoicedArticle(name='A2', price=4, amount=3)
     return [a1, a2]
 
 
@@ -95,10 +96,10 @@ def test__create_invoice__global(customer, posted_articles):
     invoiced_articles = list(invoice.invoiced_articles.all())
     assert len(invoiced_articles) == 2
     assert invoiced_articles[0].name == 'A1'
-    assert 1.229 < invoiced_articles[0].price < 1.231
+    assert invoiced_articles[0].price == money.Money(1.23, 'EUR')
     assert invoiced_articles[0].amount == 2
     assert invoiced_articles[1].name == 'A2'
-    assert 3.999 < invoiced_articles[1].price < 4.001
+    assert invoiced_articles[1].price == money.Money(4, 'EUR')
     assert invoiced_articles[1].amount == 3
 
 
@@ -159,15 +160,15 @@ def assert_rebate_reapplication_does_not_change_invoice(invoice):
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(('amount', 'price'), [
-    (20, decimal.Decimal('24.30')),  # rebate not applicable
-    (11, decimal.Decimal('24.30')),  # still not applicable
-    (10, decimal.Decimal('23.07')),  # one off
-    (9, decimal.Decimal('23.07')),  # one off
-    (6, decimal.Decimal('23.07')),  # one off
-    (5, decimal.Decimal('21.84')),  # two off
-    (4, decimal.Decimal('21.84')),  # two off
-    (1, decimal.Decimal('24.30')),  # not useful, original price
-    (0, decimal.Decimal('24.30')),  # not useful, original price
+    (20, money.Money(24.3, 'EUR')),  # rebate not applicable
+    (11, money.Money(24.3, 'EUR')),  # still not applicable
+    (10, money.Money(23.07, 'EUR')),  # one off
+    (9, money.Money(23.07, 'EUR')),  # one off
+    (6, money.Money(23.07, 'EUR')),  # one off
+    (5, money.Money(21.84, 'EUR')),  # two off
+    (4, money.Money(21.84, 'EUR')),  # two off
+    (1, money.Money(24.3, 'EUR')),  # not useful, original price
+    (0, money.Money(24.3, 'EUR')),  # not useful, original price
 ])
 def test__create_invoice__rebate_one_free(customer, posted_articles, amount, price):
     rebate1 = Rebate(name='Rebate', kind=RebateKind.ONE_FREE_PER, value=amount, auto_apply=False)
@@ -194,7 +195,7 @@ def test__create_invoice__rebate_percentage(customer, posted_articles):
                              invoiced_articles=posted_articles,
                              rebates=rebates)
 
-    assert invoice.total == decimal.Decimal('11.57')
+    assert invoice.total == money.Money(11.57, 'EUR')
     assert_rebate_reapplication_does_not_change_invoice(invoice)
 
 
@@ -209,7 +210,7 @@ def test__create_invoice__rebate_absolute(customer, posted_articles):
                              invoiced_articles=posted_articles,
                              rebates=rebates)
 
-    assert invoice.total == decimal.Decimal('9.46')
+    assert invoice.total == money.Money(9.46, 'EUR')
     assert_rebate_reapplication_does_not_change_invoice(invoice)
 
 
@@ -225,4 +226,4 @@ def test__create_invoice__rebate_absolute_greater_total(customer, posted_article
                              rebates=rebates)
 
     # rebate is larger than total of invoice, prevent negative invoice:
-    assert invoice.total == decimal.Decimal('0.00')
+    assert invoice.total == money.Money(0, 'EUR')

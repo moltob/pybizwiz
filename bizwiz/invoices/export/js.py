@@ -29,7 +29,7 @@ class InvoiceJsonExporter(InvoiceExporter):
                 date_taxes_filed=invoice.date_taxes_filed,
                 last_name=invoice.invoiced_customer.last_name,
                 first_name=invoice.invoiced_customer.first_name,
-                total=invoice.total.quantize(decimal.Decimal('1.00'))
+                total=invoice.total.amount.quantize(decimal.Decimal('1.00'))
             )
             js_invoices.append(js_invoice)
 
