@@ -83,7 +83,7 @@
 
     var selectableArticles = [{% for article in articles %}{
         name: "{{ article.name|escapejs }}",
-        price: {{ article.price|unlocalize }}
+        price: {{ article.price.amount|unlocalize }}
     }{% if not forloop.last %}, {% endif %}{% endfor %}
     ];
 
