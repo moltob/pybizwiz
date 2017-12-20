@@ -9,6 +9,7 @@ adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 - Migration to [django-money](https://github.com/django-money/django-money), currency-aware
   representation of money values.
+- Added currency to all forms and views.
 
 ## 4.4.0
 ### Added
