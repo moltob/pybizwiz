@@ -5,7 +5,7 @@ from django import forms
 from django.db.models import BLANK_CHOICE_DASH
 from django.utils.translation import ugettext as _
 
-from bizwiz.common.crispy_forms import PickableDateField
+from bizwiz.common.crispy_forms import PickableDateField, MoneyAmountField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
 from bizwiz.common.selectize import ChoiceCharField, ModelChoiceCharField, \
     ModelMultipleChoiceCharField
@@ -198,7 +198,7 @@ class InvoicedArticleForm(forms.ModelForm):
     name = ChoiceCharField(label=InvoicedArticle._meta.get_field('name').verbose_name)
 
     # prevent use of number input widgets which feature undesired +/- buttons:
-    price = forms.DecimalField(
+    price = MoneyAmountField(
         widget=forms.TextInput,
         decimal_places=2,
         localize=True,

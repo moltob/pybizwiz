@@ -4,10 +4,19 @@ from django import forms
 from django.utils.translation import ugettext as _
 
 from bizwiz.articles.models import Article
+from bizwiz.common.crispy_forms import MoneyAmountField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
 
 
 class UpdateForm(forms.ModelForm):
+    # prevent use of number input widgets which feature undesired +/- buttons:
+    price = MoneyAmountField(
+        widget=forms.TextInput,
+        decimal_places=2,
+        localize=True,
+        label=Article._meta.get_field('price').verbose_name
+    )
+
     class Meta:
         model = Article
         fields = '__all__'
