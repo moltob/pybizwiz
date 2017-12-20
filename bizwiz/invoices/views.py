@@ -303,7 +303,7 @@ class Create(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, gener
 class Print(views.View):
     def get(self, request, number):
         invoice = shortcuts.get_object_or_404(Invoice, number=number)
-        return services.export_invoices([invoice], 'PDF', as_attachment=False)
+        return services.export_invoices([invoice], 'PDF2', as_attachment=False)
 
 
 class SalesTable(tables.Table):
