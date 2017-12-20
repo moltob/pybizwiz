@@ -4,10 +4,20 @@ from django import forms
 from django.utils.translation import ugettext as _
 
 from bizwiz.articles.models import Article
+from bizwiz.common.crispy_forms import MoneyAmountField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
+from bwsite.settings import DEFAULT_CURRENCY_SIGN
 
 
 class UpdateForm(forms.ModelForm):
+    # prevent use of number input widgets which feature undesired +/- buttons:
+    price = MoneyAmountField(
+        widget=forms.TextInput,
+        decimal_places=2,
+        localize=True,
+        label=Article._meta.get_field('price').verbose_name
+    )
+
     class Meta:
         model = Article
         fields = '__all__'
@@ -16,6 +26,13 @@ class UpdateForm(forms.ModelForm):
     helper.form_class = 'form-horizontal'
     helper.label_class = 'col-lg-2'
     helper.field_class = 'col-lg-8'
+    helper.layout = layout.Layout(
+        # since a dynamic formset is used, there is no need to allow posting empty fields for
+        # unused extra forms, so all fields can be explicitly required:
+        layout.Field('name', required=''),
+        bootstrap.AppendedText('price', DEFAULT_CURRENCY_SIGN, required=''),
+        layout.Field('inactive'),
+    )
     helper.add_input(layout.Submit('submit', _("Submit")))
 
 
@@ -44,9 +61,15 @@ class BaseArticleFormset(forms.BaseModelFormSet):
             # since a dynamic formset is used, there is no need to allow posting empty fields for
             # unused extra forms, so all fields can be explicitly required:
             layout.Div(layout.Field('name', required=''), css_class='col-lg-9'),
-            layout.Div(layout.Field(
-                'price', required='', css_class='text-right'),
-                css_class='col-lg-2'),
+            layout.Div(
+                bootstrap.AppendedText(
+                    'price',
+                    DEFAULT_CURRENCY_SIGN,
+                    required='',
+                    css_class='text-right'
+                ),
+                css_class='col-lg-2'
+            ),
             layout.Div(remove_form_button_factory(), css_class='col-lg-1 text-right'),
             layout.Field('DELETE', style='display:none;'),
             data_formset_form='',

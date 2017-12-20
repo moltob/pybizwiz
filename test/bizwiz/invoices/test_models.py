@@ -1,6 +1,7 @@
 import decimal
 
 import pytest
+from djmoney import money
 
 from bizwiz.articles.models import ArticleBase, Article
 from bizwiz.customers.models import Customer, Salutation, CustomerBase
@@ -34,10 +35,10 @@ def test__invoiced_customer__create():
 
 
 def test__invoiced_article__create():
-    assert len(ArticleBase._meta.get_fields()) == 2, 'ArticleBase changed, adapt test case.'
+    assert len(ArticleBase._meta.get_fields()) == 3, 'ArticleBase changed, adapt test case.'
     a1 = Article(
         name='NAME',
-        price=1.2,
+        price=money.Money(1.2, 'USD'),  # stored as one field per amount, currency
     )
     invoice = Invoice()
 
@@ -45,7 +46,7 @@ def test__invoiced_article__create():
 
     assert a2.invoice == invoice
     assert a2.name == 'NAME'
-    assert a2.price == 1.2
+    assert a2.price == money.Money(1.2, 'USD')
     assert a2.amount == 1
     assert a2.kind == ItemKind.ARTICLE
 
@@ -62,4 +63,5 @@ def test__invoice__total():
     a = InvoicedArticle(invoice=invoice, price=-0.5, amount=2)
     a.save()
 
-    assert str(invoice.total) == str(decimal.Decimal('0.20'))
+    assert invoice.total == money.Money(0.2, 'EUR')
+    assert str(invoice.total) == '0,20 €'

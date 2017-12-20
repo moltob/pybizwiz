@@ -1,6 +1,9 @@
+import decimal
 import logging
 
 import django_tables2 as tables
+import djmoney.models.fields
+import djmoney.models.managers
 from django import shortcuts
 from django import urls, views
 from django.contrib.auth import mixins
@@ -10,6 +13,7 @@ from django.db import transaction
 from django.db.models import functions
 from django.utils.translation import ugettext as _
 from django.views import generic
+from djmoney import money
 
 from bizwiz.articles.models import ArticleBase
 from bizwiz.articles.services import get_articles_for_project, get_session_filtered_articles
@@ -20,7 +24,7 @@ from bizwiz.invoices import services
 from bizwiz.invoices.forms import InvoiceAction, ListActionForm, UpdateForm, InvoicedCustomerForm, \
     InvoicedArticleFormset, CreateForm
 from bizwiz.invoices.models import Invoice, InvoicedArticle, ItemKind
-from bizwiz.invoices.tables import COLUMN_RIGHT_ALIGNED, SummingColumn, SummingLinkColumn
+from bizwiz.invoices.tables import COLUMN_RIGHT_ALIGNED, SummingMoneyColumn, SummingLinkColumn
 from bizwiz.rebates.models import Rebate
 
 _logger = logging.getLogger(__name__)
@@ -316,7 +320,10 @@ class SalesTable(tables.Table):
         args=[tables.utils.A('year_paid')],
         attrs=COLUMN_RIGHT_ALIGNED
     )
-    total = SummingColumn(_('Yearly income'), attrs=COLUMN_RIGHT_ALIGNED)
+    total = SummingMoneyColumn(_('Yearly income'), attrs=COLUMN_RIGHT_ALIGNED)
+
+    def render_total(self, record, value):
+        return money.Money(value, record['total_currency'])
 
     class Meta:
         template = 'common/table.html'
@@ -329,15 +336,19 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
     """Sales per year."""
     table_class = SalesTable
     column_widths = ('10%', '20%', '30%', '40%',)
+    template_name = 'invoices/sales_list.html'
 
     queryset = Invoice.objects \
         .exclude(date_paid=None) \
         .annotate(year_paid=functions.ExtractYear('date_paid')) \
         .values('year_paid') \
-        .annotate(total=models.Sum(
-            models.F('invoiced_articles__price') * models.F('invoiced_articles__amount'),
-            output_field=models.DecimalField(decimal_places=2),
-        )) \
+        .annotate(
+            total=models.Sum(
+                models.F('invoiced_articles__price') * models.F('invoiced_articles__amount'),
+                output_field=models.DecimalField(decimal_places=2),
+            ),
+            total_currency=models.F('invoiced_articles__price_currency'),
+        ) \
         .annotate(num_invoices=models.Count('id', distinct=True),
                   num_articles=models.Sum(
                       models.Case(
@@ -347,12 +358,12 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
                           default=0
                       )
                   ))
-    template_name = 'invoices/sales_list.html'
 
     def get_context_data(self, **kwargs):
         # prepare chart data by separating x and y axis:
-        sales_years = [p['year_paid'] for p in self.queryset]
-        sales_totals = [p['total'] for p in self.queryset]
+        queryset = self.get_queryset()
+        sales_years = [p['year_paid'] for p in queryset]
+        sales_totals = [p['total'] for p in queryset]
 
         return super().get_context_data(sales_years=sales_years,
                                         sales_totals=sales_totals,
@@ -386,7 +397,9 @@ class ArticleSales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTa
                       total=models.Sum(
                           models.F('price') * models.F('amount'),
                           output_field=models.DecimalField(decimal_places=2)
-                      )) \
+                      ),
+                      total_currency=models.F('price_currency'),
+                      ) \
             .order_by('-year_amount')
 
     def get_context_data(self, **kwargs):

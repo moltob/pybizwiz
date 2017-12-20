@@ -60,8 +60,7 @@ class Invoice(models.Model):
     @property
     def total(self):
         """Total amount of invoice."""
-        value = sum(item.total for item in self.invoiced_articles.all())
-        return value.quantize(decimal.Decimal('1.00'))
+        return sum(item.total for item in self.invoiced_articles.all())
 
 
 class ItemKind:

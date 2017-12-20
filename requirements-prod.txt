@@ -4,6 +4,7 @@ Django==2.0
 django-crispy-forms==1.7.0
 -e git+https://mpagel@bitbucket.org/mpagel/django-formset-js.git@985e2487581b492faccac820fecc6de432081235#egg=django_formset_js
 django-jquery-js==3.1.1
+django-money==0.12.3
 django-tables2==1.17.0
 gunicorn==19.7.1
 Markdown==2.6.10
@@ -11,6 +12,7 @@ olefile==0.44
 Pillow==4.3.0
 pluggy==0.6.0
 py==1.5.2
+py-moneyed==0.7.0
 PyPDF2==1.26.0
 pytest==3.3.1
 pytest-django==3.1.2

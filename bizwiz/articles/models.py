@@ -1,3 +1,4 @@
+import djmoney.models.fields
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
@@ -8,7 +9,7 @@ class ArticleBase(models.Model):
         max_length=128,
         unique=True,
     )
-    price = models.DecimalField(
+    price = djmoney.models.fields.MoneyField(
         _("Unit price"),
         max_digits=6,
         decimal_places=2

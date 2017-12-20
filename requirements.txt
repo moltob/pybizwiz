@@ -3,6 +3,10 @@ Django
 # HTML rendering and layout of forms and formsets
 django-crispy-forms
 
+# Representation of currency in Django
+django-money
+py-moneyed
+
 # Client-side adding and deleting of formset rows
 -e git+https://mpagel@bitbucket.org/mpagel/django-formset-js.git@985e2487581b492faccac820fecc6de432081235#egg=django_formset_js
 

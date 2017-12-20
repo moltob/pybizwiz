@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/1.10/ref/settings/
 """
 
 import os
+
+import moneyed
+import moneyed.localization
 from django.contrib import messages
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -47,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'djangoformsetjs',
     'django_tables2',
+    'djmoney',
 ]
 
 MIDDLEWARE = [
@@ -125,6 +129,18 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
+
+DEFAULT_CURRENCY = moneyed.EUR
+CURRENCIES = ('EUR',)
+
+# remember default currency sign:
+formatter = moneyed.localization._FORMATTER
+DEFAULT_CURRENCY_SIGN = formatter.get_sign_definition(DEFAULT_CURRENCY.code, 'de_DE')[1].strip()
+
+# fix group sign for EUR in moneyed:
+currency_formatter = formatter.get_formatting_definition('de_DE')
+assert currency_formatter['group_separator'] == ' ', 'Unexpected change in default.'
+currency_formatter['group_separator'] = '.'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/

@@ -1,6 +1,5 @@
 import functools
 import io
-import locale
 import logging
 
 import PyPDF2
@@ -102,12 +101,10 @@ class TextBlocks:
         return "Ihre Britta Pagel"
 
     def iter_article_rows(self):
-        currency = functools.partial(locale.currency, grouping=True)
-
         yield ['Artikel', 'Stückpreis', 'Anzahl', 'Gesamt']
         for item in self.invoice.invoiced_articles.iterator():
-            yield [item.name, currency(item.price), item.amount, currency(item.total)]
-        yield [None, None, None, currency(self.invoice.total)]
+            yield [item.name, str(item.price), item.amount, str(item.total)]
+        yield [None, None, None, str(self.invoice.total)]
 
     def iter_address_field_lines(self):
         customer = self.invoice.invoiced_customer

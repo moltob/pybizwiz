@@ -33,9 +33,6 @@ class ArticleTable(tables.Table):
         fields = ('name', 'price', 'inactive')
         order_by = ('name',)
 
-    def render_price(self, value):
-        return value.quantize(decimal.Decimal('1.00'))
-
 
 class List(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView):
     model = Article

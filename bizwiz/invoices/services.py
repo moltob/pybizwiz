@@ -6,6 +6,7 @@ import logging
 from django import http
 from django.db import models
 from django.db import transaction
+from djmoney import money
 
 from bizwiz.articles.models import Article
 from bizwiz.invoices.export.js import InvoiceJsonExporter
@@ -150,10 +151,6 @@ def apply_rebate_percentage(invoice: Invoice, rebate: Rebate):
 
     factor_percent = decimal.Decimal('0.01')
     rebate_price = -invoice.total * rebate.value * factor_percent
-
-    # two names for the same value needed below:
-    precision = factor_percent
-    rebate_price = rebate_price.quantize(precision)
     rebate_item = InvoicedArticle(invoice=invoice, name=rebate.name, price=rebate_price, amount=1,
                                   kind=ItemKind.REBATE)
     rebate_item.save()
@@ -165,11 +162,14 @@ def apply_rebate_absolute(invoice: Invoice, rebate: Rebate):
         _logger.warning('Deducting a negative or null amount is not feasible.')
         return
 
-    if rebate.value < invoice.total:
-        rebate_price = -rebate.value
+    # turn generic value into money value with matching currency:
+    value = money.Money(rebate.value, invoice.total.currency)
+
+    if value < invoice.total:
+        rebate_price = -value
     else:
         _logger.debug('Rebate of {} is more than invoice total {}, limiting rebate.'.format(
-            rebate.value,
+            value,
             invoice.total,
         ))
         rebate_price = -invoice.total
