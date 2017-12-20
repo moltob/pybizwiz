@@ -6,6 +6,7 @@ from django.utils.translation import ugettext as _
 from bizwiz.articles.models import Article
 from bizwiz.common.crispy_forms import MoneyAmountField
 from bizwiz.common.dynamic_formset import remove_form_button_factory
+from bwsite.settings import DEFAULT_CURRENCY_SIGN
 
 
 class UpdateForm(forms.ModelForm):
@@ -53,9 +54,15 @@ class BaseArticleFormset(forms.BaseModelFormSet):
             # since a dynamic formset is used, there is no need to allow posting empty fields for
             # unused extra forms, so all fields can be explicitly required:
             layout.Div(layout.Field('name', required=''), css_class='col-lg-9'),
-            layout.Div(layout.Field(
-                'price', required='', css_class='text-right'),
-                css_class='col-lg-2'),
+            layout.Div(
+                bootstrap.AppendedText(
+                    'price',
+                    DEFAULT_CURRENCY_SIGN,
+                    required='',
+                    css_class='text-right'
+                ),
+                css_class='col-lg-2'
+            ),
             layout.Div(remove_form_button_factory(), css_class='col-lg-1 text-right'),
             layout.Field('DELETE', style='display:none;'),
             data_formset_form='',

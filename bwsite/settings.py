@@ -133,8 +133,12 @@ USE_TZ = True
 DEFAULT_CURRENCY = moneyed.EUR
 CURRENCIES = ('EUR',)
 
+# remember default currency sign:
+formatter = moneyed.localization._FORMATTER
+DEFAULT_CURRENCY_SIGN = formatter.get_sign_definition(DEFAULT_CURRENCY.code, 'de_DE')[1].strip()
+
 # fix group sign for EUR in moneyed:
-currency_formatter = moneyed.localization._FORMATTER.get_formatting_definition('de_DE')
+currency_formatter = formatter.get_formatting_definition('de_DE')
 assert currency_formatter['group_separator'] == ' ', 'Unexpected change in default.'
 currency_formatter['group_separator'] = '.'
 

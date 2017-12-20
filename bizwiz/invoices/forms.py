@@ -13,6 +13,7 @@ from bizwiz.customers.models import Customer
 from bizwiz.invoices.models import Invoice, InvoicedCustomer, InvoicedArticle
 from bizwiz.invoices.services import INVOICE_EXPORTER_MAP
 from bizwiz.rebates.models import Rebate
+from bwsite.settings import DEFAULT_CURRENCY_SIGN
 
 _logger = logging.getLogger(__name__)
 
@@ -170,7 +171,7 @@ class UpdateForm(forms.ModelForm):
 class InvoicedCustomerForm(forms.ModelForm):
     class Meta:
         model = InvoicedCustomer
-        exclude = ('invoice', )
+        exclude = ('invoice',)
 
     helper = helper.FormHelper()
     helper.form_tag = False
@@ -225,7 +226,12 @@ class BaseInvoicedArticleFormset(forms.BaseInlineFormSet):
                 css_class='col-lg-6'
             ),
             layout.Div(
-                layout.Field('price', required='', css_class='text-right item-price'),
+                bootstrap.AppendedText(
+                    'price',
+                    DEFAULT_CURRENCY_SIGN,
+                    required='',
+                    css_class='text-right item-price'
+                ),
                 css_class='col-lg-2',
             ),
             layout.Div(
@@ -253,7 +259,7 @@ InvoicedArticleFormset = forms.inlineformset_factory(
     min_num=1,
     validate_min=True,
     extra=0,
-    exclude=('invoice', )
+    exclude=('invoice',)
 )
 
 
