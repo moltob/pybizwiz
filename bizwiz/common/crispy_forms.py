@@ -32,5 +32,9 @@ class MoneyAmountField(forms.DecimalField):
     """
 
     def prepare_value(self, value):
-        if value:
+        try:
             return value.amount.quantize(decimal.Decimal(10) ** -self.decimal_places)
+        except AttributeError:
+            # this was not a money value, probably resulting from an invalid value, returned to
+            # form to get corrected by user, so just take it as is:
+            return super().prepare_value(value)
