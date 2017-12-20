@@ -26,6 +26,13 @@ class UpdateForm(forms.ModelForm):
     helper.form_class = 'form-horizontal'
     helper.label_class = 'col-lg-2'
     helper.field_class = 'col-lg-8'
+    helper.layout = layout.Layout(
+        # since a dynamic formset is used, there is no need to allow posting empty fields for
+        # unused extra forms, so all fields can be explicitly required:
+        layout.Field('name', required=''),
+        bootstrap.AppendedText('price', DEFAULT_CURRENCY_SIGN, required=''),
+        layout.Field('inactive'),
+    )
     helper.add_input(layout.Submit('submit', _("Submit")))
 
 
