@@ -191,6 +191,9 @@ class InvoicedCustomerForm(forms.ModelForm):
             layout.Div('zip_code', css_class='col-lg-2'),
             layout.Div('city', css_class='col-lg-4'),
         ),
+        layout.Row(
+            layout.Div(layout.Field('notes', css_class='customer-notes'), css_class='col-lg-12'),
+        ),
     )
 
 
@@ -273,6 +276,7 @@ class CreateForm(forms.Form):
         label=_("Applied rebates"),
         required=False,
     )
+    notes = forms.CharField(widget=forms.Textarea)
 
     helper = helper.FormHelper()
     helper.form_tag = False
@@ -280,5 +284,8 @@ class CreateForm(forms.Form):
         layout.Row(
             layout.Div(layout.Field('customer', css_class='customer-name'), css_class='col-lg-6'),
             layout.Div(layout.Field('rebates', css_class='rebates'), css_class='col-lg-6'),
+        ),
+        layout.Row(
+            layout.Div(layout.Field('notes', css_class='customer-notes'), css_class='col-lg-12'),
         ),
     )
