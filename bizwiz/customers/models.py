@@ -51,6 +51,10 @@ class CustomerBase(models.Model):
         max_length=50,
         blank=True
     )
+    notes = models.TextField(
+        _("Notes"),
+        blank=True
+    )
 
     class Meta:
         abstract = True
@@ -81,10 +85,6 @@ class Customer(CustomerBase):
     email = models.EmailField(
         _("Email address"),
         max_length=50,
-        blank=True
-    )
-    notes = models.TextField(
-        _("Notes"),
         blank=True
     )
 

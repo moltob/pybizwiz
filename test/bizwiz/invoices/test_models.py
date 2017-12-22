@@ -9,7 +9,7 @@ from bizwiz.invoices.models import InvoicedCustomer, Invoice, InvoicedArticle, I
 
 
 def test__invoiced_customer__create():
-    assert len(CustomerBase._meta.get_fields()) == 8, 'CustomerBase changed, adapt test case.'
+    assert len(CustomerBase._meta.get_fields()) == 9, 'CustomerBase changed, adapt test case.'
     c1 = Customer(
         first_name='FIRST',
         last_name='LAST',
@@ -19,6 +19,7 @@ def test__invoiced_customer__create():
         street_address='STREET',
         zip_code='ZIP',
         city='CITY',
+        notes='Some notes about this guy.',
     )
     invoice = Invoice()
 
@@ -32,6 +33,7 @@ def test__invoiced_customer__create():
     assert c2.company_name == 'COMPANY_NAME'
     assert c2.zip_code == 'ZIP'
     assert c2.city == 'CITY'
+    assert c2.notes == 'Some notes about this guy.'
 
 
 def test__invoiced_article__create():
