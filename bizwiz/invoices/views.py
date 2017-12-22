@@ -236,6 +236,7 @@ class SelectableCustomer:
     def __init__(self, customer):
         self.name = str(customer)
         self.pk = customer.pk
+        self.notes = customer.notes
 
 
 class Create(mixins.LoginRequiredMixin, message_views.SuccessMessageMixin, generic.FormView):
@@ -343,12 +344,12 @@ class Sales(mixins.LoginRequiredMixin, SizedColumnsMixin, tables.SingleTableView
         .annotate(year_paid=functions.ExtractYear('date_paid')) \
         .values('year_paid') \
         .annotate(
-            total=models.Sum(
-                models.F('invoiced_articles__price') * models.F('invoiced_articles__amount'),
-                output_field=models.DecimalField(decimal_places=2),
-            ),
-            total_currency=models.F('invoiced_articles__price_currency'),
-        ) \
+        total=models.Sum(
+            models.F('invoiced_articles__price') * models.F('invoiced_articles__amount'),
+            output_field=models.DecimalField(decimal_places=2),
+        ),
+        total_currency=models.F('invoiced_articles__price_currency'),
+    ) \
         .annotate(num_invoices=models.Count('id', distinct=True),
                   num_articles=models.Sum(
                       models.Case(

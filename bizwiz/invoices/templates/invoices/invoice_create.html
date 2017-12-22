@@ -22,7 +22,8 @@
     <script>
         var selectableCustomers = [{% for customer in customers %}{
             pk: {{ customer.pk }},
-            name: "{{ customer.name|escapejs }}"
+            name: "{{ customer.name|escapejs }}",
+            notes: "{{ customer.notes|escapejs }}"
         }{% if not forloop.last %}, {% endif %}{% endfor %}
         ];
 
@@ -32,6 +33,24 @@
         }{% if not forloop.last %}, {% endif %}{% endfor %}
         ];
 
+        function setCustomerNotes(pk) {
+            var notes = "";
+
+            if (pk) {
+                // linear search to be possibly optimized later:
+                var i;
+                for (i=0; i < selectableCustomers.length; i++) {
+                    var c = selectableCustomers[i];
+                    if (c.pk == pk) {
+                        notes = c.notes;
+                        break;
+                    }
+                }
+            }
+
+            $('.customer-notes').val(notes);
+        }
+
         $(function () {
             $("input.customer-name")  // refine selector via element type to not match selectize widget
                 .selectize({
@@ -40,7 +59,8 @@
                     delimiter: null,
                     labelField: "name",
                     searchField: ["name"],
-                    valueField: "pk"
+                    valueField: "pk",
+                    onChange: setCustomerNotes
                 });
         });
 
