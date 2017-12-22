@@ -192,7 +192,8 @@ class InvoicedCustomerForm(forms.ModelForm):
             layout.Div('city', css_class='col-lg-4'),
         ),
         layout.Row(
-            layout.Div(layout.Field('notes', css_class='customer-notes'), css_class='col-lg-12'),
+            layout.Div(
+                layout.Field('notes', readonly=True), css_class='col-lg-12'),
         ),
     )
 
@@ -289,6 +290,9 @@ class CreateForm(forms.Form):
             layout.Div(layout.Field('rebates', css_class='rebates'), css_class='col-lg-6'),
         ),
         layout.Row(
-            layout.Div(layout.Field('notes', css_class='customer-notes'), css_class='col-lg-12'),
+            layout.Div(
+                layout.Field('notes', readonly=True, css_class='customer-notes'),
+                css_class='col-lg-12',
+            ),
         ),
     )
