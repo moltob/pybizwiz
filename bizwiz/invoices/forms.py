@@ -276,7 +276,10 @@ class CreateForm(forms.Form):
         label=_("Applied rebates"),
         required=False,
     )
-    notes = forms.CharField(widget=forms.Textarea)
+    notes = forms.CharField(
+        widget=forms.Textarea,
+        required=False,
+    )
 
     helper = helper.FormHelper()
     helper.form_tag = False
