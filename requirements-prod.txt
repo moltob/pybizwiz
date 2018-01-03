@@ -1,15 +1,15 @@
-attrs==17.3.0
+attrs==17.4.0
 colorama==0.3.9
-Django==2.0
+Django==2.0.1
 django-crispy-forms==1.7.0
 -e git+https://mpagel@bitbucket.org/mpagel/django-formset-js.git@985e2487581b492faccac820fecc6de432081235#egg=django_formset_js
 django-jquery-js==3.1.1
 django-money==0.12.3
-django-tables2==1.17.0
+django-tables2==1.17.1
 gunicorn==19.7.1
 Markdown==2.6.10
 olefile==0.44
-Pillow==4.3.0
+Pillow==5.0.0
 pluggy==0.6.0
 py==1.5.2
 py-moneyed==0.7.0
