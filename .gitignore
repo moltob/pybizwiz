@@ -15,4 +15,7 @@ test/**/output/
 *.log.*
 *.mo
 *.pyc
-*.sqlite3 
+*.sqlite3
+
+# converted files
+scripts/ux-*.sh
