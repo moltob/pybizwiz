@@ -17,5 +17,3 @@ test/**/output/
 *.pyc
 *.sqlite3
 
-# converted files
-scripts/ux-*.sh
