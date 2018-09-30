@@ -8,6 +8,7 @@ __pycache__/
 .idea/
 .vagrant/
 test/**/output/
+.pytest_cache/
 
 # temporary files
 *.bak
