@@ -65,7 +65,7 @@ def test__text_blocks__clauses_formatting(invoice):
 
     assert '01.03.2017' in blocks.clause_date
     assert 'R001234' in blocks.clause_subject
-    assert 'Sehr geehrter Herr LAST_NAME' in blocks.clause_salutation
+    assert 'Sehr geehrter Herr Dr. LAST_NAME' in blocks.clause_salutation
 
 
 @pytest.mark.django_db

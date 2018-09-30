@@ -73,6 +73,10 @@ class TextBlocks:
         else:
             _logger.error('Unknown saluation type {!r}.'.format(customer.salutation))
             clause.append("Sehr geehrter Herr")
+
+        if customer.title:
+            clause.append(customer.title)
+
         clause.append(customer.last_name + ',')
         return ' '.join(clause)
 
