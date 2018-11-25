@@ -1,13 +1,10 @@
+dist: xenial
 language: python
 sudo: required
 services:
   - docker
 python:
-  - "3.6"
-  - "3.7-dev"
-before_install:
-  # travis has old versions pre-installed, so upgrade them first:
-  - pip list --outdated | cut -d ' ' -f1 | xargs -n1 pip install -U
+  - 3.7
 install:
   - pip install -r requirements.txt
   - pip install pytest-cov coveralls codecov
@@ -29,7 +26,7 @@ script:
 after_success:
   - coveralls
   - codecov
-  - if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_PYTHON_VERSION" == "3.6" ]; then
+  - if [ -n "$TRAVIS_TAG" ] && [ "$TRAVIS_PYTHON_VERSION" == "3.7" ]; then
       docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
       docker push $image;
       docker push ${repo}:latest;

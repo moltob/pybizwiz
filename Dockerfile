@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.7
 
 LABEL Vendor="Mike Pagel" \
       Description="Internal photography project management web-application."
