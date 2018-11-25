@@ -3,8 +3,8 @@ sudo: required
 services:
   - docker
 python:
-  - "3.6"
-  - "3.7-dev"
+  - 3.6
+  - 3.7
 before_install:
   # travis has old versions pre-installed, so upgrade them first:
   - pip list --outdated | cut -d ' ' -f1 | xargs -n1 pip install -U
