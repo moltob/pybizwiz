@@ -1,9 +1,6 @@
-import decimal
 import logging
 
 import django_tables2 as tables
-import djmoney.models.fields
-import djmoney.models.managers
 from django import shortcuts
 from django import urls, views
 from django.contrib.auth import mixins
@@ -72,6 +69,11 @@ class InvoiceTable(tables.Table):
                               models.F('invoiced_articles__amount'))
         ).order_by(('-' if descending else '') + '_total')
         return queryset, True
+
+    def get_column_class_names(self, classes_set, bound_column):
+        classes_set = super().get_column_class_names(classes_set, bound_column)
+        classes_set.add(bound_column.name)
+        return classes_set
 
 
 class List(mixins.LoginRequiredMixin, SizedColumnsMixin, generic.edit.FormMixin,
